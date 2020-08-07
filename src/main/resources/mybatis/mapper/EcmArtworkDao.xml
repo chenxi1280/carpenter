@@ -136,7 +136,8 @@
 <!--  sql-->
   <select id="selectajaxList" resultType="com.wxcz.carpenter.pojo.vo.EcmArtworkVO">
     select pk_artwork_id, fk_userId, artwork_name, artwork_describe, artwork_status, logo_path,
-    last_create_date, last_modify_date, four_letter_tips,username from ecm_artwork a inner  join ecm_user u
+    last_create_date, last_modify_date, four_letter_tips,username
+    from ecm_artwork a inner  join ecm_user u
     on u.pk_user_id = a.fk_userId
     <where>
       <if test="pkArtworkId != null and pkArtworkId!=''">
@@ -144,7 +145,7 @@
       </if>
 
       <if test="fkUserid != null and fkUserid!=''">
-        and pk_user_id like CONCAT('%',#{fkUserid},'%')
+        and fk_userId like CONCAT('%',#{fkUserid},'%')
       </if>
 
       <if test="artworkName != null and artworkName!=''">
@@ -169,14 +170,16 @@
   </select>
   <select id="selectCountByQuery" resultType="java.lang.Integer">
     select count(*)
-    from ecm_artwork
+    from ecm_artwork a inner  join ecm_user u
+    on u.pk_user_id = a.fk_userId
     <where>
+
       <if test="pkArtworkId != null and pkArtworkId!=''">
         and pk_artwork_id like CONCAT('%',#{pkArtworkId},'%')
       </if>
 
       <if test="fkUserid != null and fkUserid!=''">
-        and pk_user_id like CONCAT('%',#{fkUserid},'%')
+        and fk_userId like CONCAT('%',#{fkUserid},'%')
       </if>
 
       <if test="artworkName != null and artworkName!=''">
@@ -194,7 +197,6 @@
       <if test="artworkStatus != null and artworkStatus!=''">
         and artwork_status = #{artworkStatus}
       </if>
-
     </where>
 
   </select>

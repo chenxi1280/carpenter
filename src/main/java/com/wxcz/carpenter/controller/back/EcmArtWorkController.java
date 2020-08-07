@@ -8,11 +8,13 @@ import com.wxcz.carpenter.pojo.query.EcmUserQuery;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserVO;
 import com.wxcz.carpenter.service.EcmArtworkService;
+import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -54,7 +56,7 @@ public class EcmArtWorkController {
      */
     @RequestMapping("ajaxList")
     @ResponseBody
-    public PageDTO ajaxList(EcmArtworkQuery ecmArtworkQuery) {
+    public PageDTO ajaxList( EcmArtworkQuery ecmArtworkQuery) {
 
         return ecmArtworkService.ajaxList(ecmArtworkQuery);
     }
