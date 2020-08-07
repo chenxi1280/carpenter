@@ -13,11 +13,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/back")
 public class HomeController {
 
+    /**
+     * @param: []
+     * @return: java.lang.String
+     * @author: cxd
+     * @Date: 2020/8/7
+     * 描述 : 跳转页面接口
+     */
     @RequestMapping("/home")
     public String home(){
         return "/back/home";
     }
 
+    /**
+     * @param: []
+     * @return: java.lang.String
+     * @author: cxd
+     * @Date: 2020/8/7
+     * 描述 : 跳转页面接口
+     */
     @RequestMapping("/console")
     public String console(){
         return "/back/console";

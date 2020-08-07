@@ -1,5 +1,6 @@
 package com.wxcz.carpenter.controller.back;
 
+import com.wxcz.carpenter.controller.BaseController;
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.entity.EcmUser;
@@ -27,19 +28,47 @@ import java.security.Security;
  */
 @Controller
 @RequestMapping("/back/user")
-public class EcmUserController {
+public class EcmUserController extends BaseController {
 
     @Resource
     EcmUserService ecmUserService;
 
 
-    //    @RequiresRoles("art")
+
+    /**
+     * @param: []
+     * @return: java.lang.String
+     * @author: cxd
+     * @Date: 2020/8/7
+     * 描述 : 页面跳转
+     */
     @RequestMapping("/userPage")
     public String userPage() {
         return "/back/user/user-list";
     }
 
+    /**
+     * @param: []
+     * @return: java.lang.String
+     * @author: cxd
+     * @Date: 2020/8/7
+     * 描述 : 页面跳转
+     */
+    @RequestMapping("/setPassWordPage")
+    public String setPassWordPage() {
+        return "/back/user/password";
+    }
 
+
+    /**
+     * @param: [ecmUserQuery]  查询条件类
+     * @return: com.wxcz.carpenter.pojo.dto.PageDTO
+     * @author: cxd
+     * @Date: 2020/8/7
+     * 描述 : 按条件查询用户
+     *       保存成功: status 0  msg "success” 数据 data
+     *       保存失败: status 500  msg "error“
+     */
     @RequestMapping("ajaxList")
     @ResponseBody
     public PageDTO ajaxList(EcmUserQuery ecmUserQuery) {
@@ -48,23 +77,46 @@ public class EcmUserController {
     }
 
 
+    /**
+     * @param: [ecmUserVO]
+     * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO
+     * @author: cxd
+     * @Date: 2020/8/7
+     * 描述 : 对用户状态进行修改
+     *       保存成功: status 200  msg "success”
+     *       保存失败: status 500  msg "error“
+     */
     @RequiresRoles("admin")
     @RequestMapping("chengUser")
     @ResponseBody
     public ResponseDTO chengUser(EcmUserVO ecmUserVO) {
-
         Subject subject = SecurityUtils.getSubject();
-
-
         if (!StringUtils.isEmpty(ecmUserVO.getRoles())) {
             if (subject.hasRole("superadmin")) {
                 return ecmUserService.chengUser(ecmUserVO);
             }
             return ResponseDTO.fail("无权修改");
         }
-
-
         return ecmUserService.chengUser(ecmUserVO);
+    }
+
+
+    /**
+     * @param: [ecmUserVO]
+     * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO
+     * @author: cxd
+     * @Date: 2020/8/7
+     * 描述 :
+     *        用户自己在个人中心设置密码接口
+     *       保存成功: status 200  msg "success”
+     *       保存失败: status 500  msg "error“
+     */
+    @RequestMapping("setPassWord")
+    @ResponseBody
+    public ResponseDTO setPassWord(EcmUserVO ecmUserVO) {
+        //通过session 拿到当前用户的id
+        ecmUserVO.setPkUserId((Integer) getRequstSession().getAttribute("userId"));
+        return ecmUserService.setPassWord(ecmUserVO);
     }
 
 

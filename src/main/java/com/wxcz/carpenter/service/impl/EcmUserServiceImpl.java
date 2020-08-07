@@ -5,11 +5,13 @@ import com.wxcz.carpenter.dao.EcmUserDao;
 import com.wxcz.carpenter.dao.EcmUserRolesDao;
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
+import com.wxcz.carpenter.pojo.entity.EcmUser;
 import com.wxcz.carpenter.pojo.query.EcmUserQuery;
 import com.wxcz.carpenter.pojo.vo.EcmUserAcessVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserRolesVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserVO;
 import com.wxcz.carpenter.service.EcmUserService;
+import com.wxcz.carpenter.util.MD5Utils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StreamUtils;
@@ -51,11 +53,12 @@ public class EcmUserServiceImpl implements EcmUserService {
 
     @Override
     public List<EcmUserRolesVO> selectUserRolesByUser(EcmUserVO ecmUserVO) {
-
-
+        //查询角色集合
         List<EcmUserRolesVO>  rolesVOList = ecmUserRolesDao.selectByRoles(ecmUserVO.getRoles());
         if (!CollectionUtils.isEmpty(rolesVOList)) {
+            //查询权限集合
             List<EcmUserAcessVO> acessVOList = this.selectUSerAcessByRoles(rolesVOList);
+            //把权限集合设置到角色集合中
             setRolesAcess(rolesVOList,acessVOList);
         }
         return rolesVOList;
@@ -67,15 +70,14 @@ public class EcmUserServiceImpl implements EcmUserService {
         List<EcmUserAcessVO> list = new ArrayList<>();
 
         Set<String> set = new HashSet<String>();
-
+        //拆分权限串，并将权限id 存入 set
         rolesVOList.forEach( v -> {
-
             if (!StringUtils.isEmpty(v.getAcess())) {
                 Collections.addAll(set, v.getAcess().split(","));
             }
-
         });
         if (!CollectionUtils.isEmpty(set)) {
+            //通过权限id set<String> 查询
             list = ecmUserAcessDao.selectUSerAcessByRoles(set);
 
         }
@@ -101,11 +103,20 @@ public class EcmUserServiceImpl implements EcmUserService {
 
     @Override
     public ResponseDTO chengUser(EcmUserVO ecmUserVO) {
-
+        ecmUserVO.setLastLoginTime(new Date());
         return ResponseDTO.get( 1 == ecmUserDao.updateByPrimaryKeySelective(ecmUserVO));
     }
 
-
+    @Override
+    public ResponseDTO setPassWord(EcmUserVO ecmUserVO) {
+        EcmUser ecmUser = ecmUserDao.selectByPrimaryKey(ecmUserVO.getPkUserId());
+        if (MD5Utils.encrypt(ecmUserVO.getOldPassWord()).equals(ecmUser.getPassword())){
+            ecmUserVO.setPassword(MD5Utils.encrypt(ecmUserVO.getPassword()));
+            ecmUserVO.setLastLoginTime(new Date());
+            return ResponseDTO.get( 1 == ecmUserDao.updateByPrimaryKeySelective(ecmUserVO));
+        }
+        return ResponseDTO.fail("原密码错误");
+    }
 
 
     /**
@@ -114,14 +125,16 @@ public class EcmUserServiceImpl implements EcmUserService {
      * @author: cxd
      * @Date: 2020/8/6
      * 描述 :     将多个权限设置到多个对应角色
-     *
      */
     private void setRolesAcess(List<EcmUserRolesVO> rolesVOList, List<EcmUserAcessVO> acessVOList) {
-
+        // 通过权限id 分组 key为 权限id value 围殴 权限list
         Map<Integer, List<EcmUserAcessVO>> collect = acessVOList.stream().collect(Collectors.groupingBy(EcmUserAcessVO::getPkAcessId));
+        //循环 角色
         rolesVOList.forEach( role -> {
+            //取出对应的 权限字符串 并 才分成 string[]
             String[] split = role.getAcess().split(",");
             ArrayList<EcmUserAcessVO> ecmUserAcessVOS = new ArrayList<>();
+            //循环设置 角色 中的 权限集合
             for (String s : split) {
                 if (!CollectionUtils.isEmpty(acessVOList)) {
                     List<EcmUserAcessVO> ecmUserAcessVOList = collect.get(Integer.valueOf(s));

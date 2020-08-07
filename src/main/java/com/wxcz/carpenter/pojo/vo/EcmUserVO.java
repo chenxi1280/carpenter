@@ -11,5 +11,7 @@ import lombok.Data;
  */
 @Data
 public class EcmUserVO extends EcmUser {
+    private String oldPassWord;
+
 
 }
