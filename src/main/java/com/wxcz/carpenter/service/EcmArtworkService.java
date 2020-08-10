@@ -2,6 +2,7 @@ package com.wxcz.carpenter.service;
 
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
+import com.wxcz.carpenter.pojo.entity.EcmArtworkNodes;
 import com.wxcz.carpenter.pojo.query.EcmArtworkQuery;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
 
@@ -34,4 +35,12 @@ public interface EcmArtworkService {
      *       保存失败: status 500  msg "error“
      */
     ResponseDTO chengArtWork(EcmArtworkVO ecmArtworkVO);
+
+    PageDTO ajaxCheckList(EcmArtworkQuery ecmArtworkQuery);
+
+    ResponseDTO getArtWorkNoteS(EcmArtworkQuery ecmArtworkVO);
+
+    ResponseDTO upDataNode(EcmArtworkNodes ecmArtworkNodes);
+
+    ResponseDTO checkArtWork(EcmArtworkQuery ecmArtworkQuery);
 }

@@ -3,6 +3,7 @@ package com.wxcz.carpenter.controller.back;
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.entity.EcmArtwork;
+import com.wxcz.carpenter.pojo.entity.EcmArtworkNodes;
 import com.wxcz.carpenter.pojo.query.EcmArtworkQuery;
 import com.wxcz.carpenter.pojo.query.EcmUserQuery;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
@@ -13,6 +14,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +44,19 @@ public class EcmArtWorkController {
     @RequestMapping("artWorkPage")
     public String artWorkPage(){
         return "back/artWork/artWork-list";
+    }
+
+    @RequestMapping("checkArtWorkPage")
+    public String checkArtWorkPage(){
+        return "back/artWork/checkArtWork-list";
+    }
+
+    @RequestMapping("artWorkNodePage")
+    public String artWorkNodePage(Integer pkArtworkId, Model model){
+
+        model.addAttribute("pkArtworkId",pkArtworkId);
+
+        return "back/artWork/artWorkNode";
     }
 
     /**
@@ -79,4 +94,31 @@ public class EcmArtWorkController {
     public ResponseDTO chengArtWork(EcmArtworkVO ecmArtworkVO) {
         return ecmArtworkService.chengArtWork(ecmArtworkVO);
     }
+
+    @RequestMapping("ajaxCheckList")
+    @ResponseBody
+    public PageDTO ajaxCheckList( EcmArtworkQuery ecmArtworkQuery) {
+
+        return ecmArtworkService.ajaxCheckList(ecmArtworkQuery);
+    }
+
+
+    @RequestMapping("getArtWorkNoteS")
+    @ResponseBody
+    public ResponseDTO getArtWorkNoteS(EcmArtworkQuery ecmArtworkVO) {
+        return ecmArtworkService.getArtWorkNoteS(ecmArtworkVO);
+    }
+
+    @RequestMapping("upDataNode")
+    @ResponseBody
+    public ResponseDTO upDataNode(EcmArtworkNodes ecmArtworkNodes) {
+        return ecmArtworkService.upDataNode(ecmArtworkNodes);
+    }
+
+    @RequestMapping("checkArtWork")
+    @ResponseBody
+    public ResponseDTO checkArtWork(EcmArtworkQuery ecmArtworkQuery) {
+        return ecmArtworkService.checkArtWork(ecmArtworkQuery);
+    }
+
 }

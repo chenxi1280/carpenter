@@ -22,4 +22,8 @@ public interface EcmArtworkDao {
     List<EcmArtworkVO> selectajaxList(EcmArtworkQuery ecmArtworkQuery);
 
     Integer selectCountByQuery(EcmArtworkQuery ecmArtworkQuery);
+
+    List<EcmArtworkVO> selectajaxCheckList(EcmArtworkQuery ecmArtworkQuery);
+
+    Integer selectCountByCheckList(EcmArtworkQuery ecmArtworkQuery);
 }
