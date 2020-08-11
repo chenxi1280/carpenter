@@ -11,28 +11,31 @@
     <result column="last_create_date" jdbcType="TIMESTAMP" property="lastCreateDate" />
     <result column="last_modify_date" jdbcType="TIMESTAMP" property="lastModifyDate" />
     <result column="four_letter_tips" jdbcType="VARCHAR" property="fourLetterTips" />
+    <result column="fk_audit_id" jdbcType="INTEGER" property="fkAuditId" />
   </resultMap>
   <sql id="Base_Column_List">
-    pk_artwork_id, fk_userId, artwork_name, artwork_describe, artwork_status, logo_path, 
-    last_create_date, last_modify_date, four_letter_tips
+    pk_artwork_id, fk_userId, artwork_name, artwork_describe, artwork_status, logo_path,
+    last_create_date, last_modify_date, four_letter_tips, fk_audit_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from ecm_artwork
     where pk_artwork_id = #{pkArtworkId,jdbcType=INTEGER}
   </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from ecm_artwork
     where pk_artwork_id = #{pkArtworkId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" keyColumn="pk_artwork_id" keyProperty="pkArtworkId" parameterType="com.wxcz.carpenter.pojo.entity.EcmArtwork" useGeneratedKeys="true">
-    insert into ecm_artwork (fk_userId, artwork_name, artwork_describe, 
-      artwork_status, logo_path, last_create_date, 
-      last_modify_date, four_letter_tips)
-    values (#{fkUserid,jdbcType=INTEGER}, #{artworkName,jdbcType=VARCHAR}, #{artworkDescribe,jdbcType=VARCHAR}, 
-      #{artworkStatus,jdbcType=SMALLINT}, #{logoPath,jdbcType=VARCHAR}, #{lastCreateDate,jdbcType=TIMESTAMP}, 
-      #{lastModifyDate,jdbcType=TIMESTAMP}, #{fourLetterTips,jdbcType=VARCHAR})
+    insert into ecm_artwork (fk_userId, artwork_name, artwork_describe,
+      artwork_status, logo_path, last_create_date,
+      last_modify_date, four_letter_tips, fk_audit_id
+      )
+    values (#{fkUserid,jdbcType=INTEGER}, #{artworkName,jdbcType=VARCHAR}, #{artworkDescribe,jdbcType=VARCHAR},
+      #{artworkStatus,jdbcType=SMALLINT}, #{logoPath,jdbcType=VARCHAR}, #{lastCreateDate,jdbcType=TIMESTAMP},
+      #{lastModifyDate,jdbcType=TIMESTAMP}, #{fourLetterTips,jdbcType=VARCHAR}, #{fkAuditId,jdbcType=INTEGER}
+      )
   </insert>
   <insert id="insertSelective" keyColumn="pk_artwork_id" keyProperty="pkArtworkId" parameterType="com.wxcz.carpenter.pojo.entity.EcmArtwork" useGeneratedKeys="true">
     insert into ecm_artwork
@@ -61,6 +64,9 @@
       <if test="fourLetterTips != null">
         four_letter_tips,
       </if>
+      <if test="fkAuditId != null">
+        fk_audit_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="fkUserid != null">
@@ -86,6 +92,9 @@
       </if>
       <if test="fourLetterTips != null">
         #{fourLetterTips,jdbcType=VARCHAR},
+      </if>
+      <if test="fkAuditId != null">
+        #{fkAuditId,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -116,6 +125,9 @@
       <if test="fourLetterTips != null">
         four_letter_tips = #{fourLetterTips,jdbcType=VARCHAR},
       </if>
+      <if test="fkAuditId != null">
+        fk_audit_id = #{fkAuditId,jdbcType=INTEGER},
+      </if>
     </set>
     where pk_artwork_id = #{pkArtworkId,jdbcType=INTEGER}
   </update>
@@ -128,7 +140,8 @@
       logo_path = #{logoPath,jdbcType=VARCHAR},
       last_create_date = #{lastCreateDate,jdbcType=TIMESTAMP},
       last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
-      four_letter_tips = #{fourLetterTips,jdbcType=VARCHAR}
+      four_letter_tips = #{fourLetterTips,jdbcType=VARCHAR},
+      fk_audit_id = #{fkAuditId,jdbcType=INTEGER}
     where pk_artwork_id = #{pkArtworkId,jdbcType=INTEGER}
   </update>
 
@@ -136,8 +149,8 @@
 <!--  sql-->
   <select id="selectajaxList" resultType="com.wxcz.carpenter.pojo.vo.EcmArtworkVO">
     select pk_artwork_id, fk_userId, artwork_name, artwork_describe, artwork_status, logo_path,
-    last_create_date, last_modify_date, four_letter_tips,username
-    from ecm_artwork a inner  join ecm_user u
+    last_create_date, last_modify_date, four_letter_tips,username,fk_audit_id
+    from ecm_artwork a  inner  join ecm_user u
     on u.pk_user_id = a.fk_userId
     <where>
       <if test="pkArtworkId != null and pkArtworkId!=''">
@@ -159,8 +172,6 @@
       <if test="fourLetterTips != null and fourLetterTips!=''">
         and four_letter_tips like CONCAT('%',#{fourLetterTips},'%')
       </if>
-
-
 
     </where>
     order by last_create_date desc
@@ -226,7 +237,7 @@
   <select id="selectajaxCheckList" resultType="com.wxcz.carpenter.pojo.vo.EcmArtworkVO">
 
     select pk_artwork_id, fk_userId, artwork_name, artwork_describe, artwork_status, logo_path,
-    last_create_date, last_modify_date, four_letter_tips,username
+    last_create_date, last_modify_date, four_letter_tips,username,fk_audit_id
     from ecm_artwork a inner  join ecm_user u
     on u.pk_user_id = a.fk_userId
     <where> artwork_status = 1

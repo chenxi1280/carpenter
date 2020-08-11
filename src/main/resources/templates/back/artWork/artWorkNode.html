@@ -25,10 +25,13 @@
         var thisObj = $(obj) //js对象转jquery对象
         thisObj.parents().addClass('layui-this')
         thisObj.siblings().css("layui-nav-item layui-nav-itemed")
-        // console.log(  thisObj.siblings())
+
         $('#video').attr("src",thisObj.attr('sr'))
-        // $('#chooseText').text(thisObj.attr('chooseText'))
+
+
+        $('#itemsText').text(thisObj.attr('itemsText'))
         nodeId = $(obj).attr("id")
+
     }
 
 </script>
@@ -60,9 +63,9 @@
         <div class="layui-body" id="LAY_app_body">
 
             <div>
-                <p id="chooseText">
+                <h2 id="itemsText">
 
-                </p>
+                </h2>
 
 
             </div>
@@ -123,6 +126,8 @@
             processData: true,//布尔值,一般都不用设置，规定通过请求发送的数据是否转换为查询字符串。默认是 true。如果此时上传的时候，有图片，这里必须设置false,
             success: function (res) {// 请求成功，回调函数,data，指的就是服务器返回的数据
                 let artWorkVO = res.data;
+
+                console.log(res)
                 f(artWorkVO);
                 element.init('nav')
 
@@ -132,18 +137,11 @@
 
         function f(artWorkVo) {
             if (artWorkVo != null) {
-                let  choo = []
-                // if (artWorkVo.itemsText != null){
-                //
-                //     artWorkVo.itemsText.forEach(v => {
-                //         choo.join(v.value)
-                //
-                //     })
-                // }
 
-                test(artWorkVo.pkDetailId, artWorkVo.videoUrl,artWorkVo.itemsText)
+
+                addTree(artWorkVo.pkDetailId, artWorkVo.videoUrl,artWorkVo.itemsText,artWorkVo.videoCode)
                 if (artWorkVo.nodesVos != null) {
-                    console.log(artWorkVo.nodesVos)
+
                     artWorkVo.nodesVos.forEach(v => {
                         f(v);
                     })
@@ -151,9 +149,32 @@
             }
 
         }
+        // 修改
+        function addTree(id, videoUrl,itemsText,videoCode) {
+            console.log(itemsText)
+            let parseJSON = $.parseJSON( itemsText );
+            var chooseText = '选择消息：'
+            parseJSON.forEach( v => {
 
-        function test(id, videoUrl,chooseText) {
-            let s = '<li  data-name="home" class="layui-nav-item layui-nav-itemed " ><a onclick="mya(this)" id="'+id+'" sr="'+videoUrl+'" chooseText="'+chooseText+'">'+ id +'</a></li>'
+                chooseText += v.value
+            })
+
+            console.log(chooseText)
+
+            var item ;
+
+            if (videoCode == null ){
+                item = 'layui-icon-circle-dot'
+            }else if (videoCode == 2 ) {
+                item =  'layui-icon-ok';
+            }else if (videoCode == 3){
+                item = 'layui-icon-close';
+            }else {
+                item = 'layui-icon-circle-dot'
+            }
+
+
+            let s = '<li  data-name="home" class="layui-nav-item layui-nav-itemed " > <a onclick="mya(this)" id="'+id+'" sr="'+videoUrl+'" itemsText="'+chooseText+'">  <i class="layui-icon '+item+'"></i>     <cite>'+ id +'</cite>  </a></li>'
             $('#LAY-system-side-menu').append(s)
 
         }
@@ -165,7 +186,7 @@
 
 
     $('#nodeyes').click( function () {
-        console.log(nodeId)
+
         $.ajax({
             type: 'post',// ajax请求的方式，post或get
             url: '/back/artWork/upDataNode'  ,

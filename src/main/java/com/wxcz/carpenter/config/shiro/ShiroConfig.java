@@ -231,7 +231,7 @@ public class ShiroConfig {
         // 定义内置登录处理,表单需要加method=post
 //        filterChainDefinitionMap.put("/login", "user");
         // 这些路径全部需要登录之后，才能访问
-//        filterChainDefinitionMap.put("/back/**", "authc");
+        filterChainDefinitionMap.put("/back/**", "authc");
         // 所有路径不需要任何检测，即可访问
         filterChainDefinitionMap.put("/**", "anon");
 

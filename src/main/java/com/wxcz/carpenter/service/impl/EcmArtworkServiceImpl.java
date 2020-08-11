@@ -15,6 +15,7 @@ import com.wxcz.carpenter.pojo.vo.EcmUserVO;
 import com.wxcz.carpenter.service.EcmArtworkService;
 import com.wxcz.carpenter.util.TreeUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -45,6 +46,20 @@ public class EcmArtworkServiceImpl implements EcmArtworkService {
     public PageDTO ajaxList(EcmArtworkQuery ecmArtworkQuery) {
         // 这里是一个 链接查询 返回 带有 username 的 作品集合
         List<EcmArtworkVO>  list = ecmArtworkDao.selectajaxList(ecmArtworkQuery);
+
+        List<EcmUserVO>  lists = ecmUserDao.selectByList(list);
+        list.forEach(ecmArtworkVO -> {
+            lists.forEach(ecmUserVO ->  {
+                if (ecmArtworkVO.getFkAuditId() != null) {
+                    if (ecmUserVO.getPkUserId().equals(ecmArtworkVO.getFkAuditId())) {
+                        ecmArtworkVO.setFkAuditName(ecmUserVO.getUsername());
+                    }
+                }
+            });
+        });
+
+
+
         Integer count = ecmArtworkDao.selectCountByQuery(ecmArtworkQuery);
         return PageDTO.setPageData(count,list);
     }
@@ -60,6 +75,16 @@ public class EcmArtworkServiceImpl implements EcmArtworkService {
     public PageDTO ajaxCheckList(EcmArtworkQuery ecmArtworkQuery) {
         // 这里是一个 链接查询 返回 带有 username 的 未审核的作品集合  按修改时间排序
         List<EcmArtworkVO>  list = ecmArtworkDao.selectajaxCheckList(ecmArtworkQuery);
+        List<EcmUserVO>  lists = ecmUserDao.selectByList(list);
+        list.forEach(ecmArtworkVO -> {
+            lists.forEach(ecmUserVO ->  {
+                if (ecmArtworkVO.getFkAuditId() != null) {
+                    if (ecmUserVO.getPkUserId().equals(ecmArtworkVO.getFkAuditId())) {
+                        ecmArtworkVO.setFkAuditName(ecmUserVO.getUsername());
+                    }
+                }
+            });
+        });
         Integer count = ecmArtworkDao.selectCountByCheckList(ecmArtworkQuery);
         return PageDTO.setPageData(count,list);
     }
@@ -84,9 +109,43 @@ public class EcmArtworkServiceImpl implements EcmArtworkService {
         return ResponseDTO.get(ecmArtworkNodesDao.updateByPrimaryKeySelective(ecmArtworkNodes) == 1 );
     }
 
-    //检查 节点
     @Override
     public ResponseDTO checkArtWork(EcmArtworkQuery ecmArtworkQuery) {
-        return null;
+        List<EcmArtworkNodesVo> ecmArtworkNodesVos = ecmArtworkNodesDao.selectByArtWorkId(ecmArtworkQuery.getPkArtworkId());
+        EcmArtwork ecmArtwork = new EcmArtwork();
+        ecmArtwork.setPkArtworkId(ecmArtworkQuery.getPkArtworkId());
+        ecmArtwork.setLastModifyDate(new Date());
+        for (EcmArtworkNodesVo ecmArtworkNodesVo : ecmArtworkNodesVos) {
+            if (ecmArtworkNodesVo.getVideoCode() == null){
+                return ResponseDTO.fail("作品有节点未审核");
+            }
+            if (ecmArtworkNodesVo.getVideoCode().equals("1")){
+                return ResponseDTO.fail("作品有节点未审核");
+            }
+            if (ecmArtworkNodesVo.getVideoCode().equals("3")){
+                ecmArtwork.setArtworkStatus((short) 3);
+                return ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeySelective(ecmArtwork),"作品未通过审核") ;
+            }
+        }
+        ecmArtwork.setArtworkStatus((short) 2);
+        return ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeySelective(ecmArtwork),"作通过审核");
+    }
+
+    @Override
+    public ResponseDTO upDataArtWork(EcmArtwork ecmArtwork) {
+        return  ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeySelective(ecmArtwork));
+    }
+
+    @Override
+    public ResponseDTO artWorkAudit(EcmArtwork ecmArtwork) {
+        EcmArtwork artwork = ecmArtworkDao.selectByPrimaryKey(ecmArtwork.getPkArtworkId());
+        if (!StringUtils.isEmpty(artwork.getFkAuditId())) {
+            if (ecmArtwork.getFkAuditId().equals(artwork.getFkAuditId())) {
+                return ResponseDTO.ok();
+            }
+        }else {
+            return upDataArtWork(ecmArtwork);
+        }
+        return ResponseDTO.fail("error");
     }
 }

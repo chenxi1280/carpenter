@@ -3,6 +3,7 @@ package com.wxcz.carpenter.dao;
 import com.wxcz.carpenter.pojo.entity.EcmArtwork;
 import com.wxcz.carpenter.pojo.query.EcmArtworkQuery;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -26,4 +27,6 @@ public interface EcmArtworkDao {
     List<EcmArtworkVO> selectajaxCheckList(EcmArtworkQuery ecmArtworkQuery);
 
     Integer selectCountByCheckList(EcmArtworkQuery ecmArtworkQuery);
+
+
 }

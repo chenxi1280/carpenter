@@ -130,6 +130,7 @@
             ]]
             , toolbar: 'default'
 
+
         });
 
         //监听头部工具栏的事件
@@ -150,15 +151,7 @@
         });
 
 
-        table.on('edit(userTableFilter)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
-            let p = {};
-            p.userId = obj.data.userId;
-            p[obj.field] = obj.value;
-            $.post('/pages/back/user/edit', p, function (res) {
-                    layer.msg(res.msg);
-                }
-            );
-        });
+
         //监听行中工具栏事件
         table.on('tool(userTableFilter)', function (obj) {
 
@@ -183,7 +176,7 @@
                     //调整 权限
                     form.on('submit(sureDispatch)', function (data) {
 
-                        console.log(data.field)
+
 
                         $.ajax({
                             type: 'post',// ajax请求的方式，post或get
@@ -197,11 +190,28 @@
 
                                 layer.msg(res.msg)
 
+                                let page = $('.layui-laypage-skip .layui-input').val();
+                                let limit = $('.layui-laypage-limits').find('option:selected').val();
+
+
+
+                                layer.close(editRoleOpen); //再执行关闭
+
+                                userTable.reload({
+                                    page: page,
+                                    size:limit,
+                                });
+
+
+
+
+                                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
                             },
+
+
                         });
 
                     })
-
 
                     break;
 

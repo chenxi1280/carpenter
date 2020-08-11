@@ -1,22 +1,16 @@
 package com.wxcz.carpenter.controller.back;
 
+import com.wxcz.carpenter.controller.BaseController;
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.entity.EcmArtwork;
 import com.wxcz.carpenter.pojo.entity.EcmArtworkNodes;
 import com.wxcz.carpenter.pojo.query.EcmArtworkQuery;
-import com.wxcz.carpenter.pojo.query.EcmUserQuery;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
-import com.wxcz.carpenter.pojo.vo.EcmUserVO;
 import com.wxcz.carpenter.service.EcmArtworkService;
-import org.apache.ibatis.annotations.Param;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -30,7 +24,7 @@ import javax.annotation.Resource;
  */
 @Component
 @RequestMapping("/back/artWork")
-public class EcmArtWorkController {
+public class EcmArtWorkController extends BaseController {
     @Resource
     EcmArtworkService ecmArtworkService;
 
@@ -55,8 +49,18 @@ public class EcmArtWorkController {
     public String artWorkNodePage(Integer pkArtworkId, Model model){
 
         model.addAttribute("pkArtworkId",pkArtworkId);
+        //通过session 拿到当前用户的id
+        EcmArtwork ecmArtwork = new EcmArtwork();
+        // 暂定 节点审核人 id
+        ecmArtwork.setFkAuditId((Integer) getRequstSession().getAttribute("userId"));
+        ecmArtwork.setPkArtworkId(pkArtworkId);
+        ResponseDTO responseDTO = ecmArtworkService.artWorkAudit(ecmArtwork);
 
-        return "back/artWork/artWorkNode";
+        if (responseDTO.getStatus() == 200  ){
+            return "back/artWork/artWorkNode";
+        }
+
+        return "error/error-403";
     }
 
     /**

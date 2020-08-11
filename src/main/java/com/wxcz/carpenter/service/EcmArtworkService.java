@@ -2,6 +2,7 @@ package com.wxcz.carpenter.service;
 
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
+import com.wxcz.carpenter.pojo.entity.EcmArtwork;
 import com.wxcz.carpenter.pojo.entity.EcmArtworkNodes;
 import com.wxcz.carpenter.pojo.query.EcmArtworkQuery;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
@@ -43,4 +44,8 @@ public interface EcmArtworkService {
     ResponseDTO upDataNode(EcmArtworkNodes ecmArtworkNodes);
 
     ResponseDTO checkArtWork(EcmArtworkQuery ecmArtworkQuery);
+
+    ResponseDTO upDataArtWork(EcmArtwork ecmArtwork);
+
+    ResponseDTO artWorkAudit(EcmArtwork ecmArtwork);
 }

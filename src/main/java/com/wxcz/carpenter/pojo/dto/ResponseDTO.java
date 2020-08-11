@@ -106,6 +106,19 @@ public class ResponseDTO implements Serializable {
         }
     }
 
+    /**
+     * 调用成功的时候，返回成功的状态
+     *
+     * @return
+     */
+    public static ResponseDTO get(boolean res,String msg) {
+        if (res) {
+            return ResponseDTO.ok(msg);
+        } else {
+            return ResponseDTO.fail(msg);
+        }
+    }
+
     public static ResponseDTO ok(String msg) {
         return new ResponseDTO(msg, null);
     }
@@ -129,6 +142,12 @@ public class ResponseDTO implements Serializable {
      * 调用失败的时候，返回失败的状态
      */
     public static ResponseDTO fail(String msg) {
-        return new ResponseDTO(msg, null, null, null);
+        return new ResponseDTO(msg, null, null, 500);
+    }
+    /**
+     * 调用失败的时候，返回失败的状态
+     */
+    public static ResponseDTO fail() {
+        return new  ResponseDTO(errorMsg,null, null, 500);
     }
 }

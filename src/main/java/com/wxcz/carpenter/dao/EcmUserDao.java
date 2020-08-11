@@ -30,4 +30,6 @@ public interface EcmUserDao {
     Integer selectCountByQuery(EcmUserQuery ecmUserQuery);
 
     List<EcmUserVO> selectByArtWorkS(@Param("ids") List<EcmArtworkVO> list);
+
+    List<EcmUserVO> selectByList(@Param("ids")  List<EcmArtworkVO> list);
 }

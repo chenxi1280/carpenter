@@ -15,4 +15,6 @@ import java.io.Serializable;
 public class EcmArtworkVO extends EcmArtwork {
 
     private String username;
+
+    private String fkAuditName;
 }

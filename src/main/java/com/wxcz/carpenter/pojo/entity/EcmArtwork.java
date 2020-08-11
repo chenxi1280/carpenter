@@ -29,7 +29,7 @@ public class EcmArtwork implements Serializable {
     private String artworkDescribe;
 
     /**
-     * 状态，0草稿，1待审核，2已发布审核通过，3审核不通过禁封，5被删除
+     * 状态，0草稿，1待审核，2已发布审核通过，3审核不通过禁封，4，审核中，5被删除
      */
     private Short artworkStatus;
 
@@ -46,6 +46,11 @@ public class EcmArtwork implements Serializable {
      * 四字标签
      */
     private String fourLetterTips;
+
+    /**
+     * 审核人
+     */
+    private Integer fkAuditId;
 
     private static final long serialVersionUID = 1L;
 }
