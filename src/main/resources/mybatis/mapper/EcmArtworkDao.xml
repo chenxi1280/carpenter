@@ -165,6 +165,10 @@
         and artwork_status = #{artworkStatus}
       </if>
 
+      <if test="artworkName != null and artworkName!=''">
+        and artwork_name like CONCAT('%',#{artworkName},'%')
+      </if>
+
       <if test="artworkDescribe != null and artworkDescribe!=''">
         and artwork_describe like CONCAT('%',#{artworkDescribe},'%')
       </if>
@@ -197,6 +201,10 @@
         and artwork_status = #{artworkStatus}
       </if>
 
+      <if test="artworkName != null and artworkName!=''">
+        and artwork_name like CONCAT('%',#{artworkName},'%')
+      </if>
+
       <if test="artworkDescribe != null and artworkDescribe!=''">
         and artwork_describe like CONCAT('%',#{artworkDescribe},'%')
       </if>
@@ -227,6 +235,9 @@
       <if test="artworkDescribe != null and artworkDescribe!=''">
         and artwork_describe like CONCAT('%',#{artworkDescribe},'%')
       </if>
+      <if test="artworkName != null and artworkName!=''">
+        and artwork_name like CONCAT('%',#{artworkName},'%')
+      </if>
 
       <if test="fourLetterTips != null and fourLetterTips!=''">
         and four_letter_tips like CONCAT('%',#{fourLetterTips},'%')
@@ -248,6 +259,9 @@
       <if test="fkUserid != null and fkUserid!=''">
         and fk_userId like CONCAT('%',#{fkUserid},'%')
       </if>
+      <if test="artworkName != null and artworkName!=''">
+        and artwork_name like CONCAT('%',#{artworkName},'%')
+      </if>
 
       <if test="artworkDescribe != null and artworkDescribe!=''">
         and artwork_describe like CONCAT('%',#{artworkDescribe},'%')
@@ -260,6 +274,38 @@
     </where>
     order by last_modify_date
     limit #{start},#{limit}
+  </select>
+  <select id="selectajaxListByQuery" resultType="com.wxcz.carpenter.pojo.vo.EcmArtworkVO">
+    select <include refid="Base_Column_List" />
+    from ecm_artwork
+    <where>
+      <if test="pkArtworkId != null and pkArtworkId!=''">
+        and pk_artwork_id like CONCAT('%',#{pkArtworkId},'%')
+      </if>
+
+      <if test="fkUserid != null and fkUserid!=''">
+        and fk_userId like CONCAT('%',#{fkUserid},'%')
+      </if>
+
+      <if test="artworkStatus != null ">
+        and artwork_status = #{artworkStatus}
+      </if>
+
+      <if test="artworkName != null and artworkName!=''">
+        and artwork_name like CONCAT('%',#{artworkName},'%')
+      </if>
+
+      <if test="artworkDescribe != null and artworkDescribe!=''">
+        and artwork_describe like CONCAT('%',#{artworkDescribe},'%')
+      </if>
+
+      <if test="fourLetterTips != null and fourLetterTips!=''">
+        and four_letter_tips like CONCAT('%',#{fourLetterTips},'%')
+      </if>
+    </where>
+    order by last_create_date desc
+    limit #{start},#{limit}
+
   </select>
 
 

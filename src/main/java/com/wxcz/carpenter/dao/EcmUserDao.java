@@ -32,4 +32,6 @@ public interface EcmUserDao {
     List<EcmUserVO> selectByArtWorkS(@Param("ids") List<EcmArtworkVO> list);
 
     List<EcmUserVO> selectByList(@Param("ids")  List<EcmArtworkVO> list);
+
+    List<EcmUserVO> selectUserNameByList(@Param("ids") List<EcmArtworkVO> list);
 }

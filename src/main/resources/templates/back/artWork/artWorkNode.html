@@ -200,6 +200,7 @@
             dataType: 'json',// 服务器响应数据：json,text,html,xml
             processData: true,//布尔值,一般都不用设置，规定通过请求发送的数据是否转换为查询字符串。默认是 true。如果此时上传的时候，有图片，这里必须设置false,
             success: function (res) {// 请求成功，回调函数,data，指的就是服务器返回的数据
+
                 layer.msg(res.msg);
             },
         });
@@ -221,6 +222,7 @@
             dataType: 'json',// 服务器响应数据：json,text,html,xml
             processData: true,//布尔值,一般都不用设置，规定通过请求发送的数据是否转换为查询字符串。默认是 true。如果此时上传的时候，有图片，这里必须设置false,
             success: function (res) {// 请求成功，回调函数,data，指的就是服务器返回的数据
+
                 layer.msg(res.msg);
             },
         });

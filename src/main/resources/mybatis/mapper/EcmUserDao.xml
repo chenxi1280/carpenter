@@ -267,6 +267,13 @@
         <foreach collection="ids" separator="," open="(" item="id" close=")">#{id.fkAuditId}</foreach>
 
     </select>
+    <select id="selectUserNameByList" resultType="com.wxcz.carpenter.pojo.vo.EcmUserVO">
+        select <include refid="Base_Column_List" />
+        from ecm_user
+        where pk_user_id in
+        <foreach collection="ids" separator="," open="(" item="id" close=")">#{id.fkUserid}</foreach>
+
+    </select>
 
 
 </mapper>

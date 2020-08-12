@@ -44,7 +44,7 @@ public class EcmUserController extends BaseController {
      */
     @RequestMapping("/userPage")
     public String userPage() {
-        return "/back/user/user-list";
+        return "back/user/user-list";
     }
 
     /**
@@ -56,7 +56,7 @@ public class EcmUserController extends BaseController {
      */
     @RequestMapping("/setPassWordPage")
     public String setPassWordPage() {
-        return "/back/user/password";
+        return "back/user/password";
     }
 
 

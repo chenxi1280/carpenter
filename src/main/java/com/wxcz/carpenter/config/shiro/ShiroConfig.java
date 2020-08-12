@@ -190,7 +190,7 @@ public class ShiroConfig {
     //    自定义注销登录之后做的事情
     public LogoutFilter getLogoutFilter() { // 在ShiroFilterFactoryBean中使用
         LogoutFilter logoutFilter = new LogoutFilter();// 退出登录过滤器做了点手脚
-        logoutFilter.setRedirectUrl("/logout");    //  自定义退出登录之后，跳转访问的方法路径
+        logoutFilter.setRedirectUrl("/back/logoutPage");    //  自定义退出登录之后，跳转访问的方法路径
         return logoutFilter;
     }
 
