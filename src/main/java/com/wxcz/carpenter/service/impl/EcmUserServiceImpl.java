@@ -1,5 +1,6 @@
 package com.wxcz.carpenter.service.impl;
 
+import com.hazelcast.util.StringUtil;
 import com.wxcz.carpenter.dao.EcmUserAcessDao;
 import com.wxcz.carpenter.dao.EcmUserDao;
 import com.wxcz.carpenter.dao.EcmUserRolesDao;
@@ -109,13 +110,19 @@ public class EcmUserServiceImpl implements EcmUserService {
 
     @Override
     public ResponseDTO setPassWord(EcmUserVO ecmUserVO) {
+
         EcmUser ecmUser = ecmUserDao.selectByPrimaryKey(ecmUserVO.getPkUserId());
-        if (MD5Utils.encrypt(ecmUserVO.getOldPassWord()).equals(ecmUser.getPassword())){
-            ecmUserVO.setPassword(MD5Utils.encrypt(ecmUserVO.getPassword()));
-            ecmUserVO.setLastLoginTime(new Date());
-            return ResponseDTO.get( 1 == ecmUserDao.updateByPrimaryKeySelective(ecmUserVO));
+
+        if (!StringUtils.isEmpty(ecmUserVO.getPassword())  && !StringUtils.isEmpty(ecmUserVO.getOldPassWord()) ) {
+            if (MD5Utils.encrypt(ecmUserVO.getOldPassWord()).equals(ecmUser.getPassword())) {
+                ecmUserVO.setPassword(MD5Utils.encrypt(ecmUserVO.getPassword()));
+                ecmUserVO.setLastLoginTime(new Date());
+                return ResponseDTO.get(1 == ecmUserDao.updateByPrimaryKeySelective(ecmUserVO));
+            }
+            return ResponseDTO.fail("原密码错误");
         }
-        return ResponseDTO.fail("原密码错误");
+        return ResponseDTO.fail("请输入密码");
+
     }
 
 
