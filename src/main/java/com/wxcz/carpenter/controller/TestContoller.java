@@ -16,9 +16,6 @@ public class TestContoller {
      * @return: java.lang.String
      * @author: cxd
      * @Date: 2020/8/14
-     * 描述 :
-
-     *       保存失败: status 500  msg "error“
      */
     @RequestMapping("/test")
     String test(){
