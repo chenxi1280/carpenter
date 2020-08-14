@@ -43,12 +43,9 @@
   </div>
 
 
-  <script>
-  layui.config({
-    base: '/layuiadmin/' //静态资源所在路径
-  }).extend({
-    index: 'lib/index' //主入口模块
-  }).use(['index', 'user','layer'], function(){
+  <script type="text/javascript">
+
+  layui.use([ 'layer','form'], function(){
     var $ = layui.$
     ,form = layui.form,layer = layui.layer
 
@@ -57,12 +54,12 @@
     //提交
     form.on('submit(LAY-user-login-submit)', function(data){
 
-      $.post('/ajaxlogin',data.field,function (res) {
+      $.post('/ims/ajaxlogin',data.field,function (res) {
 
 
 
         if (res.res){
-          window.location = '/back/home';
+          window.location = '/ims/back/home';
         }
         layer.msg(res.msg);
 

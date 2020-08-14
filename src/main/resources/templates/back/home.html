@@ -76,7 +76,7 @@
                         <dd><a lay-href="set/user/info.html">基本资料</a></dd>
                         <dd><a id="setpassword">修改密码</a></dd>
                         <hr>
-                        <dd layadmin-event="logout" style="text-align: center;"><a th:href="@{/logout}">退出</a></dd>
+                        <dd layadmin-event="logout" style="text-align: center;"><a th:href="@{/ims/back/logout}">退出</a></dd>
                     </dl>
                 </li>
 
@@ -92,7 +92,7 @@
         <!-- 侧边菜单 -->
         <div class="layui-side layui-side-menu">
             <div class="layui-side-scroll">
-                <div class="layui-logo" lay-href="/back/console">
+                <div class="layui-logo" lay-href="/ims/back/console">
                     <span>万象成帧</span>
                 </div>
 
@@ -104,7 +104,7 @@
                         </a>
                         <dl class="layui-nav-child">
                             <dd data-name="console" class="layui-this">
-                                <a lay-href="console">控制台</a>
+                                <a lay-href="/ims/back/console">控制台</a>
                             </dd>
                             <dd data-name="console">
                                 <a lay-href="home/homepage1.html">主页一</a>
@@ -122,7 +122,7 @@
                         <dl class="layui-nav-child">
 
                             <dd data-name="anim">
-                                <a lay-href="/back/user/userPage">用户列表</a>
+                                <a lay-href="/ims/back/user/userPage">用户列表</a>
                             </dd>
                         </dl>
 
@@ -135,11 +135,11 @@
                             <cite>作品管理</cite>
                         </a>
                         <dl class="layui-nav-child">
-                            <dd><a lay-href="/back/artWork/artWorkPage">作品列表</a></dd>
+                            <dd><a lay-href="/ims/back/artWork/artWorkPage">作品列表</a></dd>
                         </dl>
 
                         <dl class="layui-nav-child">
-                            <dd><a lay-href="/back/artWork/checkArtWorkPage">审核作品</a></dd>
+                            <dd><a lay-href="/ims/back/artWork/checkArtWorkPage">审核作品</a></dd>
                         </dl>
                     </li>
 
@@ -301,7 +301,7 @@
                 type: 2,
                 area: ['40%', '50%'],
                 title: '修改密码',
-                content: "/back/user/setPassWordPage", //这里content是一个普通的String
+                content: "/ims/back/user/setPassWordPage", //这里content是一个普通的String
             })
 
 
