@@ -3,14 +3,11 @@ package com.wxcz.carpenter.controller.back;
 import com.wxcz.carpenter.controller.BaseController;
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
-import com.wxcz.carpenter.pojo.entity.EcmUser;
 import com.wxcz.carpenter.pojo.query.EcmUserQuery;
 import com.wxcz.carpenter.pojo.vo.EcmUserVO;
 import com.wxcz.carpenter.service.EcmUserService;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -18,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import java.security.Security;
+
 
 /**
  * @author by cxd
@@ -32,8 +29,6 @@ public class EcmUserController extends BaseController {
 
     @Resource
     EcmUserService ecmUserService;
-
-
 
     /**
      * @param: []
@@ -59,23 +54,20 @@ public class EcmUserController extends BaseController {
         return "back/user/password";
     }
 
-
     /**
      * @param: [ecmUserQuery]  查询条件类
      * @return: com.wxcz.carpenter.pojo.dto.PageDTO
      * @author: cxd
      * @Date: 2020/8/7
      * 描述 : 按条件查询用户
-     *       保存成功: status 0  msg "success” 数据 data
-     *       保存失败: status 500  msg "error“
+     * 保存成功: status 0  msg "success” 数据 data
+     * 保存失败: status 500  msg "error“
      */
     @RequestMapping("ajaxList")
     @ResponseBody
     public PageDTO ajaxList(EcmUserQuery ecmUserQuery) {
-
         return ecmUserService.ajaxList(ecmUserQuery);
     }
-
 
     /**
      * @param: [ecmUserVO]
@@ -83,8 +75,8 @@ public class EcmUserController extends BaseController {
      * @author: cxd
      * @Date: 2020/8/7
      * 描述 : 对用户状态进行修改
-     *       保存成功: status 200  msg "success”
-     *       保存失败: status 500  msg "error“
+     * 保存成功: status 200  msg "success”
+     * 保存失败: status 500  msg "error“
      */
     @RequiresRoles("admin")
     @RequestMapping("chengUser")
@@ -100,17 +92,17 @@ public class EcmUserController extends BaseController {
         return ecmUserService.chengUser(ecmUserVO);
     }
 
-
     /**
      * @param: [ecmUserVO]
      * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO
      * @author: cxd
      * @Date: 2020/8/7
      * 描述 :
-     *        用户自己在个人中心设置密码接口
-     *       保存成功: status 200  msg "success”
-     *       保存失败: status 500  msg "error“
+     * 用户自己在个人中心设置密码接口
+     * 保存成功: status 200  msg "success”
+     * 保存失败: status 500  msg "error“
      */
+
     @RequestMapping("setPassWord")
     @ResponseBody
     public ResponseDTO setPassWord(EcmUserVO ecmUserVO) {
@@ -118,6 +110,5 @@ public class EcmUserController extends BaseController {
         ecmUserVO.setPkUserId((Integer) getRequstSession().getAttribute("userId"));
         return ecmUserService.setPassWord(ecmUserVO);
     }
-
 
 }

@@ -22,7 +22,7 @@ public class HomeController {
      * 描述 : 跳转页面接口
      */
     @RequestMapping("/home")
-    public String home(){
+    public String home() {
         return "back/home";
     }
 
@@ -34,7 +34,7 @@ public class HomeController {
      * 描述 : 跳转页面接口
      */
     @RequestMapping("/console")
-    public String console(){
+    public String console() {
         return "back/console";
     }
 
@@ -46,7 +46,7 @@ public class HomeController {
      * 描述 : 退出页面
      */
     @RequestMapping("/logoutPage")
-    public String logout(){
+    public String logout() {
         return "login";
     }
 

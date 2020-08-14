@@ -27,7 +27,7 @@ public class LoginController {
      * 描述 : 跳转页面接口
      */
     @RequestMapping("/login")
-    public String login(){
+    public String login() {
         return "login";
     }
 
@@ -37,20 +37,20 @@ public class LoginController {
      * @author: cxd
      * @Date: 2020/8/7
      * 描述 ： 登录接口
-     *       保存成功: status 200  msg "success”
-     *       保存失败: status 500  msg "登录失败“
+     * 保存成功: status 200  msg "success”
+     * 保存失败: status 500  msg "登录失败“
      */
     @RequestMapping("/ajaxlogin")
     @ResponseBody
-    public ResponseDTO ajaxlogin(EcmUser user){
+    public ResponseDTO ajaxlogin(EcmUser user) {
         //存入token对象
-        UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername() , user.getPassword());
+        UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), user.getPassword());
         Subject subject = SecurityUtils.getSubject();
         try {
             //调用shiro 的认证方法 UserRealm 类中认证方法
             // 捕获异常 返回登陆失败消息
             subject.login(token);
-        }catch (AuthenticationException e){
+        } catch (AuthenticationException e) {
             return ResponseDTO.fail(e.getMessage());
         }
         return ResponseDTO.ok("登录成功");

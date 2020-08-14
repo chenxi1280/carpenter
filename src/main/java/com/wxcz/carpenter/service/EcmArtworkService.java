@@ -19,9 +19,9 @@ public interface EcmArtworkService {
      * @return: com.wxcz.carpenter.pojo.dto.PageDTO
      * @author: cxd
      * @Date: 2020/8/7
-     *        按条件查询 作品
-     *       保存成功: status 0  msg "success” data数据
-     *       保存失败: status 500  msg "error“
+     * 按条件查询 作品
+     * 保存成功: status 0  msg "success” data数据
+     * 保存失败: status 500  msg "error“
      */
     PageDTO ajaxList(EcmArtworkQuery ecmArtworkQuery);
 
@@ -31,9 +31,9 @@ public interface EcmArtworkService {
      * @author: cxd
      * @Date: 2020/8/7
      * 描述 :
-     *        验证权限并 对作品 进行修改
-     *       保存成功: status 200  msg "success”
-     *       保存失败: status 500  msg "error“
+     * 验证权限并 对作品 进行修改
+     * 保存成功: status 200  msg "success”
+     * 保存失败: status 500  msg "error“
      */
     ResponseDTO chengArtWork(EcmArtworkVO ecmArtworkVO);
 
@@ -43,50 +43,54 @@ public interface EcmArtworkService {
      * @author: cxd
      * @Date: 2020/8/12
      * 描述 :  查询 待审核视频的集合
-     *       保存成功: status 0    msg "success”  data 数据
-     *       保存失败: status 500  msg "error“    data 无
+     * 保存成功: status 0    msg "success”  data 数据
+     * 保存失败: status 500  msg "error“    data 无
      */
     PageDTO ajaxCheckList(EcmArtworkQuery ecmArtworkQuery);
+
     /**
      * @param: [ecmArtworkVO] 作品id
      * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO
      * @author: cxd
      * @Date: 2020/8/12
      * 描述 : 根据作品id 查询 所以的 作品节点
-     *       保存成功: status 200  msg "success” data 作品节点集合
-     *       保存失败: status 500  msg "error“  data 无
+     * 保存成功: status 200  msg "success” data 作品节点集合
+     * 保存失败: status 500  msg "error“  data 无
      */
     ResponseDTO getArtWorkNoteS(EcmArtworkQuery ecmArtworkVO);
+
     /**
      * @param: [ecmArtworkNodes] 更新后的及节点，（必须包含节点id）
      * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO
      * @author: cxd
      * @Date: 2020/8/12
      * 描述 : 通过传入的 节点进行更新操作
-     *       保存成功: status 200  msg "success”
-     *       保存失败: status 500  msg "error“
+     * 保存成功: status 200  msg "success”
+     * 保存失败: status 500  msg "error“
      */
     ResponseDTO upDataNode(EcmArtworkNodes ecmArtworkNodes);
 
     ResponseDTO checkArtWork(EcmArtworkQuery ecmArtworkQuery);
+
     /**
      * @param: [ecmArtwork] 更新后的及作品，（必须包含作品id）
      * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO
      * @author: cxd
      * @Date: 2020/8/12
      * 描述 : 通过传入的 作品进行更新操作
-     *       保存成功: status 200  msg "success”
-     *       保存失败: status 500  msg "error“
+     * 保存成功: status 200  msg "success”
+     * 保存失败: status 500  msg "error“
      */
     ResponseDTO upDataArtWork(EcmArtwork ecmArtwork);
+
     /**
      * @param: [ecmArtwork] 查询的 作品id 和 当前 操作的用户id
      * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO
      * @author: cxd
      * @Date: 2020/8/12
      * 描述 :   判断 作品审核人 和 当前操作的用户 是否匹配
-     *       是: status 200  msg "success”
-     *       不是: status 500  msg "error“
+     * 是: status 200  msg "success”
+     * 不是: status 500  msg "error“
      */
     ResponseDTO artWorkAudit(EcmArtwork ecmArtwork);
 }

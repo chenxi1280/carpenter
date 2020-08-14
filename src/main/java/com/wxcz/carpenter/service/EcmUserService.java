@@ -23,8 +23,8 @@ public interface EcmUserService {
      * @author: cxd
      * @Date: 2020/8/7
      * 描述 : 查询数据库是否有对应的 账号 加密密码
-     *      有 返回对象
-     *      无 返回 null
+     * 有 返回对象
+     * 无 返回 null
      */
     EcmUserVO login(EcmUserQuery query);
 
@@ -61,8 +61,8 @@ public interface EcmUserService {
      * @author: cxd
      * @Date: 2020/8/7
      * 描述 : 按条件查询用户
-     *       保存成功: status 0  msg "success” 数据 data
-     *       保存失败: status 500  msg "error“
+     * 保存成功: status 0  msg "success” 数据 data
+     * 保存失败: status 500  msg "error“
      */
     PageDTO ajaxList(EcmUserQuery ecmUserQuery);
 
@@ -81,8 +81,8 @@ public interface EcmUserService {
      * @author: cxd
      * @Date: 2020/8/7
      * 描述 : 对用户状态进行修改
-     *       保存成功: status 200  msg "success”
-     *       保存失败: status 500  msg "error“
+     * 保存成功: status 200  msg "success”
+     * 保存失败: status 500  msg "error“
      */
     ResponseDTO chengUser(EcmUserVO ecmUserVO);
 
@@ -92,9 +92,9 @@ public interface EcmUserService {
      * @author: cxd
      * @Date: 2020/8/7
      * 描述 :
-     *        用户自己在个人中心设置密码接口
-     *       保存成功: status 200  msg "success”
-     *       保存失败: status 500  msg "error“
+     * 用户自己在个人中心设置密码接口
+     * 保存成功: status 200  msg "success”
+     * 保存失败: status 500  msg "error“
      */
     ResponseDTO setPassWord(EcmUserVO ecmUserVO);
 }
