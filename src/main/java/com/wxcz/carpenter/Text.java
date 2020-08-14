@@ -7,6 +7,15 @@ package com.wxcz.carpenter;
  * @Date 2020/8/14 13:14
  */
 public class Text {
+    /**
+     * @param: [args]
+     * @return: void
+     * @author: cxd
+     * @Date: 2020/8/14
+     * 描述 :
+     * 测试自动化部署
+     *
+     */
 
     public static void main(String[] args) {
         int[] a = {1,1,2};
