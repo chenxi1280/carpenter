@@ -7,12 +7,16 @@ import com.wxcz.carpenter.dao.EcmUserRolesDao;
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.entity.EcmUser;
+import com.wxcz.carpenter.pojo.entity.EcmUserRoles;
 import com.wxcz.carpenter.pojo.query.EcmUserQuery;
 import com.wxcz.carpenter.pojo.vo.EcmUserAcessVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserRolesVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserVO;
 import com.wxcz.carpenter.service.EcmUserService;
 import com.wxcz.carpenter.util.MD5Utils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StreamUtils;
@@ -89,8 +93,29 @@ public class EcmUserServiceImpl implements EcmUserService {
     @Override
     public PageDTO ajaxList(EcmUserQuery ecmUserQuery) {
 
+        if (StringUtils.isEmpty(ecmUserQuery.getPhone())) {
+            ecmUserQuery.setPhone("1");
+        }
+
         List<EcmUserVO> list = ecmUserDao.selectListByQuery(ecmUserQuery);
+
         Integer count = ecmUserDao.selectCountByQuery(ecmUserQuery);
+        list.forEach( ecmUserVO ->  {
+            String[] split = ecmUserVO.getRoles().split(",");
+            for (String s : split) {
+                if (s.equals("2")){
+                    ecmUserVO.setRoleName("超级管理员");
+                    break;
+                }
+                if (s.equals("3")){
+                    ecmUserVO.setRoleName("普通管理员");
+                    break;
+                }
+                if (s.equals("1")){
+                    ecmUserVO.setRoleName("普通用户");
+                }
+            }
+        });
 
         return PageDTO.setPageData(count,list);
     }
@@ -104,6 +129,25 @@ public class EcmUserServiceImpl implements EcmUserService {
 
     @Override
     public ResponseDTO chengUser(EcmUserVO ecmUserVO) {
+        EcmUser ecmUser = ecmUserDao.selectByPrimaryKey(ecmUserVO.getPkUserId());
+
+        List<EcmUserRolesVO> userRoleList = ecmUserRolesDao.selectByRoles(ecmUser.getRoles());
+        userRoleList.sort( Comparator.comparing(EcmUserRoles::getGrade).reversed() );
+
+        //需要对当前用户的 最高权限判断获取
+        Subject subject = SecurityUtils.getSubject();
+        PrincipalCollection principals = subject.getPrincipals();
+
+        if (!StringUtils.isEmpty(ecmUserVO.getRoles())) {
+            ecmUserVO.setRoles(null);
+            if (subject.hasRole("superadmin")) {
+                return ResponseDTO.get( 1 == ecmUserDao.updateByPrimaryKeySelective(ecmUserVO));
+            }
+            return ResponseDTO.fail("无权修改");
+        }
+
+
+
         ecmUserVO.setLastLoginTime(new Date());
         return ResponseDTO.get( 1 == ecmUserDao.updateByPrimaryKeySelective(ecmUserVO));
     }

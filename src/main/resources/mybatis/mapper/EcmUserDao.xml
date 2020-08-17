@@ -169,7 +169,7 @@
             <if test="lastCheckMail != null">
                 last_check_mail = #{lastCheckMail,jdbcType=TIMESTAMP},
             </if>
-            <if test="roles != null">
+            <if test="roles != null  and  roles !='' " >
                 roles = #{roles,jdbcType=VARCHAR},
             </if>
         </set>
@@ -216,6 +216,7 @@
         <include refid="Base_Column_List"/>
         from ecm_user
         <where>
+
             <if test="userId != null and userId!=''">
                 and pk_user_id like CONCAT('%',#{userId},'%')
             </if>

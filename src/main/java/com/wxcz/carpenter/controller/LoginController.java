@@ -57,4 +57,32 @@ public class LoginController {
     }
 
 
+    /**
+     * @param: []
+     * @return: java.lang.String
+     * @author: cxd
+     * @Date: 2020/8/12
+     * 描述 : 退出
+     */
+
+    @RequestMapping("/logout")
+    String logoutApp() {
+        SecurityUtils.getSubject().logout();
+        return "/login";
+    }
+
+
+    /**
+     * @param: []
+     * @return: java.lang.String
+     * @author: cxd
+     * @Date: 2020/8/12
+     * 描述 : 退出页面
+     */
+    @RequestMapping("logoutPage")
+    public String logout() {
+        SecurityUtils.getSubject().logout();
+        return "login";
+    }
+
 }

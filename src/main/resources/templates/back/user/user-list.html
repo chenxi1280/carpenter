@@ -51,8 +51,9 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">是否封禁</label>
                 <div class="layui-input-block">
-                    <input type="radio" name="isValid" value="S" id="isValidy" title="封禁" checked>
-                    <input type="radio" name="isValid" value="Y" id="isValidn" title="取消封禁">
+                    <input type="radio" name="isValid" value="Y" id="isValidn" title="取消封禁" checked>
+                    <input type="radio" name="isValid" value="S" id="isValidy" title="封禁" >
+
                 </div>
             </div>
 
@@ -64,8 +65,8 @@
 
                         <option value="">请选择</option>
                         <option value="1">普通用户</option>
-                        <option value="6">普通管理员</option>
-                        <option value="4">超级管理员</option>
+                        <option value="3">普通管理员</option>
+                        <option value="2">超级管理员</option>
                     </select>
                 </div>
             </div>
@@ -103,10 +104,7 @@
                 {width: 40, type: "checkbox"}
                 , {field: 'pkUserId', title: 'ID', width: 120}
                 , {field: 'username', title: '用户昵称', width: 120}
-                , {field: 'email', title: '邮箱', width: 140}
                 , {field: 'mobile', title: '手机号', width: 120}
-                , {field: 'count', title: '登陆次数', width: 120}
-                , {field: 'lastLoginTime', title: '最近登陆时间', width: 150}
                 , {
                     field: 'isValid', title: '状态', width: 80, templet: function (d) {
 
@@ -121,7 +119,7 @@
 
                     }
                 }
-                , {field: 'note', title: '备注', width: 180}
+                , {field: 'roleName', title: '权限', width: 180}
                 , {
                     field: '', title: '操作', width: 120, templet: function (d) {
                         return '<div >' +
@@ -180,38 +178,52 @@
 
 
 
-                        $.ajax({
-                            type: 'post',// ajax请求的方式，post或get
-                            url: '/ims/back/user/chengUser',
-                            // contentType: "application/json",// 默认就是表单数据(不写)，如果此时要传递的是json字符串，
-                            // 那么此时就用application/json,如果此时要传递图片"multipart/form-data，还有数组，集合，还有对象，那么contentType必须指定为false
-                            data: data.field,// 要上传的参数,把数组对象转换为JSON字符串
-                            dataType: 'json',// 服务器响应数据：json,text,html,xml
-                            processData: true,//布尔值,一般都不用设置，规定通过请求发送的数据是否转换为查询字符串。默认是 true。如果此时上传的时候，有图片，这里必须设置false,
-                            success: function (res) {// 请求成功，回调函数,data，指的就是服务器返回的数据
+                        layer.prompt({
+                            formType: 2,
+                            value: '',
+                            title: '请输入确定来确定操作',
+                            area: ['30px', '30px'] //自定义文本域宽高
+                        }, function(value, index, elem){
+                            if (value == '确定'){
+                                $.ajax({
+                                    type: 'post',// ajax请求的方式，post或get
+                                    url: '/ims/back/user/chengUser',
+                                    // contentType: "application/json",// 默认就是表单数据(不写)，如果此时要传递的是json字符串，
+                                    // 那么此时就用application/json,如果此时要传递图片"multipart/form-data，还有数组，集合，还有对象，那么contentType必须指定为false
+                                    data: data.field,// 要上传的参数,把数组对象转换为JSON字符串
+                                    dataType: 'json',// 服务器响应数据：json,text,html,xml
+                                    processData: true,//布尔值,一般都不用设置，规定通过请求发送的数据是否转换为查询字符串。默认是 true。如果此时上传的时候，有图片，这里必须设置false,
+                                    success: function (res) {// 请求成功，回调函数,data，指的就是服务器返回的数据
 
-                                layer.msg(res.msg)
+                                        layer.msg(res.msg)
 
-                                let page = $('.layui-laypage-skip .layui-input').val();
-                                let limit = $('.layui-laypage-limits').find('option:selected').val();
+                                        let page = $('.layui-laypage-skip .layui-input').val();
+                                        let limit = $('.layui-laypage-limits').find('option:selected').val();
 
 
 
-                                layer.close(editRoleOpen); //再执行关闭
+                                        layer.close(editRoleOpen); //再执行关闭
 
-                                userTable.reload({
-                                    page: page,
-                                    size:limit,
+                                        userTable.reload({
+                                            page: page,
+                                            size:limit,
+                                        });
+
+
+
+
+                                        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                                    },
+
+
                                 });
-
-
-
-
-                                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
-                            },
-
-
+                                layer.close(index);
+                            }else {
+                                layer.msg('输入有误');
+                            }
                         });
+
+
 
                     })
 

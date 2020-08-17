@@ -1,6 +1,6 @@
 package com.wxcz.carpenter.controller.back;
 
-import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -21,6 +21,7 @@ public class HomeController {
      * @Date: 2020/8/7
      * 描述 : 跳转页面接口
      */
+    @RequiresRoles("admin")
     @RequestMapping("/home")
     public String home() {
         return "back/home";
@@ -37,31 +38,4 @@ public class HomeController {
     public String console() {
         return "back/console";
     }
-
-    /**
-     * @param: []
-     * @return: java.lang.String
-     * @author: cxd
-     * @Date: 2020/8/12
-     * 描述 : 退出页面
-     */
-    @RequestMapping("/logoutPage")
-    public String logout() {
-        return "login";
-    }
-
-    /**
-     * @param: []
-     * @return: java.lang.String
-     * @author: cxd
-     * @Date: 2020/8/12
-     * 描述 : 退出
-     */
-    @RequestMapping("/logout")
-    String logoutApp() {
-        SecurityUtils.getSubject().logout();
-        return "loginPage";
-    }
-
-
 }

@@ -5,6 +5,7 @@
     <title>万象成帧 管理后台</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link rel="stylesheet" href="../layuiadmin/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="../layuiadmin/style/admin.css" media="all">
@@ -73,10 +74,9 @@
                         <cite th:text="${session.nickName}"></cite>
                     </a>
                     <dl class="layui-nav-child">
-                        <dd><a lay-href="set/user/info.html">基本资料</a></dd>
                         <dd><a id="setpassword">修改密码</a></dd>
                         <hr>
-                        <dd layadmin-event="logout" style="text-align: center;"><a th:href="@{/ims/back/logout}">退出</a></dd>
+                        <dd  style="text-align: center;"><a href="/ims/logoutPage">退出</a></dd>
                     </dl>
                 </li>
 

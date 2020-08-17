@@ -82,13 +82,7 @@ public class EcmUserController extends BaseController {
     @RequestMapping("chengUser")
     @ResponseBody
     public ResponseDTO chengUser(EcmUserVO ecmUserVO) {
-        Subject subject = SecurityUtils.getSubject();
-        if (!StringUtils.isEmpty(ecmUserVO.getRoles())) {
-            if (subject.hasRole("superadmin")) {
-                return ecmUserService.chengUser(ecmUserVO);
-            }
-            return ResponseDTO.fail("无权修改");
-        }
+
         return ecmUserService.chengUser(ecmUserVO);
     }
 

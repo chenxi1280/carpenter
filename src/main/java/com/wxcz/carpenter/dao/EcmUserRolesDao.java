@@ -1,8 +1,10 @@
 package com.wxcz.carpenter.dao;
 
+import com.wxcz.carpenter.pojo.entity.EcmUser;
 import com.wxcz.carpenter.pojo.entity.EcmUserRoles;
 import com.wxcz.carpenter.pojo.vo.EcmUserRolesVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -32,4 +34,7 @@ public interface EcmUserRolesDao {
      *          (${roles}) =》  （1,2,3）
      */
     List<EcmUserRolesVO> selectByRoles(String roles);
+
+
+
 }

@@ -3,6 +3,8 @@ package com.wxcz.carpenter.pojo.vo;
 import com.wxcz.carpenter.pojo.entity.EcmUser;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author by cxd
  * @Classname EcmUserVO
@@ -12,6 +14,7 @@ import lombok.Data;
 @Data
 public class EcmUserVO extends EcmUser {
     private String oldPassWord;
-
+    private List<EcmUserRolesVO> ecmUserRolesVOS;
+    private String roleName;
 
 }

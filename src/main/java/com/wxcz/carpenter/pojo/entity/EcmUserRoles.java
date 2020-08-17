@@ -35,5 +35,10 @@ public class EcmUserRoles implements Serializable {
      */
     private String acess;
 
+    /**
+     * 角色等级
+     */
+    private Integer grade;
+
     private static final long serialVersionUID = 1L;
 }
