@@ -223,7 +223,7 @@
             <if test="userName != null and userName!=''">
                 and username like CONCAT('%',#{userName},'%')
             </if>
-            <if test="phone != null and phone!=''">
+            <if test="phone != null ">
                 and mobile like CONCAT('%',#{phone},'%')
             </if>
 
@@ -244,7 +244,7 @@
             <if test="userName != null and userName!=''">
                 and username like CONCAT('%',#{userName},'%')
             </if>
-            <if test="phone != null and phone!=''">
+            <if test="phone != null ">
                 and mobile like CONCAT('%',#{phone},'%')
             </if>
         </where>
@@ -264,6 +264,13 @@
         from ecm_user
         where pk_user_id in
         <foreach collection="ids" separator="," open="(" item="id" close=")">#{id.fkUserid}</foreach>
+
+    </select>
+    <select id="selectByReportList" resultType="com.wxcz.carpenter.pojo.vo.EcmUserVO">
+        select <include refid="Base_Column_List" />
+        from ecm_user
+        where pk_user_id in
+        <foreach collection="ids" separator="," open="(" item="id" close=")">#{id.fkChUserid}</foreach>
 
     </select>
 

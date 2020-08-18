@@ -147,18 +147,25 @@ public class EcmArtworkServiceImpl implements EcmArtworkService {
         ecmArtwork.setLastModifyDate(new Date());
         // 循环遍历 比对 作品的 状态
         for (EcmArtworkNodesVo ecmArtworkNodesVo : ecmArtworkNodesVos) {
-            if (ecmArtworkNodesVo.getVideoCode() == null){
+            if (ecmArtworkNodesVo.getFkEndingId() == null){
                 return ResponseDTO.fail("作品有节点未审核");
-            }
-            if (ecmArtworkNodesVo.getVideoCode().equals("1")){
+            }else if (ecmArtworkNodesVo.getFkEndingId()== 2){
                 return ResponseDTO.fail("作品有节点未审核");
-            }
-            if (ecmArtworkNodesVo.getVideoCode().equals("3")){
-                ecmArtwork.setArtworkStatus((short) 3);
-                // 修改作品状态
-                return ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeySelective(ecmArtwork),"作品未通过审核") ;
+            }else if (ecmArtworkNodesVo.getFkEndingId()== 3){
+                return ResponseDTO.fail("作品有节点未审核");
+            }else if (ecmArtworkNodesVo.getFkEndingId()== 6){
+                return ResponseDTO.fail("作品有举报节点未处理");
             }
         }
+        for (EcmArtworkNodesVo ecmArtworkNodesVo : ecmArtworkNodesVos) {
+            if (ecmArtworkNodesVo.getFkEndingId() == 5){
+                ecmArtwork.setArtworkStatus((short) 0);
+                return ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeySelective(ecmArtwork),"作不通过审核,以还原成草稿");
+            }
+        }
+
+
+
         ecmArtwork.setArtworkStatus((short) 2);
         // 修改作品状态
         return ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeySelective(ecmArtwork),"作通过审核");

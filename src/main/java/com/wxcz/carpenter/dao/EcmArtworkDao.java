@@ -3,6 +3,7 @@ package com.wxcz.carpenter.dao;
 import com.wxcz.carpenter.pojo.entity.EcmArtwork;
 import com.wxcz.carpenter.pojo.query.EcmArtworkQuery;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
+import com.wxcz.carpenter.pojo.vo.EcmReportHistroyVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -73,4 +74,10 @@ public interface EcmArtworkDao {
      * 描述 : 按条件查询 作品集合  EcmArtworkVO 集合   （主要layui表格使用）
      */
     List<EcmArtworkVO> selectajaxListByQuery(EcmArtworkQuery ecmArtworkQuery);
+
+    Integer downArtWorkByUserId(Integer pkUserId);
+
+    Integer selectByUserId(Integer pkUserId);
+
+    List<EcmArtworkVO> selectByReportList(@Param(("ids")) List<EcmReportHistroyVO> list);
 }

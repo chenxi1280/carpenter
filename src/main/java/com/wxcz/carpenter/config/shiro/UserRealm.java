@@ -70,13 +70,14 @@ public class UserRealm extends AuthorizingRealm {
         session.setAttribute("userId", ecmUserVO.getPkUserId());
         session.setAttribute("nickName", ecmUserVO.getUsername());
         session.setAttribute("phone", ecmUserVO.getMobile());
-
         //更新的登录时间 和 登录次数
         userService.upDataUser(ecmUserVO);
 
         // 设置角色 权限
 
         List<EcmUserRolesVO> userRolesVOS = userService.selectUserRolesByUser(ecmUserVO);
+
+
 
         session.setAttribute("hisRoles", userRolesVOS);
 

@@ -3,6 +3,7 @@ package com.wxcz.carpenter.dao;
 import com.wxcz.carpenter.pojo.entity.EcmUser;
 import com.wxcz.carpenter.pojo.query.EcmUserQuery;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
+import com.wxcz.carpenter.pojo.vo.EcmReportHistroyVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -78,5 +79,7 @@ public interface EcmUserDao {
      * @Date: 2020/8/14
      * 描述 : 根据 EcmArtworkVO集合 查询 对应的 审核人集合
      */
-    List<EcmUserVO> selectUserNameByList(@Param("ids") List<EcmArtworkVO> list);
+    List<EcmUserVO> selectUserNameByList(@Param("ids") List list);
+
+    List<EcmUserVO> selectByReportList(@Param("ids")List<EcmReportHistroyVO> list);
 }

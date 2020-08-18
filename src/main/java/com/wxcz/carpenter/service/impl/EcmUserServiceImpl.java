@@ -1,11 +1,13 @@
 package com.wxcz.carpenter.service.impl;
 
 import com.hazelcast.util.StringUtil;
+import com.wxcz.carpenter.dao.EcmArtworkDao;
 import com.wxcz.carpenter.dao.EcmUserAcessDao;
 import com.wxcz.carpenter.dao.EcmUserDao;
 import com.wxcz.carpenter.dao.EcmUserRolesDao;
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
+import com.wxcz.carpenter.pojo.entity.EcmArtwork;
 import com.wxcz.carpenter.pojo.entity.EcmUser;
 import com.wxcz.carpenter.pojo.entity.EcmUserRoles;
 import com.wxcz.carpenter.pojo.query.EcmUserQuery;
@@ -18,6 +20,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
@@ -45,6 +48,9 @@ public class EcmUserServiceImpl implements EcmUserService {
     @Resource
     EcmUserAcessDao ecmUserAcessDao;
 
+    @Resource
+    EcmArtworkDao ecmArtworkDao;
+
 
     @Override
     public EcmUserVO login(EcmUserQuery query) {
@@ -60,7 +66,11 @@ public class EcmUserServiceImpl implements EcmUserService {
     public List<EcmUserRolesVO> selectUserRolesByUser(EcmUserVO ecmUserVO) {
         //查询角色集合
         List<EcmUserRolesVO>  rolesVOList = ecmUserRolesDao.selectByRoles(ecmUserVO.getRoles());
+
+
         if (!CollectionUtils.isEmpty(rolesVOList)) {
+            //角色排序
+            rolesVOList.sort( Comparator.comparing(EcmUserRolesVO::getGrade).reversed() );
             //查询权限集合
             List<EcmUserAcessVO> acessVOList = this.selectUSerAcessByRoles(rolesVOList);
             //把权限集合设置到角色集合中
@@ -94,7 +104,7 @@ public class EcmUserServiceImpl implements EcmUserService {
     public PageDTO ajaxList(EcmUserQuery ecmUserQuery) {
 
         if (StringUtils.isEmpty(ecmUserQuery.getPhone())) {
-            ecmUserQuery.setPhone("1");
+            ecmUserQuery.setPhone("");
         }
 
         List<EcmUserVO> list = ecmUserDao.selectListByQuery(ecmUserQuery);
@@ -122,34 +132,32 @@ public class EcmUserServiceImpl implements EcmUserService {
 
     @Override
     public ResponseDTO upDataUser(EcmUserVO ecmUserVO) {
-        ecmUserVO.setCount(ecmUserVO.getCount()+1);
+//        ecmUserVO.setCount(ecmUserVO.getCount()+1);
         ecmUserVO.setLastLoginTime(new Date());
         return ResponseDTO.get( 1 == ecmUserDao.updateByPrimaryKeySelective(ecmUserVO));
     }
 
     @Override
+//    @Transactional(rollbackFor)
     public ResponseDTO chengUser(EcmUserVO ecmUserVO) {
         EcmUser ecmUser = ecmUserDao.selectByPrimaryKey(ecmUserVO.getPkUserId());
-
+        //角色排序
         List<EcmUserRolesVO> userRoleList = ecmUserRolesDao.selectByRoles(ecmUser.getRoles());
         userRoleList.sort( Comparator.comparing(EcmUserRoles::getGrade).reversed() );
-
+        EcmUserRolesVO ecmUserRolesVO = userRoleList.get(0);
         //需要对当前用户的 最高权限判断获取
         Subject subject = SecurityUtils.getSubject();
-        PrincipalCollection principals = subject.getPrincipals();
-
-        if (!StringUtils.isEmpty(ecmUserVO.getRoles())) {
-            ecmUserVO.setRoles(null);
-            if (subject.hasRole("superadmin")) {
-                return ResponseDTO.get( 1 == ecmUserDao.updateByPrimaryKeySelective(ecmUserVO));
+        List<EcmUserRolesVO>  hisroles = (List<EcmUserRolesVO>) subject.getSession().getAttribute("hisRoles");
+        EcmUserRolesVO ecmUserRolesVO1 = hisroles.get(0);
+        if (ecmUserRolesVO1.getGrade() >= ecmUserRolesVO.getGrade()){
+            ecmUserVO.setLastLoginTime(new Date());
+            //用户封禁下架所有作品
+            if (ecmUserVO.getIsValid().equals("N")){
+                return ResponseDTO.get( ecmArtworkDao.selectByUserId(ecmUserVO.getPkUserId()).equals(ecmArtworkDao.downArtWorkByUserId(ecmUserVO.getPkUserId())));
             }
-            return ResponseDTO.fail("无权修改");
+            return ResponseDTO.get( 1 == ecmUserDao.updateByPrimaryKeySelective(ecmUserVO));
         }
-
-
-
-        ecmUserVO.setLastLoginTime(new Date());
-        return ResponseDTO.get( 1 == ecmUserDao.updateByPrimaryKeySelective(ecmUserVO));
+        return ResponseDTO.fail("无权修改");
     }
 
     @Override

@@ -42,6 +42,13 @@ public class EcmUserController extends BaseController {
         return "back/user/user-list";
     }
 
+
+    @RequestMapping("/userDataPage")
+    public String userDataPage() {
+        return "back/user/user-data-list";
+    }
+
+
     /**
      * @param: []
      * @return: java.lang.String

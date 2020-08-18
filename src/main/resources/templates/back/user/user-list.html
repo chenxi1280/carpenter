@@ -52,7 +52,7 @@
                 <label class="layui-form-label">是否封禁</label>
                 <div class="layui-input-block">
                     <input type="radio" name="isValid" value="Y" id="isValidn" title="取消封禁" checked>
-                    <input type="radio" name="isValid" value="S" id="isValidy" title="封禁" >
+                    <input type="radio" name="isValid" value="N" id="isValidy" title="封禁">
 
                 </div>
             </div>
@@ -101,8 +101,7 @@
             , page: true
             , url: '/ims/back/user/ajaxList' //数据接口
             , cols: [[ //表头
-                {width: 40, type: "checkbox"}
-                , {field: 'pkUserId', title: 'ID', width: 120}
+                {field: 'pkUserId', title: 'ID', width: 120}
                 , {field: 'username', title: '用户昵称', width: 120}
                 , {field: 'mobile', title: '手机号', width: 120}
                 , {
@@ -151,7 +150,6 @@
         });
 
 
-
         //监听行中工具栏事件
         table.on('tool(userTableFilter)', function (obj) {
 
@@ -176,15 +174,13 @@
                     //调整 权限
                     form.on('submit(sureDispatch)', function (data) {
 
-
-
                         layer.prompt({
                             formType: 2,
                             value: '',
                             title: '请输入确定来确定操作',
-                            area: ['30px', '30px'] //自定义文本域宽高
-                        }, function(value, index, elem){
-                            if (value == '确定'){
+                            area: ['40px', '30px'] //自定义文本域宽高
+                        }, function (value, index, elem) {
+                            if (value == '确定') {
                                 $.ajax({
                                     type: 'post',// ajax请求的方式，post或get
                                     url: '/ims/back/user/chengUser',
@@ -201,15 +197,12 @@
                                         let limit = $('.layui-laypage-limits').find('option:selected').val();
 
 
-
                                         layer.close(editRoleOpen); //再执行关闭
 
                                         userTable.reload({
                                             page: page,
-                                            size:limit,
+                                            size: limit,
                                         });
-
-
 
 
                                         return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
@@ -218,11 +211,10 @@
 
                                 });
                                 layer.close(index);
-                            }else {
+                            } else {
                                 layer.msg('输入有误');
                             }
                         });
-
 
 
                     })

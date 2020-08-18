@@ -146,7 +146,7 @@
   </update>
 
 
-<!--  sql-->
+  <!--  sql-->
   <select id="selectajaxList" resultType="com.wxcz.carpenter.pojo.vo.EcmArtworkVO">
     select pk_artwork_id, fk_userId, artwork_name, artwork_describe, artwork_status, logo_path,
     last_create_date, last_modify_date, four_letter_tips,username,fk_audit_id
@@ -307,6 +307,30 @@
     limit #{start},#{limit}
 
   </select>
+  <select id="selectByUserId" resultType="java.lang.Integer">
+    select count(*)
+    from ecm_artwork
+    where fk_userId =#{pkUserId}
+
+  </select>
+  <select id="selectByReportList" resultType="com.wxcz.carpenter.pojo.vo.EcmArtworkVO">
+    select <include refid="Base_Column_List" />
+    from ecm_artwork
+    where pk_artwork_id in
+    <foreach collection="ids" separator="," open="(" item="id" close=")">#{id.fkArtworkId}</foreach>
+
+  </select>
+
+
+  <update id="downArtWorkByUserId">
+    update ecm_artwork
+    set  artwork_status = 5
+    where fk_userId =#{pkUserId}
+
+
+
+  </update>
+
 
 
 </mapper>

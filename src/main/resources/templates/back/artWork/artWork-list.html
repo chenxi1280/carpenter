@@ -36,7 +36,8 @@
                 <option value="0">草稿</option>
                 <option value="1">待审核</option>
                 <option value="2">通过</option>
-                <option value="3">不通过</option>
+                <option value="3">ai审核通过</option>
+                <option value="4">已发布</option>
                 <option value="5">删除</option>
             </select>
         </div>
@@ -76,7 +77,8 @@
                         <option value="0">草稿</option>
                         <option value="1">待审核</option>
                         <option value="2">通过</option>
-                        <option value="3">不通过</option>
+                        <option value="3">ai审核通过</option>
+                        <option value="4">已发布</option>
                         <option value="5">删除</option>
                     </select>
                 </div>
@@ -145,6 +147,10 @@
                         }else if (d.artworkStatus == "3"){
                             return '<div >' +
                                 '<button class="layui-btn layui-btn-danger layui-btn-xs" lay-event="lock">审核不通过</button>' +
+                                '</div>'
+                        }else if (d.artworkStatus == "4"){
+                            return '<div >' +
+                                '<button class="layui-btn layui-btn-danger layui-btn-xs" lay-event="lock">已发布</button>' +
                                 '</div>'
                         }else if (d.artworkStatus == "5"){
                             return '<div >' +
