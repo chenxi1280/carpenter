@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+
+<script type="text/javascript" src="../../layuiadmin/layui/layui.js"></script>
+
+<style>
+    /*修改layui表格的高度*/
+    .layui-table-cell {
+        height: auto;
+    }
+</style>
+<body class="layui-card-body layui-card">
+<div style="padding: 10px;" class="layui-card">
+    <form id="queryForm" class="layui-form" method="post"
+          style="display: flex;align-items: center;padding-left: 50px">
+        <div class="layui-hide-xs" style="display: flex;align-items: center">
+            <span style="width: fit-content">id：</span>
+            <input class="layui-input" name="userId" id="nickName"
+                   style="width: 120px;"/>
+        </div>
+        <div class="layui-hide-xs" style="display: flex;align-items: center;margin-left: 20px">
+            <label style="width:  fit-content">昵称：</label><input class="layui-input" name="userName" id="realName"
+                                                                 style="width: 120px"/>
+        </div>
+        <div style="display: flex;align-items: center;margin-left: 20px">
+            <label style="width:  fit-content">手机号：</label><input class="layui-input" name="phone" id="phone"
+                                                                  style="width: 120px"/>
+        </div>
+
+        <div style="display: flex;align-items: center;margin-left: 20px">
+            <button type="button" class="layui-btn" id="queryBtn" lay-submit lay-filter="queryForm">查询</button>
+        </div>
+    </form>
+
+    <table id="userTable" lay-filter="userTableFilter" style="padding-top: 10px"></table>
+    <!--        <div th:include="plugins/splitBar::splitBar"></div>-->
+
+</div>
+
+
+<!--// 加上th:inline='javascript' 否则可能会因为小于或者大于符号导致 thymeleaf模板引擎解析错误。-->
+<script th:inline="javascript" type="text/javascript">
+
+    layui.use(['table', 'layer', 'laydate', 'form'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var laydate = layui.laydate;
+        var form = layui.form;
+        var $ = layui.$;
+        laydate.render({
+            elem: '#creteDateRange' //指定元素
+            , range: '至'
+        });
+
+        var userTable = table.render({
+            elem: '#userTable'
+            , page: true
+            , url: '/ims/back/user/ajaxList' //数据接口
+            , cols: [[ //表头
+                {field: 'pkUserId', title: 'ID', width: 120}
+                , {field: 'username', title: '用户昵称', width: 120}
+                , {field: 'mobile', title: '手机号', width: 120}
+                , {field: '', title: '上行流量', width: 180, sort: true}
+                , {field: '', title: '下行流量', width: 180, sort: true}
+                , {field: '', title: '审核时长', width: 180, sort: true}
+                , {field: '', title: '转码时长', width: 180, sort: true}
+                , {field: '', title: '广告时长', width: 180, sort: true}
+                , {field: '', title: '作品总数', width: 180, sort: true}
+                , {field: '', title: '缴费情况', width: 180, sort: true}
+            ]]
+            , toolbar: 'default'
+
+
+        });
+
+        //监听头部工具栏的事件
+        table.on('toolbar(userTableFilter)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'add':
+                    layer.msg('添加');
+                    break;
+                case 'delete':
+                    layer.msg('删除');
+                    break;
+                case 'update':
+                    layer.msg('编辑');
+                    break;
+            }
+            ;
+        });
+
+
+        //监听行中工具栏事件
+        table.on('tool(userTableFilter)', function (obj) {
+
+
+            var d = obj.data;
+
+            switch (obj.event) {
+
+
+            }
+        });
+
+
+        //条件查询
+        form.on('submit(queryForm)', function (data) {
+            userTable.reload({
+                where: data.field,
+                page: {curr: 1}
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+    })
+
+
+</script>
+
+
+</body>
+
+
+</html>
