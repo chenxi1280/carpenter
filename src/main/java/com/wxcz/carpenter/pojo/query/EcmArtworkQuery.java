@@ -16,6 +16,11 @@ public class EcmArtworkQuery extends PageQuery {
     private Integer pkArtworkId;
 
     /**
+     * 投诉id
+     */
+    private Integer reportId;
+
+    /**
      * 作者
      */
     private Integer fkUserid;

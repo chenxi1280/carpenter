@@ -22,4 +22,8 @@ public interface EcmReportHistroyDao {
     List<EcmReportHistroyVO> selectAjaxList(ReportArtWorkQuery reportArtWorkQuery);
 
     Integer selectAjaxCount(ReportArtWorkQuery reportArtWorkQuery);
+
+    Integer updateStateSuccessByPrimaryKey(Integer reportId);
+
+    EcmReportHistroyVO selectByArtWorkId(Integer pkArtworkId);
 }

@@ -51,7 +51,7 @@ public interface EcmArtworkDao {
      * @return: java.util.List<com.wxcz.carpenter.pojo.vo.EcmArtworkVO>
      * @author: cxd
      * @Date: 2020/8/14
-     * 描述 :  查询待审核的所有作品  EcmArtworkVO 集合 （遗弃）  （主要layui表格使用）
+     * 描述 :  查询待审核的所有作品  EcmArtworkVO 集合  （主要layui表格使用）
      *       连表查询 ，在 EcmArtworkVO 中的 作品所属的用户名会在 Use表查询
      *       连表user表是索引丢失，查询比较慢，
      */
@@ -80,4 +80,5 @@ public interface EcmArtworkDao {
     Integer selectByUserId(Integer pkUserId);
 
     List<EcmArtworkVO> selectByReportList(@Param(("ids")) List<EcmReportHistroyVO> list);
+
 }

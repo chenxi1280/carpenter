@@ -2,15 +2,18 @@ package com.wxcz.carpenter.service.impl;
 
 import com.wxcz.carpenter.dao.EcmArtworkDao;
 import com.wxcz.carpenter.dao.EcmArtworkNodesDao;
+import com.wxcz.carpenter.dao.EcmReportHistroyDao;
 import com.wxcz.carpenter.dao.EcmUserDao;
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.entity.EcmArtwork;
 import com.wxcz.carpenter.pojo.entity.EcmArtworkNodes;
+import com.wxcz.carpenter.pojo.entity.EcmReportHistroy;
 import com.wxcz.carpenter.pojo.entity.EcmUser;
 import com.wxcz.carpenter.pojo.query.EcmArtworkQuery;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkNodesVo;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
+import com.wxcz.carpenter.pojo.vo.EcmReportHistroyVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserVO;
 import com.wxcz.carpenter.service.EcmArtworkService;
 import com.wxcz.carpenter.util.TreeUtil;
@@ -39,6 +42,9 @@ public class EcmArtworkServiceImpl implements EcmArtworkService {
 
     @Resource
     EcmUserDao ecmUserDao;
+
+    @Resource
+    EcmReportHistroyDao ecmReportHistroyDao;
 
     @Resource
     EcmArtworkNodesDao ecmArtworkNodesDao;
@@ -157,15 +163,43 @@ public class EcmArtworkServiceImpl implements EcmArtworkService {
                 return ResponseDTO.fail("作品有举报节点未处理");
             }
         }
+
+
+        EcmReportHistroyVO ecmReportHistroyVO = ecmReportHistroyDao.selectByArtWorkId(ecmArtworkQuery.getPkArtworkId());
+//
+//        //判断是否为 投诉节点
+//        if (ecmReportHistroyVO.getReportId() != null){
+//            // 改变节点状态
+//            ecmReportHistroyDao.updateStateSuccessByPrimaryKey(ecmReportHistroyVO.getReportId());
+//            System.out.println("发送违规");
+//            // 发送 站内信  违规 ！！
+//        }else {
+//            System.out.println("发送成功");
+//            // 发送 站内信  通过 ！！
+//
+//        }
+
+        // 判断是否 存在 不通过 节点
         for (EcmArtworkNodesVo ecmArtworkNodesVo : ecmArtworkNodesVos) {
+            // 判断是否 存在 不通过 节点
             if (ecmArtworkNodesVo.getFkEndingId() == 5){
+                // 设置作品状态
                 ecmArtwork.setArtworkStatus((short) 0);
+                if (ecmReportHistroyVO != null){
+                    // 改变节点状态
+                    ecmReportHistroyDao.updateStateSuccessByPrimaryKey(ecmReportHistroyVO.getReportId());
+                    System.out.println("发送违规");
+                    // 发送 站内信  违规 ！！
+                }else {
+                    // 发送站内信 不通过
+                    System.out.println("发送不通过");
+                }
                 return ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeySelective(ecmArtwork),"作不通过审核,以还原成草稿");
             }
         }
 
-
-
+        System.out.println("发送成功");
+        // 发送 站内信  通过 ！！
         ecmArtwork.setArtworkStatus((short) 2);
         // 修改作品状态
         return ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeySelective(ecmArtwork),"作通过审核");

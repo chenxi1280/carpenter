@@ -1,20 +1,30 @@
 package com.wxcz.carpenter.service.impl;
 
 import com.wxcz.carpenter.dao.EcmArtworkDao;
+import com.wxcz.carpenter.dao.EcmArtworkNodesDao;
 import com.wxcz.carpenter.dao.EcmReportHistroyDao;
 import com.wxcz.carpenter.dao.EcmUserDao;
 import com.wxcz.carpenter.pojo.dto.PageDTO;
+import com.wxcz.carpenter.pojo.dto.ResponseDTO;
+import com.wxcz.carpenter.pojo.entity.EcmArtwork;
 import com.wxcz.carpenter.pojo.entity.EcmReportHistroy;
+import com.wxcz.carpenter.pojo.query.EcmArtworkQuery;
 import com.wxcz.carpenter.pojo.query.ReportArtWorkQuery;
+import com.wxcz.carpenter.pojo.vo.EcmArtworkNodesVo;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
 import com.wxcz.carpenter.pojo.vo.EcmReportHistroyVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserVO;
 import com.wxcz.carpenter.service.EcmReportHistroyService;
+import com.wxcz.carpenter.util.TreeUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author by cxd
@@ -29,10 +39,15 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
     EcmReportHistroyDao ecmReportHistroyDao;
 
     @Resource
+    EcmArtworkNodesDao ecmArtworkNodesDao;
+
+    @Resource
     EcmArtworkDao ecmArtworkDao;
 
     @Resource
     EcmUserDao ecmUserDao;
+
+
 
     @Override
     public PageDTO ajaxList(ReportArtWorkQuery reportArtWorkQuery) {
@@ -87,4 +102,48 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
 
         return PageDTO.setPageData(count,list);
     }
+
+    @Override
+    public ResponseDTO artWorkAudit(EcmReportHistroy ecmReportHistroy) {
+        //通过作品id查询作品
+        EcmReportHistroy ecmReport = ecmReportHistroyDao.selectByPrimaryKey(ecmReportHistroy.getReportId());
+        // 判断是否有 审核人
+        if (!StringUtils.isEmpty(ecmReport.getFkChUserid())) {
+            // 比对用户是否一致
+            if (ecmReport.getFkChUserid().equals(ecmReportHistroy.getFkChUserid())) {
+                return ResponseDTO.ok();
+            }
+        }else {
+            // 没有审核人 ，当前用户做为审核人
+            ecmArtworkNodesDao.updateByReportHistroy(ecmReportHistroy.getFkArtworkId());
+            return ResponseDTO.get(1 == ecmReportHistroyDao.updateByPrimaryKeySelective(ecmReportHistroy));
+        }
+        return ResponseDTO.fail("error");
+    }
+
+    @Override
+    public ResponseDTO getArtWorkNoteS(EcmArtworkQuery ecmArtworkVO) {
+        EcmArtwork ecmArtwork = ecmArtworkDao.selectByPrimaryKey(ecmArtworkVO.getPkArtworkId());
+        if (ecmArtwork == null) {
+            return ResponseDTO.fail("查询id为空");
+        }
+        List<EcmArtworkNodesVo> list = ecmArtworkNodesDao.selectByArtWorkId(ecmArtworkVO.getPkArtworkId());
+        EcmReportHistroy ecmReportHistroy = ecmReportHistroyDao.selectByPrimaryKey(ecmArtworkVO.getReportId());
+//        List l = new ArrayList();
+//        l.add(TreeUtil.buildTree(list).get(0));
+//        l.add(ecmReportHistroy);
+        Map map = new HashMap();
+        map.put("artWork",TreeUtil.buildTree(list).get(0));
+        map.put("reportHistroy",ecmReportHistroy);
+        return ResponseDTO.ok("success", map);
+
+
+    }
+
+    @Override
+    public EcmReportHistroyVO getReportIdByArtWorkId(Integer pkArtworkId) {
+        return ecmReportHistroyDao.selectByArtWorkId(pkArtworkId) ;
+    }
+
+
 }

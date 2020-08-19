@@ -30,4 +30,8 @@ public interface EcmArtworkNodesDao {
      * 描述 :  作品的id 查询作品详情 集合
      */
     List<EcmArtworkNodesVo> selectByArtWorkId(Integer pkArtworkId);
+
+    Integer updateByReportHistroy(Integer fkArtworkId);
+
+    Integer updateStateFailByArtWorkId(Integer pkArtworkId);
 }

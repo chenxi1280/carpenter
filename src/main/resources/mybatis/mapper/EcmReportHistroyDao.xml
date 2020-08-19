@@ -157,18 +157,19 @@
   </update>
 
 
-<!--  sql-->
+
+    <!--  sql-->
 
   <select id="selectAjaxList" resultType="com.wxcz.carpenter.pojo.vo.EcmReportHistroyVO">
     select  <include refid="Base_Column_List" />
     from ecm_report_histroy
-    <where>
+    where re_state =1
       <if test="reportId != null and reportId!=''">
         and report_id like CONCAT('%',#{reportId},'%')
       </if>
 
       <if test="fkArtworkId != null and fkArtworkId!=''">
-        and pk_artwork_id like CONCAT('%',#{fkArtworkId},'%')
+        and fk_artwork_id like CONCAT('%',#{fkArtworkId},'%')
       </if>
 
       <if test="fkUserid != null and fkUserid!=''">
@@ -181,15 +182,10 @@
 
 
 
-      <if test="reState != null ">
-        and re_state like CONCAT('%',#{reState},'%')
-      </if>
-
       <if test="reportStatue != null and reportStatue!=''">
         and report_statue like CONCAT('%',#{reportStatue},'%')
       </if>
 
-    </where>
     order by createtime
     limit #{start},#{limit}
 
@@ -204,7 +200,7 @@
       </if>
 
       <if test="fkArtworkId != null and fkArtworkId!=''">
-        and pk_artwork_id like CONCAT('%',#{fkArtworkId},'%')
+        and fk_artwork_id like CONCAT('%',#{fkArtworkId},'%')
       </if>
 
       <if test="fkUserid != null and fkUserid!=''">
@@ -228,6 +224,18 @@
     </where>
 
   </select>
+  <select id="selectByArtWorkId" resultType="com.wxcz.carpenter.pojo.vo.EcmReportHistroyVO">
+    select <include refid="Base_Column_List" />
+    from ecm_report_histroy
+    where fk_artwork_id = #{fkArtworkId}
 
+  </select>
+
+  <update id="updateStateSuccessByPrimaryKey">
+    update ecm_report_histroy
+    set re_state = 2
+    where report_id = #{reportId}
+
+  </update>
 
 </mapper>

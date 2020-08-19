@@ -20,19 +20,17 @@
 </head>
 
 
-
-
 <script>
 
-    var nodeId ;
+    var nodeId;
 
-    function mya(obj){
+    function mya(obj) {
 
         var thisObj = $(obj) //js对象转jquery对象
         thisObj.parents().addClass('layui-this')
         thisObj.siblings().css("layui-nav-item layui-nav-itemed")
 
-        $('#video').attr("src",thisObj.attr('sr'))
+        $('#video').attr("src", thisObj.attr('sr'))
 
 
         $('#itemsText').text(thisObj.attr('itemsText'))
@@ -58,8 +56,6 @@
                     lay-filter="layadmin-system-side-menu">
 
 
-
-
                 </ul>
             </div>
         </div>
@@ -68,73 +64,107 @@
         <!-- 主体内容 -->
         <div class="layui-body" id="LAY_app_body">
 
-            <div>
-                <h2 id="itemsText">
+            <div style="display: flex">
+                <div>
+                    <video width="369px" height="666px" controls="controls" style="padding-left: 10%"
+                           id="video" src="">
+                    </video>
+                </div>
+                <div style="flex-direction: row-reverse ;padding-left: 10%; padding-top: 5%">
 
-                </h2>
+                    <div>
+                        <h2 id="itemsText">
+
+                        </h2>
+                    </div>
 
 
+                    <div>
+
+                        <h1 id="reState"></h1>
+
+                        <P id="comtemt"></P>
+
+                        <img  id="img" src="">
+                    </div>
+
+
+                </div>
+
+                <div style="padding-top: 20%; padding-left :10%;display: flex;">
+
+                    <button type="button" id="nodeyes" class="layui-btn layui-btn-radius">通过</button>
+                    <button type="button" id="nodeno" class="layui-btn layui-btn-radius layui-btn-danger">不通过
+                    </button>
+
+                </div>
             </div>
-            <div >
-
-                <video width="378px" height="672px" controls="controls" style="padding-left: 10%"
-                       id="video" src="">
-                </video>
 
 
-            </div>
-
-            <div style="padding-left: 10%; padding-top: 2% " >
-
-                <button type="button" id="nodeyes"	class="layui-btn layui-btn-radius" >通过</button>
-                <button type="button" id="nodeno"	class="layui-btn layui-btn-radius layui-btn-danger" >不通过</button>
-
-            </div>
         </div>
-
 
 
     </div>
 </div>
 
 
+<script th:inline="javascript">
 
-<script th:inline="javascript" >
+
     layui.config({
         base: '/layuiadmin/' //静态资源所在路径
     }).extend({
         index: 'lib/index' //主入口模块
     }).use('index');
 
-    layui.use(['table', 'layer', 'laydate', 'form'], function () {
+    layui.use(['layer', 'element', 'form'], function () {
         var layer = layui.layer;
 
-        var $ = layui.$;
-        var element  = layui.element ;
+        var element = layui.element;
 
         let pkArtworkId1 = [[${pkArtworkId}]];
+        let reportId = [[${reportId}]];
 
-        function funrec(obj) {
-            //这样就把主窗体的值放到iframe层的隐藏控件了
-            //你也可以直接拿到obj完成你的需求
-            $("#hid_rec").val(obj);
-        }
+        console.log(pkArtworkId1)
 
         $.ajax({
             type: 'post',// ajax请求的方式，post或get
-            url: '/ims/back/artWork/getArtWorkNoteS',
+            url: '/ims/back/reportArtWork/getArtWorkNoteS',
             // contentType: "application/json",// 默认就是表单数据(不写)，如果此时要传递的是json字符串，
             // 那么此时就用application/json,如果此时要传递图片"multipart/form-data，还有数组，集合，还有对象，那么contentType必须指定为false
             data: {
-                pkArtworkId: pkArtworkId1
+                pkArtworkId: pkArtworkId1,
+                reportId: reportId
             },// 要上传的参数,把数组对象转换为JSON字符串
             dataType: 'json',// 服务器响应数据：json,text,html,xml
             processData: true,//布尔值,一般都不用设置，规定通过请求发送的数据是否转换为查询字符串。默认是 true。如果此时上传的时候，有图片，这里必须设置false,
             success: function (res) {// 请求成功，回调函数,data，指的就是服务器返回的数据
-                let artWorkVO = res.data;
+                let data = res.data;
+                let reportHistroy = data.reportHistroy;
+                console.log(res.data)
+                if (reportHistroy != null) {
 
-                console.log(res)
-                f(artWorkVO);
+                    if (reportHistroy.reState == 1) {
+                        console.log(111)
+                        $('#reState').text("投诉理由：侵权")
+                    } else if (reportHistroy.reState == 2) {
+                        $('#reState').text("投诉理由：违规")
+                    } else if (reportHistroy.reState == 3) {
+                        $('#reState').text("投诉理由：其他")
+                    }
+                    if (reportHistroy.comtemt != null) {
+                        $('#comtemt').text("投诉原因：" + reportHistroy.comtemt)
+                    } else {
+                        $('#comtemt').text("投诉原因：无")
+                    }
+                    if (reportHistroy.imgUrl != null) {
+
+                        $('#img').attr("src", reportHistroy.imgUrl)
+                        $('#img').css("width","270px")
+                        $('#img').css("height","480px")
+                    }
+                }
+                f(data.artWork);
                 element.init('nav')
 
 
@@ -145,7 +175,7 @@
             if (artWorkVo != null) {
 
 
-                addTree(artWorkVo.pkDetailId, artWorkVo.videoUrl,artWorkVo.itemsText,artWorkVo.fkEndingId)
+                addTree(artWorkVo.pkDetailId, artWorkVo.videoUrl, artWorkVo.itemsText, artWorkVo.fkEndingId)
                 if (artWorkVo.nodesVos != null) {
 
                     artWorkVo.nodesVos.forEach(v => {
@@ -155,55 +185,55 @@
             }
 
         }
+
         // 修改
-        function addTree(id, videoUrl,itemsText,fkEndingId) {
-            console.log(itemsText)
-            let parseJSON = $.parseJSON( itemsText );
+        function addTree(id, videoUrl, itemsText, fkEndingId) {
+
+            let parseJSON = $.parseJSON(itemsText);
             var chooseText = '选择消息：'
-            parseJSON.forEach( v => {
+            parseJSON.forEach(v => {
 
                 chooseText += v.value
             })
 
-            console.log(chooseText)
 
-            var item ;
+            var item;
 
-            if (fkEndingId == 1 ) {
-                item =  'layui-icon-star-fill';
-            }else if (fkEndingId == 2){
+            if (fkEndingId == 1) {
+                item = 'layui-icon-star-fill';
+            } else if (fkEndingId == 2) {
                 item = 'layui-icon-face-cry';
-            }else if (fkEndingId == 3){
+            } else if (fkEndingId == 3) {
                 item = 'layui-icon-help';
-            }else if (fkEndingId == 4){
+            } else if (fkEndingId == 4) {
                 item = 'layui-icon-ok';
-            }else if (fkEndingId == 5){
+            } else if (fkEndingId == 5) {
                 item = 'layui-icon-close';
-            }else {
+            } else if (fkEndingId == 6) {
+                item = 'layui-icon-add-circle-fine';
+            } else {
                 item = 'layui-icon-circle-dot'
             }
 
 
-            let s = '<li  data-name="home" class="layui-nav-item layui-nav-itemed " > <a onclick="mya(this)" id="'+id+'" sr="'+videoUrl+'" itemsText="'+chooseText+'">  <i class="layui-icon '+item+'"></i>     <cite>'+ id +'</cite>  </a></li>'
+            let s = '<li  data-name="home" class="layui-nav-item layui-nav-itemed " > <a onclick="mya(this)" id="' + id + '" sr="' + videoUrl + '" itemsText="' + chooseText + '">  <i class="layui-icon ' + item + '"></i>     <cite>' + id + '</cite>  </a></li>'
             $('#LAY-system-side-menu').append(s)
 
         }
 
 
-
-
     });
 
 
-    $('#nodeyes').click( function () {
+    $('#nodeyes').click(function () {
 
         $.ajax({
             type: 'post',// ajax请求的方式，post或get
-            url: '/ims/back/artWork/upDataNode'  ,
+            url: '/ims/back/artWork/upDataNode',
             // contentType: "application/json",// 默认就是表单数据(不写)，如果此时要传递的是json字符串，
             // 那么此时就用application/json,如果此时要传递图片"multipart/form-data，还有数组，集合，还有对象，那么contentType必须指定为false
             data: {
-                pkDetailId:nodeId,
+                pkDetailId: nodeId,
                 fkEndingId: '4',
 
             },// 要上传的参数,把数组对象转换为JSON字符串
@@ -217,15 +247,15 @@
 
     })
 
-    $('#nodeno').click( function () {
-        console.log(nodeId)
+    $('#nodeno').click(function () {
+
         $.ajax({
             type: 'post',// ajax请求的方式，post或get
-            url: '/ims/back/artWork/upDataNode'  ,
+            url: '/ims/back/artWork/upDataNode',
             // contentType: "application/json",// 默认就是表单数据(不写)，如果此时要传递的是json字符串，
             // 那么此时就用application/json,如果此时要传递图片"multipart/form-data，还有数组，集合，还有对象，那么contentType必须指定为false
             data: {
-                pkDetailId:nodeId,
+                pkDetailId: nodeId,
                 fkEndingId: '5',
 
             },// 要上传的参数,把数组对象转换为JSON字符串
@@ -238,9 +268,6 @@
         });
 
     })
-
-
-
 
 
 </script>

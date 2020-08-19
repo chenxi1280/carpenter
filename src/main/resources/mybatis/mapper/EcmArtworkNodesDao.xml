@@ -260,13 +260,32 @@
       parent_list = #{parentList,jdbcType=VARCHAR},
       chosen_text = #{chosenText,jdbcType=VARCHAR}
     where pk_detail_id = #{pkDetailId,jdbcType=INTEGER}
-  </update>
 
-  <!--SQl-->
+  </update>
+    <!--SQl-->
+
   <select id="selectByArtWorkId" resultType="com.wxcz.carpenter.pojo.vo.EcmArtworkNodesVo">
     select <include refid="Base_Column_List" />
     from ecm_artwork_nodes
     where fk_artwork_id = #{pkArtworkId}
 
   </select>
+
+
+  <update id="updateByReportHistroy">
+      update ecm_artwork_nodes
+      set fk_ending_id = 6
+      where fk_artwork_id =  #{pkArtworkId}
+
+
+    </update>
+  <update id="updateStateFailByArtWorkId">
+
+      update ecm_artwork_nodes
+      set fk_ending_id = 1
+      where fk_artwork_id =  #{pkArtworkId}
+
+
+  </update>
+
 </mapper>

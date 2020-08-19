@@ -5,11 +5,15 @@ import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.entity.EcmArtwork;
 import com.wxcz.carpenter.pojo.entity.EcmArtworkNodes;
+import com.wxcz.carpenter.pojo.entity.EcmReportHistroy;
 import com.wxcz.carpenter.pojo.query.EcmArtworkQuery;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
+import com.wxcz.carpenter.pojo.vo.EcmReportHistroyVO;
 import com.wxcz.carpenter.service.EcmArtworkService;
+import com.wxcz.carpenter.service.EcmReportHistroyService;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,11 +26,14 @@ import javax.annotation.Resource;
  * @Description TODO
  * @Date 2020/8/7 10:52
  */
-@Component
+@Controller
 @RequestMapping("/back/artWork")
 public class EcmArtWorkController extends BaseController {
     @Resource
     EcmArtworkService ecmArtworkService;
+
+    @Resource
+    EcmReportHistroyService ecmReportHistroyService;
 
     /**
      * @param: []
@@ -64,9 +71,14 @@ public class EcmArtWorkController extends BaseController {
      */
 
     @RequestMapping("artWorkNodePage")
-    public String artWorkNodePage(Integer pkArtworkId, Model model) {
+    public String artWorkNodePage(Integer pkArtworkId ,Model model) {
         // 同时把作品id 传回前端
         model.addAttribute("pkArtworkId", pkArtworkId);
+        EcmReportHistroyVO ecmReportHistroyVO = ecmReportHistroyService.getReportIdByArtWorkId(pkArtworkId);
+
+        if (ecmReportHistroyVO != null) {
+            model.addAttribute("reportId", ecmReportHistroyVO.getReportId());
+        }
         //通过session 拿到当前用户的id
         EcmArtwork ecmArtwork = new EcmArtwork();
         //         暂定 节点审核人 id
