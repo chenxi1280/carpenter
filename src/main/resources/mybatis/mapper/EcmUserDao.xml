@@ -169,7 +169,7 @@
             <if test="lastCheckMail != null">
                 last_check_mail = #{lastCheckMail,jdbcType=TIMESTAMP},
             </if>
-            <if test="roles != null  and  roles !='' " >
+            <if test="roles != null  and  roles !='' ">
                 roles = #{roles,jdbcType=VARCHAR},
             </if>
         </set>
@@ -253,24 +253,43 @@
 
     <select id="selectByList" resultType="com.wxcz.carpenter.pojo.vo.EcmUserVO">
 
-        select <include refid="Base_Column_List" />
+        select
+        <include refid="Base_Column_List"/>
         from ecm_user
         where pk_user_id in
         <foreach collection="ids" separator="," open="(" item="id" close=")">#{id.fkAuditId}</foreach>
 
     </select>
     <select id="selectUserNameByList" resultType="com.wxcz.carpenter.pojo.vo.EcmUserVO">
-        select <include refid="Base_Column_List" />
+        select
+        <include refid="Base_Column_List"/>
         from ecm_user
         where pk_user_id in
         <foreach collection="ids" separator="," open="(" item="id" close=")">#{id.fkUserid}</foreach>
 
     </select>
     <select id="selectByReportList" resultType="com.wxcz.carpenter.pojo.vo.EcmUserVO">
-        select <include refid="Base_Column_List" />
+        select
+        <include refid="Base_Column_List"/>
         from ecm_user
         where pk_user_id in
         <foreach collection="ids" separator="," open="(" item="id" close=")">#{id.fkChUserid}</foreach>
+
+    </select>
+    <select id="selectAll" resultType="com.wxcz.carpenter.pojo.vo.EcmUserVO">
+        select
+        <include refid="Base_Column_List"/>
+        from ecm_user
+        where mobile is not null
+
+    </select>
+    <select id="selectIds" resultType="com.wxcz.carpenter.pojo.vo.EcmUserVO">
+        select <include refid="Base_Column_List"/>
+        from ecm_user
+        where pk_user_id in
+        <foreach collection="ids" close=")" item="id" open="(" separator=",">
+        #{id}
+        </foreach>
 
     </select>
 

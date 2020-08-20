@@ -82,4 +82,8 @@ public interface EcmUserDao {
     List<EcmUserVO> selectUserNameByList(@Param("ids") List list);
 
     List<EcmUserVO> selectByReportList(@Param("ids")List<EcmReportHistroyVO> list);
+
+    List<EcmUserVO> selectAll();
+
+    List<EcmUserVO> selectIds(@Param("ids") List<Integer> asList);
 }

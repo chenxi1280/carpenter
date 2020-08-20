@@ -11,4 +11,5 @@ import lombok.Data;
  */
 @Data
 public class EcmTemplateVo extends EcmTemplate {
+    private Integer[] ids;
 }

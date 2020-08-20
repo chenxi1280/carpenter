@@ -1,8 +1,8 @@
 package com.wxcz.carpenter.dao;
 
 import com.wxcz.carpenter.pojo.entity.EcmInnerMessage;
-import com.wxcz.carpenter.pojo.query.EcmInnerMessageQuery;
-import com.wxcz.carpenter.pojo.vo.EcmInnerMessageVO;
+import com.wxcz.carpenter.pojo.vo.EcmUserVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,5 +19,5 @@ public interface EcmInnerMessageDao {
 
     int updateByPrimaryKey(EcmInnerMessage record);
 
-    List<EcmInnerMessageVO> ajaxMsgTemplateList(EcmInnerMessageQuery ecmInnerMessageQuery);
+    int insertMsgAll(@Param("list") List<EcmUserVO> list, @Param("msg") EcmInnerMessage ecmInnerMessage);
 }
