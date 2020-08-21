@@ -134,7 +134,7 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
 //        List l = new ArrayList();
 //        l.add(TreeUtil.buildTree(list).get(0));
 //        l.add(ecmReportHistroy);
-        Map map = new HashMap();
+        Map map = new HashMap(2);
         map.put("artWork",TreeUtil.buildTree(list).get(0));
         map.put("reportHistroy",ecmReportHistroy);
         return ResponseDTO.ok("success", map);

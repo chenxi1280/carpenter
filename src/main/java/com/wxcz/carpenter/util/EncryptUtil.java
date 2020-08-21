@@ -164,9 +164,9 @@ public class EncryptUtil {
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         int defaultBitSize = 16;
         for (int i = 0; i < defaultBitSize; ++i) {
-            if (i < passPtr.length)
+            if (i < passPtr.length) {
                 keyPtr[i] = passPtr[i];
-            else {
+            } else {
                 keyPtr[i] = 0;
             }
         }
@@ -230,9 +230,9 @@ public class EncryptUtil {
         String stmp = "";
         for (int n = 0; n < b.length; ++n) {
             stmp = Integer.toHexString(b[n] & 0xFF);
-            if (stmp.length() == 1)
+            if (stmp.length() == 1) {
                 hs.append("0").append(stmp);
-            else {
+            } else {
                 hs.append(stmp);
             }
         }

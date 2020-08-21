@@ -114,15 +114,15 @@ public class EcmUserServiceImpl implements EcmUserService {
         list.forEach( ecmUserVO ->  {
             String[] split = ecmUserVO.getRoles().split(",");
             for (String s : split) {
-                if (s.equals("2")){
+                if ("2".equals(s)){
                     ecmUserVO.setRoleName("超级管理员");
                     break;
                 }
-                if (s.equals("3")){
+                if ("3".equals(s)){
                     ecmUserVO.setRoleName("普通管理员");
                     break;
                 }
-                if (s.equals("1")){
+                if ("1".equals(s)){
                     ecmUserVO.setRoleName("普通用户");
                 }
             }
@@ -153,7 +153,7 @@ public class EcmUserServiceImpl implements EcmUserService {
         if (ecmUserRolesVO1.getGrade() >= ecmUserRolesVO.getGrade()){
             ecmUserVO.setLastLoginTime(new Date());
             //用户封禁下架所有作品
-            if (ecmUserVO.getIsValid().equals("N")){
+            if ( "N".equals(ecmUserVO.getIsValid()) ){
                 return ResponseDTO.get( ecmArtworkDao.selectByUserId(ecmUserVO.getPkUserId()).equals(ecmArtworkDao.downArtWorkByUserId(ecmUserVO.getPkUserId())));
             }
             return ResponseDTO.get( 1 == ecmUserDao.updateByPrimaryKeySelective(ecmUserVO));
