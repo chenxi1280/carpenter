@@ -23,4 +23,6 @@ public interface EcmReportHistroyService {
     ResponseDTO getArtWorkNoteS(EcmArtworkQuery ecmArtworkVO);
 
     EcmReportHistroyVO getReportIdByArtWorkId(Integer pkArtworkId);
+
+    EcmReportHistroyVO getReportHistoryVOByEcmReportHistroy(EcmReportHistroy ecmReportHistroy);
 }

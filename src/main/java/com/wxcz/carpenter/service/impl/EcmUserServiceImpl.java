@@ -54,6 +54,7 @@ public class EcmUserServiceImpl implements EcmUserService {
 
     @Override
     public EcmUserVO login(EcmUserQuery query) {
+
         return  ecmUserDao.login(query);
     }
 

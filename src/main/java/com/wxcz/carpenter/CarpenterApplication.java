@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import java.util.TimeZone;
 
 @SpringBootApplication
+
 @EnableTransactionManagement
 @MapperScan("com.wxcz.carpenter.dao")
 public class CarpenterApplication {

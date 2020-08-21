@@ -40,6 +40,7 @@ public class LoginController {
      * 保存成功: status 200  msg "success”
      * 保存失败: status 500  msg "登录失败“
      */
+
     @RequestMapping("/ajaxlogin")
     @ResponseBody
     public ResponseDTO ajaxlogin(EcmUser user) {

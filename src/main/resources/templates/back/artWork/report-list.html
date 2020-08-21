@@ -79,11 +79,11 @@
                 , {
                     field: 'reportStatue;', title: '状态', width: 90, templet: function (d) {
 
-                        if (d.reportStatue == "0") {
+                        if (d.reportStatue == "1") {
                             return '<div >' +
                                 '<button class="layui-btn layui-btn-normal  layui-btn-xs" lay-event="lock">侵权</button>' +
                                 '</div>'
-                        }else if (d.reportStatue == "1"){
+                        }else if (d.reportStatue == "2"){
                             return '<div >' +
                                 '<button class="layui-btn layui-btn-warm  layui-btn-xs" lay-event="lock">违规</button>' +
                                 '</div>'

@@ -17,4 +17,6 @@ public class EcmReportHistroyVO extends EcmReportHistroy {
     private String fkChName;
 
     private String artWorkName;
+
+    private String artWorkNameNodeName;
 }

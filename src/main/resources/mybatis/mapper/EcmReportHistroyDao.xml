@@ -233,7 +233,7 @@
 
   <update id="updateStateSuccessByPrimaryKey">
     update ecm_report_histroy
-    set re_state = 2
+    set re_state = 2,fk_ch_userId =null
     where report_id = #{reportId}
 
   </update>

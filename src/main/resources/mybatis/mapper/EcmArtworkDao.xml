@@ -331,5 +331,13 @@
 
   </update>
 
+  <update id="updateByPrimaryKeyFail">
+
+    update ecm_artwork
+    set  artwork_status = 0,fk_audit_id =null
+    where pk_artwork_id =#{pkArtworkId}
+
+  </update>
+
 
 </mapper>

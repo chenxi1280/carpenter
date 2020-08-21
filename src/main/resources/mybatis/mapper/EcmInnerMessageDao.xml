@@ -114,5 +114,20 @@
         </foreach>
 
     </insert>
+    <insert id="insertMsgPart">
+        insert into ecm_inner_message
+        (fk_user_id, reviewer_id, message_status,send_date, content)
+        values
+        <foreach collection="list" separator="," index="index" item="item" >
+            (
+            #{item.fkUserId},
+            #{item.reviewerId},
+            #{item.messageStatus},
+            #{item.sendDate},
+            #{item.content}
+            )
+        </foreach>
+
+    </insert>
 
 </mapper>

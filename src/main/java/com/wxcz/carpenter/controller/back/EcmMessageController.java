@@ -11,6 +11,7 @@ import com.wxcz.carpenter.pojo.query.EcmTemplateQuery;
 import com.wxcz.carpenter.pojo.vo.EcmInnerMessageVO;
 import com.wxcz.carpenter.pojo.vo.EcmTemplateVo;
 import com.wxcz.carpenter.service.EcmMessageService;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,7 @@ public class EcmMessageController extends BaseController {
     @Resource
     EcmMessageService ecmMessageService;
 
+    @RequiresRoles("superadmin")
     @RequestMapping("msgTemplatePage")
     public String artWorkPage() {
         return "back/message/msg-template-list";

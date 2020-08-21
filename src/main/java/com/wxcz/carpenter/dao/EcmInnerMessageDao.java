@@ -1,6 +1,7 @@
 package com.wxcz.carpenter.dao;
 
 import com.wxcz.carpenter.pojo.entity.EcmInnerMessage;
+import com.wxcz.carpenter.pojo.vo.EcmInnerMessageVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,4 +21,6 @@ public interface EcmInnerMessageDao {
     int updateByPrimaryKey(EcmInnerMessage record);
 
     int insertMsgAll(@Param("list") List<EcmUserVO> list, @Param("msg") EcmInnerMessage ecmInnerMessage);
+
+    int insertMsgPart(@Param("list") List<EcmInnerMessageVO> ecmInnerMessageVOS);
 }

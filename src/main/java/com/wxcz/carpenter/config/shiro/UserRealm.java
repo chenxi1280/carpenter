@@ -1,13 +1,16 @@
 package com.wxcz.carpenter.config.shiro;
 
 
+import com.wxcz.carpenter.common.SecretKeyConstants;
 import com.wxcz.carpenter.pojo.entity.EcmUser;
 import com.wxcz.carpenter.pojo.query.EcmUserQuery;
 import com.wxcz.carpenter.pojo.vo.EcmUserRolesVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserVO;
 import com.wxcz.carpenter.service.EcmUserService;
+import com.wxcz.carpenter.util.EncryptUtil;
 import com.wxcz.carpenter.util.MD5Utils;
 
+import lombok.SneakyThrows;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -45,6 +48,7 @@ public class UserRealm extends AuthorizingRealm {
      * @param authenticationToken 携带了用户名和密码的：认证，判断用户名和密码跟数据库里边是否一致
      * @return
      */
+    @SneakyThrows
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         // 获取身份（用户名 电话号码）
@@ -56,7 +60,7 @@ public class UserRealm extends AuthorizingRealm {
         EcmUserQuery query = new EcmUserQuery();
         // 前端传递过来的// String.valueOf((char[]) credentials)
         String password = new String((char[]) credentials);
-        query.setPhone((String) principal);
+        query.setPhone(EncryptUtil.aesEncrypt((String) principal, SecretKeyConstants.secretKey));
         query.setPassWord(MD5Utils.encrypt(password));
 
         // 拿到了数据库的用户
@@ -69,7 +73,7 @@ public class UserRealm extends AuthorizingRealm {
 //        // 应该设置 session
         session.setAttribute("userId", ecmUserVO.getPkUserId());
         session.setAttribute("nickName", ecmUserVO.getUsername());
-        session.setAttribute("phone", ecmUserVO.getMobile());
+//        session.setAttribute("phone", ecmUserVO.getMobile());
         //更新的登录时间 和 登录次数
         userService.upDataUser(ecmUserVO);
 

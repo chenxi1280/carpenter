@@ -221,6 +221,12 @@
 
         $('#sendPart').click(function f() {
 
+            if (ids.length == 0 ){
+                layer.msg("请选择一行！")
+                return false
+            }
+
+
             let editmes = layer.open({
                 type: 1,
                 area: ['50%', '50%'],
@@ -256,8 +262,7 @@
 
             form.render();
             form.on('submit(addMsg)', function (data) {
-                console.log()
-                console.log(ids)
+
                 var msgdata = {pkTemplateId:data.field.pkTemplateId, ids:ids}
                 $.ajax({
                     type: 'post',// ajax请求的方式，post或get
@@ -269,7 +274,7 @@
                     processData: true,//布尔值,一般都不用设置，规定通过请求发送的数据是否转换为查询字符串。默认是 true。如果此时上传的时候，有图片，这里必须设置false,
                     success: function (res) {// 请求成功，回调函数,data，指的就是服务器返回的数据
                         layer.msg(res.msg);
-
+                        ids = []
                         let page = $('.layui-laypage-skip .layui-input').val();
                         let limit = $('.layui-laypage-limits').find('option:selected').val();
 

@@ -81,4 +81,5 @@ public interface EcmArtworkDao {
 
     List<EcmArtworkVO> selectByReportList(@Param(("ids")) List<EcmReportHistroyVO> list);
 
+    Integer updateByPrimaryKeyFail(EcmArtwork ecmArtwork);
 }

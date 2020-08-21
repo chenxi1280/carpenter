@@ -2,6 +2,7 @@ package com.wxcz.carpenter.dao;
 
 import com.wxcz.carpenter.pojo.entity.EcmTemplate;
 import com.wxcz.carpenter.pojo.query.EcmTemplateQuery;
+import com.wxcz.carpenter.pojo.vo.EcmInnerMessageVO;
 import com.wxcz.carpenter.pojo.vo.EcmTemplateVo;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface EcmTemplateDao {
     List<EcmTemplateVo> ajaxMsgTemplateList(EcmTemplateQuery ecmTemplateQuery);
 
     Integer ajaxMsgTemplateCount(EcmTemplateQuery ecmTemplateQuery);
+
+    EcmTemplateVo selectByTitle(String template);
 }

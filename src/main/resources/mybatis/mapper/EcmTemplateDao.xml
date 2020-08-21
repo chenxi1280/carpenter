@@ -129,5 +129,11 @@
 
 
   </select>
+    <select id="selectByTitle" resultType="com.wxcz.carpenter.pojo.vo.EcmTemplateVo">
+      select <include refid="Base_Column_List" />
+      from ecm_template
+      where template_name like  CONCAT('%',#{template},'%')
+
+    </select>
 
 </mapper>

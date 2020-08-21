@@ -7,7 +7,9 @@ import com.wxcz.carpenter.dao.EcmUserDao;
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.entity.EcmArtwork;
+import com.wxcz.carpenter.pojo.entity.EcmArtworkNodes;
 import com.wxcz.carpenter.pojo.entity.EcmReportHistroy;
+import com.wxcz.carpenter.pojo.entity.EcmUser;
 import com.wxcz.carpenter.pojo.query.EcmArtworkQuery;
 import com.wxcz.carpenter.pojo.query.ReportArtWorkQuery;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkNodesVo;
@@ -143,6 +145,25 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
     @Override
     public EcmReportHistroyVO getReportIdByArtWorkId(Integer pkArtworkId) {
         return ecmReportHistroyDao.selectByArtWorkId(pkArtworkId) ;
+    }
+
+    @Override
+    public EcmReportHistroyVO getReportHistoryVOByEcmReportHistroy(EcmReportHistroy ecmReportHistroy) {
+
+        EcmUser ecmUser = ecmUserDao.selectByPrimaryKey(ecmReportHistroy.getFkUserid());
+
+        EcmArtwork ecmArtwork = ecmArtworkDao.selectByPrimaryKey(ecmReportHistroy.getFkArtworkId());
+
+        EcmArtworkNodes ecmArtworkNodesVos = ecmArtworkNodesDao.selectByPrimaryKey(ecmReportHistroy.getFkArtworkNodeId());
+
+        EcmReportHistroyVO ecmReportHistroyVO = (EcmReportHistroyVO) ecmReportHistroy;
+
+        ecmReportHistroyVO.setUsername(ecmUser.getUsername());
+        ecmReportHistroyVO.setArtWorkNameNodeName(ecmArtworkNodesVos.getItemsText());
+        ecmReportHistroyVO.setArtWorkName(ecmArtwork.getArtworkName());
+
+
+        return ecmReportHistroyVO;
     }
 
 
