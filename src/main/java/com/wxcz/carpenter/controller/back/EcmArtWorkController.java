@@ -11,7 +11,9 @@ import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
 import com.wxcz.carpenter.pojo.vo.EcmReportHistroyVO;
 import com.wxcz.carpenter.service.EcmArtworkService;
 import com.wxcz.carpenter.service.EcmReportHistroyService;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 /**
  * @author by cxd
@@ -120,10 +123,16 @@ public class EcmArtWorkController extends BaseController {
      * 保存成功: status 200  msg "success”
      * 保存失败: status 500  msg "error“
      */
-    @RequiresRoles("admin")
+
     @RequestMapping("chengArtWork")
     @ResponseBody
     public ResponseDTO chengArtWork(EcmArtworkVO ecmArtworkVO) {
+
+        Subject subject = SecurityUtils.getSubject();
+        if (!subject.hasRole("superadmin")){
+            return ResponseDTO.fail("无权限");
+        }
+
         return ecmArtworkService.chengArtWork(ecmArtworkVO);
     }
 
@@ -186,7 +195,16 @@ public class EcmArtWorkController extends BaseController {
     @RequestMapping("checkArtWork")
     @ResponseBody
     public ResponseDTO checkArtWork(EcmArtworkQuery ecmArtworkQuery) {
+
         return ecmArtworkService.checkArtWork(ecmArtworkQuery);
+    }
+
+    @RequiresRoles("admin")
+    @RequestMapping("reCheckArtWork")
+    @ResponseBody
+    public ResponseDTO reCheckArtWork(EcmArtworkQuery ecmArtworkQuery) {
+
+        return ecmArtworkService.reCheckArtWork(ecmArtworkQuery);
     }
 
 }

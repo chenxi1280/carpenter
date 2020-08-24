@@ -62,11 +62,11 @@
 
 
         <!-- 主体内容 -->
-        <div class="layui-body" id="LAY_app_body">
+        <div class="layui-body" id="LAY_app_body" style="top: 10px">
 
             <div style="display: flex">
                 <div>
-                    <video width="369px" height="666px" controls="controls" style="padding-left: 10%"
+                    <video width="90%" height="100%" controls="controls" style="padding-left: 10%"
                            id="video" src="">
                     </video>
                 </div>
@@ -93,8 +93,8 @@
 
                 <div style="padding-top: 20%; padding-left :10%;display: flex;">
 
-                    <button type="button" id="nodeyes" class="layui-btn layui-btn-radius">通过</button>
-                    <button type="button" id="nodeno" class="layui-btn layui-btn-radius layui-btn-danger">不通过
+                    <button type="button" id="nodeyes" class="layui-btn layui-btn-radius">通过检查</button>
+                    <button type="button" id="nodeno" class="layui-btn layui-btn-radius layui-btn-danger">不通过检查
                     </button>
 
                 </div>
@@ -190,7 +190,7 @@
         function addTree(id, videoUrl, itemsText, fkEndingId) {
 
             let parseJSON = $.parseJSON(itemsText);
-            var chooseText = '选择消息：'
+            var chooseText = '选项信息：'
             parseJSON.forEach(v => {
 
                 chooseText += v.value

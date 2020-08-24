@@ -1,6 +1,7 @@
 package com.wxcz.carpenter.service.impl;
 
 import com.hazelcast.util.StringUtil;
+import com.wxcz.carpenter.common.SecretKeyConstants;
 import com.wxcz.carpenter.dao.EcmArtworkDao;
 import com.wxcz.carpenter.dao.EcmUserAcessDao;
 import com.wxcz.carpenter.dao.EcmUserDao;
@@ -14,7 +15,9 @@ import com.wxcz.carpenter.pojo.query.EcmUserQuery;
 import com.wxcz.carpenter.pojo.vo.EcmUserAcessVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserRolesVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserVO;
+import com.wxcz.carpenter.service.BaseService;
 import com.wxcz.carpenter.service.EcmUserService;
+import com.wxcz.carpenter.util.EncryptUtil;
 import com.wxcz.carpenter.util.MD5Utils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -37,7 +40,7 @@ import java.util.stream.Collectors;
  * @Date 2020/8/6 10:42
  */
 @Service
-public class EcmUserServiceImpl implements EcmUserService {
+public class EcmUserServiceImpl implements EcmUserService , BaseService {
 
     @Resource
     EcmUserDao ecmUserDao;
@@ -112,6 +115,12 @@ public class EcmUserServiceImpl implements EcmUserService {
 
         Integer count = ecmUserDao.selectCountByQuery(ecmUserQuery);
         list.forEach( ecmUserVO ->  {
+            try {
+                ecmUserVO.setMobile(EncryptUtil.aesDecrypt(  ecmUserVO.getMobile(), SecretKeyConstants.secretKey));
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
             String[] split = ecmUserVO.getRoles().split(",");
             for (String s : split) {
                 if ("2".equals(s)){
@@ -141,20 +150,56 @@ public class EcmUserServiceImpl implements EcmUserService {
     @Override
 //    @Transactional(rollbackFor)
     public ResponseDTO chengUser(EcmUserVO ecmUserVO) {
-        EcmUser ecmUser = ecmUserDao.selectByPrimaryKey(ecmUserVO.getPkUserId());
-        //角色排序
-        List<EcmUserRolesVO> userRoleList = ecmUserRolesDao.selectByRoles(ecmUser.getRoles());
-        userRoleList.sort( Comparator.comparing(EcmUserRoles::getGrade).reversed() );
-        EcmUserRolesVO ecmUserRolesVO = userRoleList.get(0);
+
         //需要对当前用户的 最高权限判断获取
         Subject subject = SecurityUtils.getSubject();
         List<EcmUserRolesVO>  hisroles = (List<EcmUserRolesVO>) subject.getSession().getAttribute("hisRoles");
         EcmUserRolesVO ecmUserRolesVO1 = hisroles.get(0);
+
+        if (ecmUserRolesVO1.getGrade() < 90  && !StringUtils.isEmpty(ecmUserVO.getRoles())){
+            return ResponseDTO.fail("无权限");
+        }
+
+
+        Integer userId = (Integer)getRequstSession().getAttribute("userId");
+
+        if (ecmUserVO.getPkUserId().equals(userId)){
+
+            if (!StringUtils.isEmpty(ecmUserVO.getRoles())) {
+
+                List<EcmUserRolesVO> userRoleList = ecmUserRolesDao.selectByRoles(ecmUserVO.getRoles());
+                userRoleList.sort(Comparator.comparing(EcmUserRoles::getGrade).reversed());
+                EcmUserRolesVO ecmUserRolesVO = userRoleList.get(0);
+
+                if (ecmUserRolesVO1.getGrade() >= ecmUserRolesVO.getGrade()) {
+                    ecmUserVO.setLastLoginTime(new Date());
+                    //用户封禁下架所有作品
+                    if ("N".equals(ecmUserVO.getIsValid())) {
+                        ecmArtworkDao.selectByUserId(ecmUserVO.getPkUserId()).equals(ecmArtworkDao.downArtWorkByUserId(ecmUserVO.getPkUserId()));
+                    }
+
+                    return ResponseDTO.get(1 == ecmUserDao.updateByPrimaryKeySelective(ecmUserVO));
+                }
+
+                return ResponseDTO.fail("无权限");
+
+            }
+
+        }
+
+
+        EcmUser ecmUser = ecmUserDao.selectByPrimaryKey(ecmUserVO.getPkUserId());
+
+        //角色排序
+        List<EcmUserRolesVO> userRoleList = ecmUserRolesDao.selectByRoles(ecmUser.getRoles());
+        userRoleList.sort( Comparator.comparing(EcmUserRoles::getGrade).reversed() );
+        EcmUserRolesVO ecmUserRolesVO = userRoleList.get(0);
+        //角色等级比较
         if (ecmUserRolesVO1.getGrade() >= ecmUserRolesVO.getGrade()){
             ecmUserVO.setLastLoginTime(new Date());
             //用户封禁下架所有作品
             if ( "N".equals(ecmUserVO.getIsValid()) ){
-                return ResponseDTO.get( ecmArtworkDao.selectByUserId(ecmUserVO.getPkUserId()).equals(ecmArtworkDao.downArtWorkByUserId(ecmUserVO.getPkUserId())));
+                ecmArtworkDao.selectByUserId(ecmUserVO.getPkUserId()).equals(ecmArtworkDao.downArtWorkByUserId(ecmUserVO.getPkUserId()));
             }
             return ResponseDTO.get( 1 == ecmUserDao.updateByPrimaryKeySelective(ecmUserVO));
         }

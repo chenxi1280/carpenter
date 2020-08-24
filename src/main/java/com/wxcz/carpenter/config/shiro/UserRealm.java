@@ -69,6 +69,9 @@ public class UserRealm extends AuthorizingRealm {
         if (ecmUserVO == null){
             throw new CredentialsException("账户或密码错误");
         }
+        if ("N".equals(ecmUserVO.getIsValid())){
+            throw new CredentialsException("账户或密码错误");
+        }
 
 //        // 应该设置 session
         session.setAttribute("userId", ecmUserVO.getPkUserId());

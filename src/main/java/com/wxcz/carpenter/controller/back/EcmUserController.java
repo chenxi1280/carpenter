@@ -85,7 +85,6 @@ public class EcmUserController extends BaseController {
      * 保存成功: status 200  msg "success”
      * 保存失败: status 500  msg "error“
      */
-    @RequiresRoles("admin")
     @RequestMapping("chengUser")
     @ResponseBody
     public ResponseDTO chengUser(EcmUserVO ecmUserVO) {

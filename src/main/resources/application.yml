@@ -22,4 +22,6 @@ logging:
     com.wxcz.carpenter.dao: debug
 server:
   port: 9090
+  servlet:
+    context-path: /ims
 

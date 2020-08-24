@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class AuthException {
 
-    @ExceptionHandler(value = AuthorizationException.class)
+//    @ExceptionHandler(value = AuthorizationException.class)
     public String exceptionHandler(AuthorizationException e){
         System.out.println("未知异常！原因是:"+e);
 

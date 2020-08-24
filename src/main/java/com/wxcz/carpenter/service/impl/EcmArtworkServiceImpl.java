@@ -8,11 +8,13 @@ import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.entity.EcmArtwork;
 import com.wxcz.carpenter.pojo.entity.EcmArtworkNodes;
+import com.wxcz.carpenter.pojo.entity.EcmReportHistroy;
 import com.wxcz.carpenter.pojo.query.EcmArtworkQuery;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkNodesVo;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
 import com.wxcz.carpenter.pojo.vo.EcmReportHistroyVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserVO;
+import com.wxcz.carpenter.service.BaseService;
 import com.wxcz.carpenter.service.EcmArtworkService;
 import com.wxcz.carpenter.service.EcmMessageService;
 import com.wxcz.carpenter.util.TreeUtil;
@@ -33,7 +35,7 @@ import java.util.List;
  * @Date 2020/8/7 10:53
  */
 @Service
-public class EcmArtworkServiceImpl implements EcmArtworkService {
+public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
 
     @Resource
     EcmArtworkDao ecmArtworkDao;
@@ -53,7 +55,7 @@ public class EcmArtworkServiceImpl implements EcmArtworkService {
     @Override
     public PageDTO ajaxList(EcmArtworkQuery ecmArtworkQuery) {
 
-        List<EcmArtworkVO>  list = ecmArtworkDao.selectajaxListByQuery(ecmArtworkQuery);
+        List<EcmArtworkVO> list = ecmArtworkDao.selectajaxListByQuery(ecmArtworkQuery);
 //        List<EcmArtworkVO>  list = ecmArtworkDao.selectajaxList(ecmArtworkQuery);
         //通过 作品list 查询对用的审核人list
         if (!CollectionUtils.isEmpty(list)) {
@@ -68,9 +70,9 @@ public class EcmArtworkServiceImpl implements EcmArtworkService {
                         }
                     }
                 });
-                listVOs.forEach( ecmUserVO -> {
+                listVOs.forEach(ecmUserVO -> {
 
-                    if (ecmArtworkVO.getFkUserid() != null ) {
+                    if (ecmArtworkVO.getFkUserid() != null) {
                         if (ecmUserVO.getPkUserId().equals(ecmArtworkVO.getFkUserid())) {
                             ecmArtworkVO.setUsername(ecmUserVO.getUsername());
                         }
@@ -84,20 +86,28 @@ public class EcmArtworkServiceImpl implements EcmArtworkService {
 
 
         Integer count = ecmArtworkDao.selectCountByQuery(ecmArtworkQuery);
-        return PageDTO.setPageData(count,list);
+        return PageDTO.setPageData(count, list);
     }
 
     @Override
     public ResponseDTO chengArtWork(EcmArtworkVO ecmArtworkVO) {
         // 更新时间
         ecmArtworkVO.setLastModifyDate(new Date());
+        // 还原成 草稿 清空 审核人
+        if (ecmArtworkVO.getArtworkStatus() != null) {
+            if (ecmArtworkVO.getArtworkStatus() == 1) {
+                return ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeyFail(ecmArtworkVO));
+            }
+        }
+
+
         return ResponseDTO.get(ecmArtworkDao.updateByPrimaryKeySelective(ecmArtworkVO) == 1);
     }
 
     @Override
     public PageDTO ajaxCheckList(EcmArtworkQuery ecmArtworkQuery) {
         // 这里是一个 链接查询 返回 带有 username 的 未审核的作品集合  按修改时间排序
-        List<EcmArtworkVO>  list = ecmArtworkDao.selectajaxCheckList(ecmArtworkQuery);
+        List<EcmArtworkVO> list = ecmArtworkDao.selectajaxCheckList(ecmArtworkQuery);
         //通过 作品list 查询对用的审核人list
         if (!CollectionUtils.isEmpty(list)) {
             List<EcmUserVO> listVOs = ecmUserDao.selectUserNameByList(list);
@@ -111,9 +121,9 @@ public class EcmArtworkServiceImpl implements EcmArtworkService {
                         }
                     }
                 });
-                listVOs.forEach( ecmUserVO -> {
+                listVOs.forEach(ecmUserVO -> {
 
-                    if (ecmArtworkVO.getFkUserid() != null ) {
+                    if (ecmArtworkVO.getFkUserid() != null) {
                         if (ecmUserVO.getPkUserId().equals(ecmArtworkVO.getFkUserid())) {
                             ecmArtworkVO.setUsername(ecmUserVO.getUsername());
                         }
@@ -125,7 +135,7 @@ public class EcmArtworkServiceImpl implements EcmArtworkService {
             });
         }
         Integer count = ecmArtworkDao.selectCountByCheckList(ecmArtworkQuery);
-        return PageDTO.setPageData(count,list);
+        return PageDTO.setPageData(count, list);
     }
 
     @Override
@@ -141,85 +151,155 @@ public class EcmArtworkServiceImpl implements EcmArtworkService {
 
     @Override
     public ResponseDTO upDataNode(EcmArtworkNodes ecmArtworkNodes) {
-        return ResponseDTO.get(ecmArtworkNodesDao.updateByPrimaryKeySelective(ecmArtworkNodes) == 1 );
+        return ResponseDTO.get(ecmArtworkNodesDao.updateByPrimaryKeySelective(ecmArtworkNodes) == 1);
     }
-
 
 
     @Override
     @Transactional
     public ResponseDTO checkArtWork(EcmArtworkQuery ecmArtworkQuery) {
+
+        Integer userId = (Integer) getRequstSession().getAttribute("userId");
+        EcmArtwork artwork = ecmArtworkDao.selectByPrimaryKey(ecmArtworkQuery.getPkArtworkId());
+        EcmArtwork ecmArtwork = new EcmArtwork();
+        if (artwork.getFkAuditId() == null){
+            ecmArtwork.setFkAuditId(userId);
+        }
+        if (!userId.equals(artwork.getFkAuditId()) &&artwork.getFkAuditId() != null ){
+            return ResponseDTO.fail("无权限");
+        }
+
         // 查询作品的 所有节点
         List<EcmArtworkNodesVo> ecmArtworkNodesVos = ecmArtworkNodesDao.selectByArtWorkId(ecmArtworkQuery.getPkArtworkId());
         // 先创建一个需要修个作品对象
-        EcmArtwork ecmArtwork = new EcmArtwork();
         ecmArtwork.setPkArtworkId(ecmArtworkQuery.getPkArtworkId());
         ecmArtwork.setLastModifyDate(new Date());
         // 循环遍历 比对 作品的 状态
         for (EcmArtworkNodesVo ecmArtworkNodesVo : ecmArtworkNodesVos) {
-            if (ecmArtworkNodesVo.getFkEndingId() == null){
+            if (ecmArtworkNodesVo.getFkEndingId() == null) {
                 return ResponseDTO.fail("作品有节点未审核");
-            }else if (ecmArtworkNodesVo.getFkEndingId()== 2){
+            } else if (ecmArtworkNodesVo.getFkEndingId() == 2) {
                 return ResponseDTO.fail("作品有节点未审核");
-            }else if (ecmArtworkNodesVo.getFkEndingId()== 3){
+            } else if (ecmArtworkNodesVo.getFkEndingId() == 3) {
                 return ResponseDTO.fail("作品有节点未审核");
-            }else if (ecmArtworkNodesVo.getFkEndingId()== 6){
+            } else if (ecmArtworkNodesVo.getFkEndingId() == 6) {
                 return ResponseDTO.fail("作品有举报节点未处理");
             }
         }
 
 
-        EcmReportHistroyVO ecmReportHistroyVO = ecmReportHistroyDao.selectByArtWorkId(ecmArtworkQuery.getPkArtworkId());
-
-        try{
+        try {
 
             // 判断是否 存在 不通过 节点
             for (EcmArtworkNodesVo ecmArtworkNodesVo : ecmArtworkNodesVos) {
                 // 判断是否 存在 不通过 节点
-                if (ecmArtworkNodesVo.getFkEndingId() == 5){
+                if (ecmArtworkNodesVo.getFkEndingId() == 5) {
                     // 设置作品状态
                     ecmArtwork.setArtworkStatus((short) 0);
-                    // 判断是不是 违规 作品
-                    if (ecmReportHistroyVO != null){
-                        // 改变节点状态
-                        ecmReportHistroyDao.updateStateSuccessByPrimaryKey(ecmReportHistroyVO.getReportId());
-                        ecmMessageService.insertViolationMsg(ecmReportHistroyVO,"作品涉嫌违规");
 
 
-                        // 发送 站内信  违规 ！！
-                    }else {
-                        // 发送站内信 不通过
-                        ecmMessageService.insertSystemMsg(ecmArtwork,"作品不通过审核");
-                    }
+                    // 发送站内信 不通过
+                    ecmMessageService.insertSystemMsg(ecmArtwork, "作品不通过审核");
+
                     ecmArtwork.setLastModifyDate(new Date());
-                    return ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeyFail(ecmArtwork),"作不通过审核,以还原成草稿");
+                    return ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeySelective(ecmArtwork), "作不通过审核,以还原成草稿");
                 }
             }
 
-            // 用户id ，发送人 ， 内容
-            if (ecmReportHistroyVO != null){
-                ecmReportHistroyDao.updateStateSuccessByPrimaryKey(ecmReportHistroyVO.getReportId());
-            }
 
-            ecmMessageService.insertSystemMsg(ecmArtwork,"作品通过审核");
+
+            ecmMessageService.insertSystemMsg(ecmArtwork, "作品通过审核");
 
             // 发送 站内信  通过 ！！
             ecmArtwork.setArtworkStatus((short) 2);
             // 修改作品状态
-            return ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeySelective(ecmArtwork),"作通过审核");
+            return ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeySelective(ecmArtwork), "作通过审核");
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return  ResponseDTO.fail("网络错误");
+            return ResponseDTO.fail("网络错误");
         }
-
 
     }
 
     @Override
+    public ResponseDTO reCheckArtWork(EcmArtworkQuery ecmArtworkQuery) {
+        Integer userId = (Integer) getRequstSession().getAttribute("userId");
+        EcmReportHistroyVO ecmReportHistroyVO = ecmReportHistroyDao.selectByArtWorkId(ecmArtworkQuery.getPkArtworkId());
+
+        EcmArtwork ecmArtwork = new EcmArtwork();
+
+        if (ecmReportHistroyVO.getFkChUserid() == null){
+            ecmReportHistroyVO.setFkChUserid(userId);
+        }
+        if (!userId.equals(ecmReportHistroyVO.getFkChUserid()) && ecmReportHistroyVO.getFkChUserid() != null ){
+            return ResponseDTO.fail("无权限");
+        }
+
+
+        // 查询作品的 所有节点
+        List<EcmArtworkNodesVo> ecmArtworkNodesVos = ecmArtworkNodesDao.selectByArtWorkId(ecmArtworkQuery.getPkArtworkId());
+        // 先创建一个需要修个作品对象
+        ecmArtwork.setPkArtworkId(ecmArtworkQuery.getPkArtworkId());
+        ecmArtwork.setLastModifyDate(new Date());
+        // 循环遍历 比对 作品的 状态
+        for (EcmArtworkNodesVo ecmArtworkNodesVo : ecmArtworkNodesVos) {
+            if (ecmArtworkNodesVo.getFkEndingId() == null) {
+                return ResponseDTO.fail("作品有节点未审核");
+            } else if (ecmArtworkNodesVo.getFkEndingId() == 2) {
+                return ResponseDTO.fail("作品有节点未审核");
+            } else if (ecmArtworkNodesVo.getFkEndingId() == 3) {
+                return ResponseDTO.fail("作品有节点未审核");
+            } else if (ecmArtworkNodesVo.getFkEndingId() == 6) {
+                return ResponseDTO.fail("作品有举报节点未处理");
+            }
+        }
+
+        EcmReportHistroy ecmReportHistroy = new EcmReportHistroy();
+        ecmReportHistroy.setReportId(ecmReportHistroyVO.getReportId());
+        ecmReportHistroy.setUpdataTime(new Date());
+        ecmReportHistroy.setReState((short) 2);
+        ecmReportHistroy.setFkChUserid(userId);
+        try {
+
+            // 判断是否 存在 不通过 节点
+            for (EcmArtworkNodesVo ecmArtworkNodesVo : ecmArtworkNodesVos) {
+                // 判断是否 存在 不通过 节点
+                if (ecmArtworkNodesVo.getFkEndingId() == 5) {
+                    // 设置作品状态
+                    ecmArtwork.setArtworkStatus((short) 0);
+                    // 判断是不是 违规 作品
+                    // 改变节点状态
+
+//                    ecmReportHistroyDao.updateStateSuccessByPrimaryKey(ecmReportHistroyVO.getReportId());
+                    ecmReportHistroyDao.updateByPrimaryKeySelective(ecmReportHistroy);
+                    ecmMessageService.insertViolationMsg(ecmReportHistroyVO, "作品涉嫌违规");
+                    // 发送 站内信  违规 ！！
+                    ecmArtwork.setLastModifyDate(new Date());
+                    ecmArtwork.setFkAuditId(userId);
+                    return ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeySelective(ecmArtwork), "作不通过审核,以还原成草稿");
+                }
+            }
+
+            // 用户id ，发送人 ， 内容
+//            ecmReportHistroyDao.updateStateSuccessByPrimaryKey(ecmReportHistroyVO.getReportId());
+            ecmReportHistroyDao.updateByPrimaryKeySelective(ecmReportHistroy);
+            // 修改作品状态
+
+            return ResponseDTO.ok("作品以确认无问题！");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return ResponseDTO.fail("网络错误");
+        }
+    }
+
+
+    @Override
     public ResponseDTO upDataArtWork(EcmArtwork ecmArtwork) {
-        return  ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeySelective(ecmArtwork));
+        return ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeySelective(ecmArtwork));
     }
 
     @Override
@@ -232,10 +312,12 @@ public class EcmArtworkServiceImpl implements EcmArtworkService {
             if (ecmArtwork.getFkAuditId().equals(artwork.getFkAuditId())) {
                 return ResponseDTO.ok();
             }
-        }else {
+        } else {
             // 没有审核人 ，当前用户做为审核人
             return upDataArtWork(ecmArtwork);
         }
         return ResponseDTO.fail("error");
     }
+
+
 }

@@ -334,7 +334,7 @@
   <update id="updateByPrimaryKeyFail">
 
     update ecm_artwork
-    set  artwork_status = 0,fk_audit_id =null
+    set  artwork_status = 1,fk_audit_id =null
     where pk_artwork_id =#{pkArtworkId}
 
   </update>

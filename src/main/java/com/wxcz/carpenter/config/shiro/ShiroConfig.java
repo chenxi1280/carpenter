@@ -137,7 +137,7 @@ public class ShiroConfig {
     @Bean
     public DefaultWebSessionManager defaultWebSessionManager(SessionDAO sessionDAO) { // 6
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
-        sessionManager.setGlobalSessionTimeout(30 * 60 * 1000);// 设置Session全局过期时间
+        sessionManager.setGlobalSessionTimeout(30 * 60 * 1000 * 12);// 设置Session全局过期时间
         sessionManager.setDeleteInvalidSessions(true);// 如果检测到过期就删除Session
         sessionManager.setSessionValidationSchedulerEnabled(true);// 开启循环检测
         sessionManager.setSessionDAO(sessionDAO);// 设置SessionDAO

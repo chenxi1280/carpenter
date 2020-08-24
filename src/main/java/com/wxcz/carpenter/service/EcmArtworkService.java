@@ -93,4 +93,6 @@ public interface EcmArtworkService {
      * 不是: status 500  msg "error“
      */
     ResponseDTO artWorkAudit(EcmArtwork ecmArtwork);
+
+    ResponseDTO reCheckArtWork(EcmArtworkQuery ecmArtworkQuery);
 }

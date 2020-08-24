@@ -32,9 +32,10 @@ public class HomeController extends BaseController {
 
         Subject subject = SecurityUtils.getSubject();
         if (subject.hasRole("admin") || subject.hasRole("superadmin")){
+
             return "back/home";
         }
-
+        SecurityUtils.getSubject().logout();
         return "error/loginError-403";
     }
 
