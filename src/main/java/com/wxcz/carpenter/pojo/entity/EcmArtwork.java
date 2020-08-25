@@ -29,7 +29,7 @@ public class EcmArtwork implements Serializable {
     private String artworkDescribe;
 
     /**
-     * 状态，0草稿，1待审核，2已发布审核通过，3审核不通过禁封，4，审核中，5被删除
+     * 状态，0草稿，1待审核，2审核通过，3，ai审核通过，4，已发布，5被删除
      */
     private Short artworkStatus;
 
@@ -37,6 +37,11 @@ public class EcmArtwork implements Serializable {
      * 作品封面存储位置，绝对路径
      */
     private String logoPath;
+
+    /**
+     * 图片审核状态
+     */
+    private Short logoPathStatus;
 
     private Date lastCreateDate;
 

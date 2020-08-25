@@ -168,6 +168,11 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
         if (!userId.equals(artwork.getFkAuditId()) &&artwork.getFkAuditId() != null ){
             return ResponseDTO.fail("无权限");
         }
+        if (artwork.getLogoPathStatus() == 0 ){
+            return ResponseDTO.fail("图片未审核");
+        }
+
+
 
         // 查询作品的 所有节点
         List<EcmArtworkNodesVo> ecmArtworkNodesVos = ecmArtworkNodesDao.selectByArtWorkId(ecmArtworkQuery.getPkArtworkId());
@@ -186,6 +191,17 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
                 return ResponseDTO.fail("作品有举报节点未处理");
             }
         }
+
+        if (artwork.getLogoPathStatus() == 2 ){
+            // 发送站内信 不通过
+            ecmMessageService.insertSystemMsg(ecmArtwork, "封面未通过");
+            // 设置作品状态
+            ecmArtwork.setArtworkStatus((short) 0);
+
+            ecmArtwork.setLastModifyDate(new Date());
+            return ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeySelective(ecmArtwork), "作不通过审核,以还原成草稿");
+        }
+
 
 
         try {
@@ -294,6 +310,24 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return ResponseDTO.fail("网络错误");
         }
+    }
+
+    @Override
+    public ResponseDTO chArtWorkImg(EcmArtworkVO ecmArtworkVO) {
+        EcmArtwork ecmArtwork = ecmArtworkDao.selectByPrimaryKey(ecmArtworkVO.getPkArtworkId());
+        Integer userId = (Integer) getRequstSession().getAttribute("userId");
+        if (ecmArtwork != null){
+            if (ecmArtwork.getFkAuditId() != null  &&  !userId.equals(ecmArtwork.getFkAuditId())){
+                return ResponseDTO.ok("无权限");
+            }else {
+                ecmArtworkVO.setFkAuditId(userId);
+            }
+        }
+
+
+
+
+        return ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeySelective(ecmArtworkVO));
     }
 
 

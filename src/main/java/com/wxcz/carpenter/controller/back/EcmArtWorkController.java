@@ -207,4 +207,10 @@ public class EcmArtWorkController extends BaseController {
         return ecmArtworkService.reCheckArtWork(ecmArtworkQuery);
     }
 
+    @RequestMapping("chArtWorkImg")
+    @ResponseBody
+    public ResponseDTO chArtWorkImg(EcmArtworkVO ecmArtworkVO) {
+        return ecmArtworkService.chArtWorkImg(ecmArtworkVO);
+    }
+
 }

@@ -95,4 +95,6 @@ public interface EcmArtworkService {
     ResponseDTO artWorkAudit(EcmArtwork ecmArtwork);
 
     ResponseDTO reCheckArtWork(EcmArtworkQuery ecmArtworkQuery);
+
+    ResponseDTO chArtWorkImg(EcmArtworkVO ecmArtworkQuery);
 }

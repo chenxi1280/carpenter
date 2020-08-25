@@ -8,6 +8,7 @@
     <result column="artwork_describe" jdbcType="VARCHAR" property="artworkDescribe" />
     <result column="artwork_status" jdbcType="SMALLINT" property="artworkStatus" />
     <result column="logo_path" jdbcType="VARCHAR" property="logoPath" />
+    <result column="logo_path_status" jdbcType="SMALLINT" property="logoPathStatus" />
     <result column="last_create_date" jdbcType="TIMESTAMP" property="lastCreateDate" />
     <result column="last_modify_date" jdbcType="TIMESTAMP" property="lastModifyDate" />
     <result column="four_letter_tips" jdbcType="VARCHAR" property="fourLetterTips" />
@@ -15,7 +16,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     pk_artwork_id, fk_userId, artwork_name, artwork_describe, artwork_status, logo_path,
-    last_create_date, last_modify_date, four_letter_tips, fk_audit_id
+    logo_path_status, last_create_date, last_modify_date, four_letter_tips, fk_audit_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
@@ -29,13 +30,13 @@
   </delete>
   <insert id="insert" keyColumn="pk_artwork_id" keyProperty="pkArtworkId" parameterType="com.wxcz.carpenter.pojo.entity.EcmArtwork" useGeneratedKeys="true">
     insert into ecm_artwork (fk_userId, artwork_name, artwork_describe,
-      artwork_status, logo_path, last_create_date,
-      last_modify_date, four_letter_tips, fk_audit_id
-      )
+      artwork_status, logo_path, logo_path_status,
+      last_create_date, last_modify_date, four_letter_tips,
+      fk_audit_id)
     values (#{fkUserid,jdbcType=INTEGER}, #{artworkName,jdbcType=VARCHAR}, #{artworkDescribe,jdbcType=VARCHAR},
-      #{artworkStatus,jdbcType=SMALLINT}, #{logoPath,jdbcType=VARCHAR}, #{lastCreateDate,jdbcType=TIMESTAMP},
-      #{lastModifyDate,jdbcType=TIMESTAMP}, #{fourLetterTips,jdbcType=VARCHAR}, #{fkAuditId,jdbcType=INTEGER}
-      )
+      #{artworkStatus,jdbcType=SMALLINT}, #{logoPath,jdbcType=VARCHAR}, #{logoPathStatus,jdbcType=SMALLINT},
+      #{lastCreateDate,jdbcType=TIMESTAMP}, #{lastModifyDate,jdbcType=TIMESTAMP}, #{fourLetterTips,jdbcType=VARCHAR},
+      #{fkAuditId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" keyColumn="pk_artwork_id" keyProperty="pkArtworkId" parameterType="com.wxcz.carpenter.pojo.entity.EcmArtwork" useGeneratedKeys="true">
     insert into ecm_artwork
@@ -54,6 +55,9 @@
       </if>
       <if test="logoPath != null">
         logo_path,
+      </if>
+      <if test="logoPathStatus != null">
+        logo_path_status,
       </if>
       <if test="lastCreateDate != null">
         last_create_date,
@@ -83,6 +87,9 @@
       </if>
       <if test="logoPath != null">
         #{logoPath,jdbcType=VARCHAR},
+      </if>
+      <if test="logoPathStatus != null">
+        #{logoPathStatus,jdbcType=SMALLINT},
       </if>
       <if test="lastCreateDate != null">
         #{lastCreateDate,jdbcType=TIMESTAMP},
@@ -116,6 +123,9 @@
       <if test="logoPath != null">
         logo_path = #{logoPath,jdbcType=VARCHAR},
       </if>
+      <if test="logoPathStatus != null">
+        logo_path_status = #{logoPathStatus,jdbcType=SMALLINT},
+      </if>
       <if test="lastCreateDate != null">
         last_create_date = #{lastCreateDate,jdbcType=TIMESTAMP},
       </if>
@@ -138,6 +148,7 @@
       artwork_describe = #{artworkDescribe,jdbcType=VARCHAR},
       artwork_status = #{artworkStatus,jdbcType=SMALLINT},
       logo_path = #{logoPath,jdbcType=VARCHAR},
+      logo_path_status = #{logoPathStatus,jdbcType=SMALLINT},
       last_create_date = #{lastCreateDate,jdbcType=TIMESTAMP},
       last_modify_date = #{lastModifyDate,jdbcType=TIMESTAMP},
       four_letter_tips = #{fourLetterTips,jdbcType=VARCHAR},
