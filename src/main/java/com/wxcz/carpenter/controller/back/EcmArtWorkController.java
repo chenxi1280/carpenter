@@ -45,7 +45,6 @@ public class EcmArtWorkController extends BaseController {
      * @Date: 2020/8/7
      * 描述 : 跳转页面
      */
-
     @RequestMapping("artWorkPage")
     public String artWorkPage() {
         return "back/artWork/artWork-list";
@@ -187,9 +186,10 @@ public class EcmArtWorkController extends BaseController {
      * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO
      * @author: cxd
      * @Date: 2020/8/12
-     * 描述 : 返回作品的 状态
+     * 描述 : 审核 检查 作品
+     *   返回作品的 状态
      * 保存成功: status 200  msg “作品未通过审核” “作通过审核”
-     * 保存失败: status 500  msg “作品有节点未审核”
+     * 保存失败: status 500  msg “作品有节点未审核”  “无权限”
      */
     @RequiresRoles("admin")
     @RequestMapping("checkArtWork")
@@ -199,6 +199,16 @@ public class EcmArtWorkController extends BaseController {
         return ecmArtworkService.checkArtWork(ecmArtworkQuery);
     }
 
+    /**
+     * @param: [ecmArtworkQuery] 节点id
+     * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO
+     * @author: cxd
+     * @Date: 2020/8/25
+     * 描述 :  审核 投诉 作品
+     * 返回作品的 状态
+     * 保存成功: status 200  msg “作品未通过审核” “作通过审核”
+     * 保存失败: status 500  msg “作品有节点未审核” “无权限”
+     */
     @RequiresRoles("admin")
     @RequestMapping("reCheckArtWork")
     @ResponseBody
@@ -207,6 +217,16 @@ public class EcmArtWorkController extends BaseController {
         return ecmArtworkService.reCheckArtWork(ecmArtworkQuery);
     }
 
+    /**
+     * @param: [ecmArtworkVO] 作品id ，图片状态
+     * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO
+     * @author: cxd
+     * @Date: 2020/8/25
+     * 描述 :   图片审核接口
+     *    改变作品封面 状态
+     * 保存成功: status 200  msg “success”
+     * 保存失败: status 500  msg “无权限”
+     */
     @RequestMapping("chArtWorkImg")
     @ResponseBody
     public ResponseDTO chArtWorkImg(EcmArtworkVO ecmArtworkVO) {

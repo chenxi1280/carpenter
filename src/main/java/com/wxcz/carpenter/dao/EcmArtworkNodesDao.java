@@ -31,7 +31,30 @@ public interface EcmArtworkNodesDao {
      */
     List<EcmArtworkNodesVo> selectByArtWorkId(Integer pkArtworkId);
 
+    /**
+     * @param: [fkArtworkId]
+     * @return: java.lang.Integer
+     * @author: cxd
+     * @Date: 2020/8/25
+     * 描述 : 根据作品id 更新 投诉 节点状态 为被投诉状态
+     */
     Integer updateByReportHistroy(Integer fkArtworkId);
 
+    /**
+     * @param: [pkArtworkId]
+     * @return: java.lang.Integer
+     * @author: cxd
+     * @Date: 2020/8/25
+     * 描述 : 根据 作品id ，修改节点状态 为审核通过状态
+     */
     Integer updateStateFailByArtWorkId(Integer pkArtworkId);
+
+    /**
+     * @param: [fkArtworkNodeId]
+     * @return: java.lang.Integer
+     * @author: cxd
+     * @Date: 2020/8/25
+     * 描述 : 根据作品id 更新 投诉 节点状态 为被投诉状态
+     */
+    Integer updateByReportHistroyNode(Integer fkArtworkNodeId);
 }

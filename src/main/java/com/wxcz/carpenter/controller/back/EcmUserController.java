@@ -42,12 +42,17 @@ public class EcmUserController extends BaseController {
         return "back/user/user-list";
     }
 
-
+    /**
+     * @param: []
+     * @return: java.lang.String
+     * @author: cxd
+     * @Date: 2020/8/25
+     * 描述 : 页面跳转 用户 数据 表
+     */
     @RequestMapping("/userDataPage")
     public String userDataPage() {
         return "back/user/user-data-list";
     }
-
 
     /**
      * @param: []
@@ -88,7 +93,6 @@ public class EcmUserController extends BaseController {
     @RequestMapping("chengUser")
     @ResponseBody
     public ResponseDTO chengUser(EcmUserVO ecmUserVO) {
-
         return ecmUserService.chengUser(ecmUserVO);
     }
 
@@ -102,7 +106,6 @@ public class EcmUserController extends BaseController {
      * 保存成功: status 200  msg "success”
      * 保存失败: status 500  msg "error“
      */
-
     @RequestMapping("setPassWord")
     @ResponseBody
     public ResponseDTO setPassWord(EcmUserVO ecmUserVO) {

@@ -75,11 +75,39 @@ public interface EcmArtworkDao {
      */
     List<EcmArtworkVO> selectajaxListByQuery(EcmArtworkQuery ecmArtworkQuery);
 
+    /**
+     * @param: [pkUserId] 用户id
+     * @return: java.lang.Integer
+     * @author: cxd
+     * @Date: 2020/8/25
+     * 描述 :  用户封禁下架所有作品
+     */
     Integer downArtWorkByUserId(Integer pkUserId);
 
+    /**
+     * @param: [pkUserId]
+     * @return: java.lang.Integer
+     * @author: cxd
+     * @Date: 2020/8/25
+     * 描述 : 根据用户id 查询 作品
+     */
     Integer selectByUserId(Integer pkUserId);
 
+    /**
+     * @param: [list]
+     * @return: java.util.List<com.wxcz.carpenter.pojo.vo.EcmArtworkVO>
+     * @author: cxd
+     * @Date: 2020/8/25
+     * 描述 : 根据 投诉集合查询 作品信息
+     */
     List<EcmArtworkVO> selectByReportList(@Param(("ids")) List<EcmReportHistroyVO> list);
 
+    /**
+     * @param: [ecmArtwork]
+     * @return: java.lang.Integer
+     * @author: cxd
+     * @Date: 2020/8/25
+     * 描述 : 更新 作品 审核失败  审核人清空
+     */
     Integer updateByPrimaryKeyFail(EcmArtwork ecmArtwork);
 }

@@ -287,5 +287,10 @@
 
 
   </update>
+  <update id="updateByReportHistroyNode">
+          update ecm_artwork_nodes
+      set fk_ending_id = 6
+      where pk_detail_id =  #{fkArtworkNodeId}
+  </update>
 
 </mapper>

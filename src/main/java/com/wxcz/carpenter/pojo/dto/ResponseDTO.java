@@ -7,8 +7,8 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * creator：cxd
- * date:2020/8/5
+ * @author cxd
+ * @Date: 2020/8/25
  */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)

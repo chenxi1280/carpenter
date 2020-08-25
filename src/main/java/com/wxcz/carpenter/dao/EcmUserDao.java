@@ -81,9 +81,30 @@ public interface EcmUserDao {
      */
     List<EcmUserVO> selectUserNameByList(@Param("ids") List list);
 
+    /**
+     * @param: [list]
+     * @return: java.util.List<com.wxcz.carpenter.pojo.vo.EcmUserVO>
+     * @author: cxd
+     * @Date: 2020/8/25
+     * 描述 :  根据 投诉审核人id集合  查询 用户集合
+     */
     List<EcmUserVO> selectByReportList(@Param("ids")List<EcmReportHistroyVO> list);
 
+    /**
+     * @param: []
+     * @return: java.util.List<com.wxcz.carpenter.pojo.vo.EcmUserVO>
+     * @author: cxd
+     * @Date: 2020/8/25
+     * 描述 : 查询所有用户 （有电话号码的）
+     */
     List<EcmUserVO> selectAll();
 
+    /**
+     * @param: [asList] userId 集合
+     * @return: java.util.List<com.wxcz.carpenter.pojo.vo.EcmUserVO>
+     * @author: cxd
+     * @Date: 2020/8/25
+     * 描述 : 根据id 集合查询用户集合
+     */
     List<EcmUserVO> selectIds(@Param("ids") List<Integer> asList);
 }

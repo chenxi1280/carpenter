@@ -24,11 +24,8 @@ public class HomeController extends BaseController {
      * @Date: 2020/8/7
      * 描述 : 跳转页面接口
      */
-
     @RequestMapping("/home")
     public String home() {
-
-
 
         Subject subject = SecurityUtils.getSubject();
         if (subject.hasRole("admin") || subject.hasRole("superadmin")){

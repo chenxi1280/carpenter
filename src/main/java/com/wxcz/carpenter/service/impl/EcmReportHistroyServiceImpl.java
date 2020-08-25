@@ -116,8 +116,10 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
                 return ResponseDTO.ok();
             }
         }else {
-            // 没有审核人 ，当前用户做为审核人
+            // 没有审核人 ，当前用户做为审核人  需要修改，在前端 有 节点详情的时候需修改 单个节点的信息
             ecmArtworkNodesDao.updateByReportHistroy(ecmReportHistroy.getFkArtworkId());
+            // 单个节点的信息
+            //ecmArtworkNodesDao.updateByReportHistroyNode(ecmReportHistroy.getFkArtworkNodeId());
             return ResponseDTO.get(1 == ecmReportHistroyDao.updateByPrimaryKeySelective(ecmReportHistroy));
         }
         return ResponseDTO.fail("error");
@@ -125,20 +127,18 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
 
     @Override
     public ResponseDTO getArtWorkNoteS(EcmArtworkQuery ecmArtworkVO) {
+        //判断 作品表中是否有这个作品
         EcmArtwork ecmArtwork = ecmArtworkDao.selectByPrimaryKey(ecmArtworkVO.getPkArtworkId());
         if (ecmArtwork == null) {
             return ResponseDTO.fail("查询id为空");
         }
         List<EcmArtworkNodesVo> list = ecmArtworkNodesDao.selectByArtWorkId(ecmArtworkVO.getPkArtworkId());
         EcmReportHistroy ecmReportHistroy = ecmReportHistroyDao.selectByPrimaryKey(ecmArtworkVO.getReportId());
-//        List l = new ArrayList();
-//        l.add(TreeUtil.buildTree(list).get(0));
-//        l.add(ecmReportHistroy);
+
         Map map = new HashMap(2);
         map.put("artWork",TreeUtil.buildTree(list).get(0));
         map.put("reportHistroy",ecmReportHistroy);
         return ResponseDTO.ok("success", map);
-
 
     }
 

@@ -113,24 +113,20 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
     }
 
     @Override
+    @Transactional
     public ResponseDTO addMsgPart(EcmTemplateVo ecmTemplateVo) {
         EcmTemplate ecmTemplate = ecmTemplateDao.selectByPrimaryKey(ecmTemplateVo.getPkTemplateId());
-
         List<EcmUserVO>  list =  ecmUserDao.selectIds( Arrays.asList(ecmTemplateVo.getIds()));
         // 查出 模板
-
         List<EcmInnerMessageVO> ecmInnerMessageVOS = msgReplace( ecmTemplate.getContent(), list);
 
         try {
-
             ecmInnerMessageDao.insertMsgPart(ecmInnerMessageVOS);
-
             return ResponseDTO.ok();
         } catch (Exception e){
 
             e.printStackTrace();
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-
             return ResponseDTO.fail("发送错误，请重试");
 
         }
@@ -184,6 +180,7 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
         return ecmInnerMessageDao.insertSelective(ecmInnerMessageVO);
     }
 
+    // 站内信 msg 所用用户 发送
     private List<EcmInnerMessageVO> msgReplace(String content ,List<EcmUserVO>  list ){
 
 
@@ -200,7 +197,9 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
     }
 
 
+    // 站内信 msg 模板替换方法
     private EcmInnerMessageVO getInsertMsgVO(String content, EcmUser ecmUserVO,String artWorkName ,String nodeName ) {
+
         EcmInnerMessageVO ecmInnerMessageVO = new EcmInnerMessageVO();
         // ${} 替换名字
         ecmInnerMessageVO.setContent(Parser.parse0(content, ecmUserVO.getUsername()));
@@ -215,7 +214,10 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
         ecmInnerMessageVO.setFkUserId(ecmUserVO.getPkUserId());
         return ecmInnerMessageVO;
     }
+
+    // 站内信 msg 模板替换方法
     private EcmInnerMessageVO getInsertMsgVO(String content, EcmUser ecmUserVO,String artWorkName  ) {
+
         EcmInnerMessageVO ecmInnerMessageVO = new EcmInnerMessageVO();
         // ${} 替换名字
         ecmInnerMessageVO.setContent(Parser.parse0(content, ecmUserVO.getUsername()));
@@ -230,6 +232,8 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
         ecmInnerMessageVO.setFkUserId(ecmUserVO.getPkUserId());
         return ecmInnerMessageVO;
     }
+
+    // 站内信 msg 模板替换方法
     private EcmInnerMessageVO getInsertMsgVO(String content, EcmUser ecmUserVO ){
         EcmInnerMessageVO ecmInnerMessageVO = new EcmInnerMessageVO();
         // ${} 替换名字

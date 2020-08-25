@@ -160,7 +160,7 @@
   <!--  sql-->
   <select id="selectajaxList" resultType="com.wxcz.carpenter.pojo.vo.EcmArtworkVO">
     select pk_artwork_id, fk_userId, artwork_name, artwork_describe, artwork_status, logo_path,
-    last_create_date, last_modify_date, four_letter_tips,username,fk_audit_id
+    last_create_date, last_modify_date, four_letter_tips,username,fk_audit_id,logo_path_status
     from ecm_artwork a  inner  join ecm_user u
     on u.pk_user_id = a.fk_userId
     <where>
@@ -259,7 +259,7 @@
   <select id="selectajaxCheckList" resultType="com.wxcz.carpenter.pojo.vo.EcmArtworkVO">
 
     select pk_artwork_id, fk_userId, artwork_name, artwork_describe, artwork_status, logo_path,
-    last_create_date, last_modify_date, four_letter_tips,username,fk_audit_id
+    last_create_date, last_modify_date, four_letter_tips,username,fk_audit_id,logo_path_status
     from ecm_artwork a inner  join ecm_user u
     on u.pk_user_id = a.fk_userId
     <where> artwork_status = 1

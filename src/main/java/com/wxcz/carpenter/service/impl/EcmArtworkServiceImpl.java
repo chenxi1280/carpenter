@@ -324,9 +324,6 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
             }
         }
 
-
-
-
         return ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeySelective(ecmArtworkVO));
     }
 

@@ -70,6 +70,15 @@ public interface EcmArtworkService {
      */
     ResponseDTO upDataNode(EcmArtworkNodes ecmArtworkNodes);
 
+    /**
+     * @param: [ecmArtworkQuery] 需要审核检查作品的id
+     * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO
+     * @author: cxd
+     * @Date: 2020/8/25
+     * 描述 : 检查 作品子节点 接口，并根据节点状态 决定 作品状态
+     * 保存成功: status 200  msg “作品未通过审核” “作通过审核”
+     * 保存失败: status 500  msg “作品有节点未审核”  “无权限”
+     */
     ResponseDTO checkArtWork(EcmArtworkQuery ecmArtworkQuery);
 
     /**
@@ -94,7 +103,25 @@ public interface EcmArtworkService {
      */
     ResponseDTO artWorkAudit(EcmArtwork ecmArtwork);
 
+    /**
+     * @param: [ecmArtworkQuery]
+     * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO
+     * @author: cxd
+     * @Date: 2020/8/25
+     * 描述 :
+     *       保存成功: status 200  msg "success”
+     *       保存失败: status 500  msg "error“
+     */
     ResponseDTO reCheckArtWork(EcmArtworkQuery ecmArtworkQuery);
 
+    /**
+     * @param: [ecmArtworkQuery] 需要审核检查作品的id
+     * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO
+     * @author: cxd
+     * @Date: 2020/8/25
+     * 描述 : 检查 投诉作品子节点 接口，并根据节点状态 决定 作品状态
+     * 保存成功: status 200  msg “作品未通过审核” “作通过审核”
+     * 保存失败: status 500  msg “作品有节点未审核”  “无权限”
+     */
     ResponseDTO chArtWorkImg(EcmArtworkVO ecmArtworkQuery);
 }

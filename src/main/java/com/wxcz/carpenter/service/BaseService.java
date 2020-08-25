@@ -14,23 +14,23 @@ import javax.servlet.http.HttpSession;
  */
 public interface BaseService {
 
+    /**
+     * @param: []
+     * @return: javax.servlet.http.HttpServletRequest
+     * @author: cxd
+     * @Date: 2020/8/25
+     * 描述 :获取  httprequest
+     */
      default HttpServletRequest getRequest() {
         return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
     }
+
 
     /**
      * @param: []
      * @return: javax.servlet.http.HttpSession
      * @author: cxd
-     * @Date: 2020/8/7
-     * 描述 : 获取HttpSession
-     * @param userId
-     */
-    /**
-     * @param: []
-     * @return: javax.servlet.http.HttpSession
-     * @author: cxd
-     * @Date: 2020/8/7
+     * @Date: 2020/8/25
      * 描述 : 获取HttpSession
      */
     default HttpSession getRequstSession() {// 获取shiro自己的session

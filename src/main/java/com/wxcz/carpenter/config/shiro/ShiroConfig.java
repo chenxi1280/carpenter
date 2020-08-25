@@ -30,8 +30,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * creator：cxd
- * date: 2020/8/5
+ * @author cxd
+ * @Date: 2020/8/25
  */
 @Configuration
 public class ShiroConfig {
@@ -213,7 +213,7 @@ public class ShiroConfig {
 
 //        shiroFilterFactoryBean.setUnauthorizedUrl("/unAuthPage");  // 没有授权，后执行的方法，在控制器上的注解没有授权，没有角色或者权限，抛出异常之后，跳转的地址，这个配置无效的，需要全局异常捕获
         // map的key就是过滤器的名字
-        Map<String, Filter> filters = new HashMap<>();
+        Map<String, Filter> filters = new HashMap<>(100);
         // 增加自定义过滤器
       //  filters.put("authc", this.getLoginFilter());// 过滤链中就要加上自己定义的登录过滤器，代替shiro自带的登录过滤器
         filters.put("logout", this.getLogoutFilter());
@@ -223,7 +223,7 @@ public class ShiroConfig {
 
 
         // 配置哪个过滤器过滤哪个路径，而且顺序是从上往下匹配
-        Map<String, String> filterChainDefinitionMap = new HashMap<>();
+        Map<String, String> filterChainDefinitionMap = new HashMap<>(100);
 //        配置拦截路径用的，也就是说哪些路径应该经过哪些过滤器处理
 //        key:指的是路径
 //        value:指的是过滤器的名称简写

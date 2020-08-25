@@ -11,7 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * creator：cxd
+ * @author cxd
+ * @Date: 2020/8/25
  */
 public class ShiroAuthFilter extends FormAuthenticationFilter {
 

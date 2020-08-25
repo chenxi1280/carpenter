@@ -8,6 +8,7 @@ package com.wxcz.carpenter.common;
  */
 public enum ReportMnum {
 
+    //侵权视频状态
     tort(1,"侵权"),violations(2,"违规"),other(3,"其他");
     int value;
     String name;
