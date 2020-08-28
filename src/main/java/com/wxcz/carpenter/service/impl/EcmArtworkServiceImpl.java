@@ -93,7 +93,7 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
     public ResponseDTO chengArtWork(EcmArtworkVO ecmArtworkVO) {
         // 更新时间
         ecmArtworkVO.setLastModifyDate(new Date());
-        // 还原成 草稿 清空 审核人
+        // 还原成 待审核 清空 审核人
         if (ecmArtworkVO.getArtworkStatus() != null) {
             if (ecmArtworkVO.getArtworkStatus() == 1) {
                 return ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeyFail(ecmArtworkVO));
@@ -325,6 +325,27 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
         }
 
         return ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeySelective(ecmArtworkVO));
+    }
+
+    @Override
+    public ResponseDTO chengArtWorkReport(EcmArtworkVO ecmArtworkVO) {
+        // 更新时间
+        EcmReportHistroyVO ecmReportHistroyVO = ecmReportHistroyDao.selectByArtWorkId(ecmArtworkVO.getPkArtworkId());
+        if (ecmReportHistroyVO == null ){
+            EcmReportHistroy ecmReportHistroy = new EcmReportHistroy();
+            ecmReportHistroy.setReState((short) 1);
+            ecmReportHistroy.setFkArtworkId(ecmArtworkVO.getPkArtworkId());
+            ecmReportHistroy.setComtemt("测试");
+            ecmReportHistroy.setCreatetime( new Date());
+//            ecmReportHistroy.setFkChUserid(ecmArtworkVO.getFkUserid());
+            ecmReportHistroy.setFkArtworkNodeId(1);
+            ecmReportHistroy.setReportStatue((short) 1);
+            ecmReportHistroy.setFkUserid(ecmArtworkVO.getFkUserid());
+
+            return ResponseDTO.get(1 == ecmReportHistroyDao.insertSelective(ecmReportHistroy));
+        }
+
+        return ResponseDTO.get(ecmReportHistroyDao.updateStateSuccessByArtWorkId(ecmArtworkVO.getPkArtworkId()) == 1);
     }
 
 

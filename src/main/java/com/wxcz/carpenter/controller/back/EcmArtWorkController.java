@@ -233,4 +233,17 @@ public class EcmArtWorkController extends BaseController {
         return ecmArtworkService.chArtWorkImg(ecmArtworkVO);
     }
 
+
+    @RequestMapping("chengArtWorkReport")
+    @ResponseBody
+    public ResponseDTO chengArtWorkReport(EcmArtworkVO ecmArtworkVO) {
+
+        Subject subject = SecurityUtils.getSubject();
+        if (!subject.hasRole("superadmin")){
+            return ResponseDTO.fail("无权限");
+        }
+
+        return ecmArtworkService.chengArtWorkReport(ecmArtworkVO);
+    }
+
 }

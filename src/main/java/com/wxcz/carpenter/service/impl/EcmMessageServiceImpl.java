@@ -117,8 +117,8 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
     public ResponseDTO addMsgPart(EcmTemplateVo ecmTemplateVo) {
         EcmTemplate ecmTemplate = ecmTemplateDao.selectByPrimaryKey(ecmTemplateVo.getPkTemplateId());
         List<EcmUserVO>  list =  ecmUserDao.selectIds( Arrays.asList(ecmTemplateVo.getIds()));
-        // 查出 模板
-        List<EcmInnerMessageVO> ecmInnerMessageVOS = msgReplace( ecmTemplate.getContent(), list);
+        //
+        List<EcmInnerMessageVO> ecmInnerMessageVOS = msgReplace( ecmTemplate, list);
 
         try {
             ecmInnerMessageDao.insertMsgPart(ecmInnerMessageVOS);
@@ -142,11 +142,19 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
         EcmArtwork ecmArt = ecmArtworkDao.selectByPrimaryKey(ecmArtwork.getPkArtworkId());
         EcmUser ecmUser = ecmUserDao.selectByPrimaryKey(ecmArt.getFkUserid());
         EcmInnerMessageVO insertMsgVO = getInsertMsgVO(ecmTemplateVo.getContent(),  ecmUser,ecmArt.getArtworkName());
+        insertMsgVO.setFkTemplateId(ecmTemplateVo.getPkTemplateId());
         return ecmInnerMessageDao.insertSelective(insertMsgVO);
 
 
     }
 
+    /**
+     * @param: [ecmReportHistroy, template]
+     * @return: java.lang.Integer
+     * @author: cxd
+     * @Date: 2020/8/28
+     * 描述 :   投诉替换
+     */
     @Override
     public Integer insertViolationMsg(EcmReportHistroy ecmReportHistroy, String template) {
         EcmTemplateVo ecmTemplateVo = ecmTemplateDao.selectByTitle(template);
@@ -160,7 +168,7 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
         // !{} 替换作品
         ecmInnerMessageVO.setContent(Parser.parse("!{","}", ecmInnerMessageVO.getContent(),ecmReportHistroyVO.getArtWorkName() ));
         // @{}替换节点名字
-        ecmInnerMessageVO.setContent(Parser.parse("@{","}", ecmInnerMessageVO.getContent(),ecmReportHistroyVO.getArtWorkNameNodeName() ));
+        ecmInnerMessageVO.setContent(Parser.parse("@{","}", ecmInnerMessageVO.getContent(),ecmReportHistroyVO.getArtWorkNameNodeName()));
         // #{} 替换节点违规信息
         ecmInnerMessageVO.setContent(Parser.parse("#{","}", ecmInnerMessageVO.getContent(),ReportMnum.getByValue(ecmReportHistroyVO.getReportStatue()).getName() ));
 
@@ -174,24 +182,25 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
         }
         ecmInnerMessageVO.setReviewerId(2);
         ecmInnerMessageVO.setFkUserId(ecmReportHistroyVO.getFkUserid());
-
+        ecmInnerMessageVO.setFkTemplateId(ecmTemplateVo.getPkTemplateId());
 
 
         return ecmInnerMessageDao.insertSelective(ecmInnerMessageVO);
     }
 
     // 站内信 msg 所用用户 发送
-    private List<EcmInnerMessageVO> msgReplace(String content ,List<EcmUserVO>  list ){
+    private List<EcmInnerMessageVO> msgReplace(EcmTemplate ecmTemplate , List<EcmUserVO>  list ){
 
 
         List<EcmInnerMessageVO> ecmInnerMessageVOS = new ArrayList<>();
 //        content.replaceAll("{userName}","")
         for (EcmUserVO ecmUserVO : list) {
 
-            EcmInnerMessageVO ecmInnerMessageVO = getInsertMsgVO(content, ecmUserVO);
-
+            EcmInnerMessageVO ecmInnerMessageVO = getInsertMsgVO(ecmTemplate.getContent(), ecmUserVO);
+            ecmInnerMessageVO.setFkTemplateId(ecmTemplate.getPkTemplateId());
             ecmInnerMessageVOS.add(ecmInnerMessageVO);
         }
+
         return ecmInnerMessageVOS;
 
     }
@@ -238,10 +247,10 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
         EcmInnerMessageVO ecmInnerMessageVO = new EcmInnerMessageVO();
         // ${} 替换名字
         ecmInnerMessageVO.setContent(Parser.parse0(content, ecmUserVO.getUsername()));
-        // !{} 替换作品
-//        ecmInnerMessageVO.setContent(Parser.parse("!{","}", ecmInnerMessageVO.getContent(),"artWorkName" ));
-        // @{}替换节点名字
-//        ecmInnerMessageVO.setContent(Parser.parse("@{","}", ecmInnerMessageVO.getContent(),"nodeName" ));
+//         !{} 替换作品
+        ecmInnerMessageVO.setContent(Parser.parse("!{","}", ecmInnerMessageVO.getContent(),"artWorkName" ));
+//         @{}替换节点名字
+        ecmInnerMessageVO.setContent(Parser.parse("@{","}", ecmInnerMessageVO.getContent(),"nodeName" ));
 
         ecmInnerMessageVO.setMessageStatus((short) 0);
         ecmInnerMessageVO.setSendDate(new Date());

@@ -159,7 +159,7 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
         EcmReportHistroyVO ecmReportHistroyVO = (EcmReportHistroyVO) ecmReportHistroy;
 
         ecmReportHistroyVO.setUsername(ecmUser.getUsername());
-        ecmReportHistroyVO.setArtWorkNameNodeName(ecmArtworkNodesVos.getItemsText());
+        ecmReportHistroyVO.setArtWorkNameNodeName(ecmArtworkNodesVos.getVideoText());
         ecmReportHistroyVO.setArtWorkName(ecmArtwork.getArtworkName());
 
 

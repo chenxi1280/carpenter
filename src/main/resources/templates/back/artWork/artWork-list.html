@@ -161,9 +161,10 @@
                     }
                 }
                 , {
-                    field: '', title: '操作', width: 110, templet: function (d) {
+                    field: '', title: '操作', width: 160, templet: function (d) {
                         return '<div >' +
                             '<button class="layui-btn  layui-btn-warm layui-btn-xs" lay-event="setArtWork">调整作品</button>' +
+                            '<button class="layui-btn  layui-btn-warm layui-btn-xs" lay-event="setArtWorkReport">变为投诉</button>' +
                             '</div>'
                     }
                 }
@@ -250,8 +251,34 @@
 
                     break;
 
-                case 'edit':
-                    // 在这之前还需要render(渲染)一把
+                case 'setArtWorkReport':
+                    $.ajax({
+                        type: 'post',// ajax请求的方式，post或get
+                        url: '/ims/back/artWork/chengArtWorkReport',
+                        // contentType: "application/json",// 默认就是表单数据(不写)，如果此时要传递的是json字符串，
+                        // 那么此时就用application/json,如果此时要传递图片"multipart/form-data，还有数组，集合，还有对象，那么contentType必须指定为false
+                        data: {
+                            pkArtworkId: d.pkArtworkId,
+                            fkUserid : d.fkUserid
+                        },// 要上传的参数,把数组对象转换为JSON字符串
+                        dataType: 'json',// 服务器响应数据：json,text,html,xml
+                        processData: true,//布尔值,一般都不用设置，规定通过请求发送的数据是否转换为查询字符串。默认是 true。如果此时上传的时候，有图片，这里必须设置false,
+                        success: function (res) {// 请求成功，回调函数,data，指的就是服务器返回的数据
+
+                            layer.msg(res.msg)
+
+                            let page = $('.layui-laypage-skip .layui-input').val();
+                            let limit = $('.layui-laypage-limits').find('option:selected').val();
+                            layer.close(editRoleOpen); //再执行关闭
+
+                            artWorkTable.reload({
+                                page: page,
+                                size:limit,
+                            });
+
+
+                        },
+                    });
                     break;
             }
         });

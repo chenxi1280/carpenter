@@ -124,4 +124,6 @@ public interface EcmArtworkService {
      * 保存失败: status 500  msg “作品有节点未审核”  “无权限”
      */
     ResponseDTO chArtWorkImg(EcmArtworkVO ecmArtworkQuery);
+
+    ResponseDTO chengArtWorkReport(EcmArtworkVO ecmArtworkVO);
 }

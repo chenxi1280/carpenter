@@ -233,9 +233,15 @@
 
   <update id="updateStateSuccessByPrimaryKey">
     update ecm_report_histroy
-    set re_state = 2,fk_ch_userId =null
+    set re_state = 2
     where report_id = #{reportId}
 
   </update>
+    <update id="updateStateSuccessByArtWorkId">
+    update ecm_report_histroy
+    set re_state = 1,fk_ch_userId =null
+    where fk_artwork_id = #{pkArtworkId}
+
+    </update>
 
 </mapper>

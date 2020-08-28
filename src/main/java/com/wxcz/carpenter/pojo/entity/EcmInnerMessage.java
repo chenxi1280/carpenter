@@ -22,9 +22,14 @@ public class EcmInnerMessage implements Serializable {
     private Integer fkUserId;
 
     /**
-     * 审核人id
+     * 审核人发送人id
      */
     private Integer reviewerId;
+
+    /**
+     * 消息模板id
+     */
+    private Integer fkTemplateId;
 
     /**
      * 状态，0未读 1已读 2 删除
