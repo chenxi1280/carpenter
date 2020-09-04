@@ -54,6 +54,11 @@ public class EcmUserController extends BaseController {
         return "back/user/user-data-list";
     }
 
+    @RequestMapping("/userLogoListPage")
+    public String userLogoListPage() {
+        return "back/user/user-logo-list";
+    }
+
     /**
      * @param: []
      * @return: java.lang.String
@@ -112,6 +117,12 @@ public class EcmUserController extends BaseController {
         //通过session 拿到当前用户的id
         ecmUserVO.setPkUserId((Integer) getRequstSession().getAttribute("userId"));
         return ecmUserService.setPassWord(ecmUserVO);
+    }
+
+    @RequestMapping("updataUserLogoStatus")
+    @ResponseBody
+    public ResponseDTO updataUserLogoStatus(EcmUserVO ecmUserVO) {
+        return ecmUserService.updataUserLogoStatus(ecmUserVO);
     }
 
 }

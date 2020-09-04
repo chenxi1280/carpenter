@@ -97,4 +97,6 @@ public interface EcmUserService {
      * 保存失败: status 500  msg "error“
      */
     ResponseDTO setPassWord(EcmUserVO ecmUserVO);
+
+    ResponseDTO updataUserLogoStatus(EcmUserVO ecmUserVO);
 }

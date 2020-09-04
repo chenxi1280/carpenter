@@ -2,20 +2,19 @@ package com.wxcz.carpenter.service.impl;
 
 import com.hazelcast.util.StringUtil;
 import com.wxcz.carpenter.common.SecretKeyConstants;
-import com.wxcz.carpenter.dao.EcmArtworkDao;
-import com.wxcz.carpenter.dao.EcmUserAcessDao;
-import com.wxcz.carpenter.dao.EcmUserDao;
-import com.wxcz.carpenter.dao.EcmUserRolesDao;
+import com.wxcz.carpenter.dao.*;
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.entity.EcmArtwork;
 import com.wxcz.carpenter.pojo.entity.EcmUser;
 import com.wxcz.carpenter.pojo.entity.EcmUserRoles;
 import com.wxcz.carpenter.pojo.query.EcmUserQuery;
+import com.wxcz.carpenter.pojo.vo.EcmTemplateVo;
 import com.wxcz.carpenter.pojo.vo.EcmUserAcessVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserRolesVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserVO;
 import com.wxcz.carpenter.service.BaseService;
+import com.wxcz.carpenter.service.EcmMessageService;
 import com.wxcz.carpenter.service.EcmUserService;
 import com.wxcz.carpenter.util.EncryptUtil;
 import com.wxcz.carpenter.util.MD5Utils;
@@ -53,6 +52,11 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
 
     @Resource
     EcmArtworkDao ecmArtworkDao;
+
+    @Resource
+    EcmInnerMessageDao ecmInnerMessageDao;
+    @Resource
+    EcmMessageService ecmMessageService;
 
 
     @Override
@@ -107,19 +111,19 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
     @Override
     public PageDTO ajaxList(EcmUserQuery ecmUserQuery) {
 
-        if (StringUtils.isEmpty(ecmUserQuery.getPhone())) {
+        if (StringUtils.isEmpty(ecmUserQuery.getPhone())){
             ecmUserQuery.setPhone("");
         }
 
         List<EcmUserVO> list = ecmUserDao.selectListByQuery(ecmUserQuery);
 
-        Integer count = ecmUserDao.selectCountByQuery(ecmUserQuery);
+//        list.stream().filter( ecmUserVO ->  ecmUserVO.getRoles())
+
         list.forEach( ecmUserVO ->  {
             try {
                 ecmUserVO.setMobile(EncryptUtil.aesDecrypt(  ecmUserVO.getMobile(), SecretKeyConstants.secretKey));
             } catch (Exception e) {
                 e.printStackTrace();
-
             }
             String[] split = ecmUserVO.getRoles().split(",");
             for (String s : split) {
@@ -137,6 +141,8 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
             }
         });
 
+
+        Integer count = list.size();
         return PageDTO.setPageData(count,list);
     }
 
@@ -221,6 +227,30 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
         }
         return ResponseDTO.fail("请输入密码");
 
+    }
+
+    @Override
+    public ResponseDTO updataUserLogoStatus(EcmUserVO ecmUserVO) {
+
+        if (ecmUserVO.getUserLogoStatus() == null){
+            return ResponseDTO.fail("网络错误");
+        }
+        String msg = "审核已通过";
+        if (ecmUserVO.getUserLogoStatus() ==2 ){
+
+            ecmUserVO.setUserLogoUrl("https://sike-1259692143.cos.ap-chongqing.myqcloud.com/img/1599099032542img.png");
+            msg = "审核不通过";
+            // 站内信发送
+            EcmTemplateVo ecmTemplateVo = new EcmTemplateVo();
+            //  15 为头像违规 模板
+            ecmTemplateVo.setPkTemplateId(15);
+            ecmTemplateVo.setIds(new Integer[] {ecmUserVO.getPkUserId()});
+            ecmMessageService.addMsgPart(ecmTemplateVo);
+
+        }
+        ecmUserDao.updateByPrimaryKeySelective(ecmUserVO);
+
+        return ResponseDTO.ok(msg);
     }
 
 

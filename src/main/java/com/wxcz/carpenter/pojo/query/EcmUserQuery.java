@@ -26,7 +26,7 @@ public class EcmUserQuery extends PageQuery {
     private String phone;
 
     /**
-     * 是否有效Y/N
+     * 是否有效封禁
      */
     private String isValid;
 
@@ -35,4 +35,10 @@ public class EcmUserQuery extends PageQuery {
      * 角色id , 分割
      */
     private String roles;
+
+    /**
+     * 用户头像状态 0 未审核，1 通过 ，2 不通过
+     */
+    private Byte userLogoStatus;
+
 }

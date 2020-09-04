@@ -72,5 +72,15 @@ public class EcmUser implements Serializable {
      */
     private String roles;
 
+    /**
+     * 用户头像
+     */
+    private String userLogoUrl;
+
+    /**
+     * 用户头像状态 0 未审核，1 通过 ，2 不通过
+     */
+    private Byte userLogoStatus;
+
     private static final long serialVersionUID = 1L;
 }
