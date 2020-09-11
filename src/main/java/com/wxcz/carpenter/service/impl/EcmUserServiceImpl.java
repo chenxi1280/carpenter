@@ -7,12 +7,10 @@ import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.entity.EcmArtwork;
 import com.wxcz.carpenter.pojo.entity.EcmUser;
+import com.wxcz.carpenter.pojo.entity.EcmUserFlow;
 import com.wxcz.carpenter.pojo.entity.EcmUserRoles;
 import com.wxcz.carpenter.pojo.query.EcmUserQuery;
-import com.wxcz.carpenter.pojo.vo.EcmTemplateVo;
-import com.wxcz.carpenter.pojo.vo.EcmUserAcessVO;
-import com.wxcz.carpenter.pojo.vo.EcmUserRolesVO;
-import com.wxcz.carpenter.pojo.vo.EcmUserVO;
+import com.wxcz.carpenter.pojo.vo.*;
 import com.wxcz.carpenter.service.BaseService;
 import com.wxcz.carpenter.service.EcmMessageService;
 import com.wxcz.carpenter.service.EcmUserService;
@@ -55,9 +53,12 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
 
     @Resource
     EcmInnerMessageDao ecmInnerMessageDao;
+
     @Resource
     EcmMessageService ecmMessageService;
 
+    @Resource
+    EcmUserFlowDao ecmUserFlowDao;
 
     @Override
     public EcmUserVO login(EcmUserQuery query) {
@@ -117,6 +118,9 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
 
         List<EcmUserVO> list = ecmUserDao.selectListByQuery(ecmUserQuery);
 
+        List<EcmUserFlowVO> ecmUserFlowVOS = ecmUserFlowDao.selectByUserList(list);
+
+
 //        list.stream().filter( ecmUserVO ->  ecmUserVO.getRoles())
 
         list.forEach( ecmUserVO ->  {
@@ -124,6 +128,14 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
                 ecmUserVO.setMobile(EncryptUtil.aesDecrypt(  ecmUserVO.getMobile(), SecretKeyConstants.secretKey));
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+            ecmUserFlowVOS.forEach( flow -> {
+               if (flow.getUserId().equals(ecmUserVO.getPkUserId())){
+                   ecmUserVO.setUpFlow(String.valueOf((flow.getTotalFlow() - flow.getSurplusFlow()) / 1204) +"MB" );
+               }
+            });
+            if (ecmUserVO.getUpFlow() == null){
+                ecmUserVO.setUpFlow("500MB");
             }
             String[] split = ecmUserVO.getRoles().split(",");
             for (String s : split) {

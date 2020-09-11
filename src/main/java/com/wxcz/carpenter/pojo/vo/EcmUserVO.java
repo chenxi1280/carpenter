@@ -17,4 +17,6 @@ public class EcmUserVO extends EcmUser {
     private List<EcmUserRolesVO> ecmUserRolesVOS;
     private String roleName;
 
+    //上行流量
+    private String upFlow;
 }
