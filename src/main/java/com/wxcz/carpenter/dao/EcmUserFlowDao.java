@@ -26,5 +26,8 @@ public interface EcmUserFlowDao {
 
     Integer updateUserFlowCheck(@Param("list")List<EcmUserFlow> ecmUserFlows);
 
-    List<EcmUserFlow> selectByUserIds(@Param("ids") Collection<Integer> integers);
+    List<EcmUserFlowVO> selectByUserIds(@Param("ids") Collection<Integer> integers);
+
+    Integer updateUserFlowByCheck(@Param("list")List<EcmUserFlow> ecmUserFlows);
+
 }

@@ -2,8 +2,11 @@ package com.wxcz.carpenter.dao;
 
 import com.wxcz.carpenter.pojo.entity.EcmUserHistoryFlow;
 import com.wxcz.carpenter.pojo.vo.EcmUserHistoryFlowVO;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public interface EcmUserHistoryFlowDao {
     int deleteByPrimaryKey(Integer flowHistoryId);
@@ -21,4 +24,7 @@ public interface EcmUserHistoryFlowDao {
 
     List<EcmUserHistoryFlowVO> selectUserFlowAll();
 
+    List<EcmUserHistoryFlowVO> selectUserFlowByOneDay();
+
+    List<EcmUserHistoryFlowVO> selectUserFlowByUserIds(@Param("ids") Collection userIds);
 }

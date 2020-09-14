@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wxcz.carpenter.dao.EcmFlowCheckHistoryDao">
+  <resultMap id="BaseResultMap" type="com.wxcz.carpenter.pojo.entity.EcmFlowCheckHistory">
+    <id column="flow_check_id" jdbcType="INTEGER" property="flowCheckId" />
+    <result column="fk_user_id" jdbcType="INTEGER" property="fkUserId" />
+    <result column="old_flow" jdbcType="INTEGER" property="oldFlow" />
+    <result column="new_flow" jdbcType="INTEGER" property="newFlow" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    flow_check_id, fk_user_id, old_flow, new_flow, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ecm_flow_check_history
+    where flow_check_id = #{flowCheckId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ecm_flow_check_history
+    where flow_check_id = #{flowCheckId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="flow_check_id" keyProperty="flowCheckId" parameterType="com.wxcz.carpenter.pojo.entity.EcmFlowCheckHistory" useGeneratedKeys="true">
+    insert into ecm_flow_check_history (fk_user_id, old_flow, new_flow, 
+      create_time)
+    values (#{fkUserId,jdbcType=INTEGER}, #{oldFlow,jdbcType=INTEGER}, #{newFlow,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="flow_check_id" keyProperty="flowCheckId" parameterType="com.wxcz.carpenter.pojo.entity.EcmFlowCheckHistory" useGeneratedKeys="true">
+    insert into ecm_flow_check_history
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="fkUserId != null">
+        fk_user_id,
+      </if>
+      <if test="oldFlow != null">
+        old_flow,
+      </if>
+      <if test="newFlow != null">
+        new_flow,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="fkUserId != null">
+        #{fkUserId,jdbcType=INTEGER},
+      </if>
+      <if test="oldFlow != null">
+        #{oldFlow,jdbcType=INTEGER},
+      </if>
+      <if test="newFlow != null">
+        #{newFlow,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wxcz.carpenter.pojo.entity.EcmFlowCheckHistory">
+    update ecm_flow_check_history
+    <set>
+      <if test="fkUserId != null">
+        fk_user_id = #{fkUserId,jdbcType=INTEGER},
+      </if>
+      <if test="oldFlow != null">
+        old_flow = #{oldFlow,jdbcType=INTEGER},
+      </if>
+      <if test="newFlow != null">
+        new_flow = #{newFlow,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where flow_check_id = #{flowCheckId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wxcz.carpenter.pojo.entity.EcmFlowCheckHistory">
+    update ecm_flow_check_history
+    set fk_user_id = #{fkUserId,jdbcType=INTEGER},
+      old_flow = #{oldFlow,jdbcType=INTEGER},
+      new_flow = #{newFlow,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where flow_check_id = #{flowCheckId,jdbcType=INTEGER}
+  </update>
+
+<!--  sql-->
+  <insert id="insertUserFlowByCheck">
+     insert into ecm_flow_check_history
+     (fk_user_id, old_flow, new_flow,create_time)
+     values <foreach collection="list" item="item" index="index" separator=",">
+     (
+        #{item.userId},
+        #{item.oldFlow},
+        #{item.surplusFlow},
+        #{item.updateTime}
+      )
+    </foreach>
+
+  </insert>
+</mapper>

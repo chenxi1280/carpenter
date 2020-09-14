@@ -11,4 +11,6 @@ import lombok.Data;
  */
 @Data
 public class EcmUserFlowVO extends EcmUserFlow {
+
+    private Integer oldFlow;
 }

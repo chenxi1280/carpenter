@@ -127,5 +127,18 @@
     select <include refid="Base_Column_List" />
     from ecm_user_history_flow
   </select>
+  <select id="selectUserFlowByOneDay" resultType="com.wxcz.carpenter.pojo.vo.EcmUserHistoryFlowVO">
+    select <include refid="Base_Column_List"/>
+    from ecm_user_history_flow
+    where creat_time >=(NOW() - interval 24 hour)
+  </select>
+  <select id="selectUserFlowByUserIds" resultType="com.wxcz.carpenter.pojo.vo.EcmUserHistoryFlowVO">
+    select <include refid="Base_Column_List"/>
+    from ecm_user_history_flow
+    where user_id in <foreach collection="ids" separator="," open="(" close=")" item="id">
+    #{id}
+    </foreach>
+
+  </select>
 
 </mapper>
