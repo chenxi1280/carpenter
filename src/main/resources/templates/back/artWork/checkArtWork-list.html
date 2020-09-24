@@ -45,6 +45,34 @@
     <div>
         <img id="showBigImg" src="" style="width: 378px;height: 672px;"/>
     </div>
+
+    <view :style=' " background:url(" + item.logoPath + ")  center ;background-size: cover; " ' class="artWorkImgDiv" v-show="item.code  != 'ad'">
+
+        <view :style=' "height: " + item.high + "px;  display: flex;  flex-direction: column-reverse;" '>
+
+            <view style="background-color: rgba(0,0,0,.1); padding-left: 10px; ">
+                <view style="display: flex ;  padding-top: 5px;">
+                    <img :src="item.userLogoUrl" style="width: 60px; height: 60px; border-radius: 30px;" />
+                    <view class="demo-price" style="color: #FFFFFF; padding-left: 10px; padding-top: 12px;">
+                        {{item.userName}}
+                    </view>
+                </view>
+
+                <view class="demo-title" style="color: #FFFFFF;">
+                    {{item.artworkName}}
+                </view>
+                <view style="color: #FFFFFF; padding-bottom: 10px; display: flex; ">
+                    <view>
+<!--                        <img src="../../../static/icon/heat_degree.png" style="width: 40px; height: 40px; border-radius: 20px; color: #FA3534;" />-->
+                    </view>
+                    <view style="color: #FFFFFF; padding-left: 10px; padding-top: 6px;">
+                        {{item.hotCount}}
+                    </view>
+                </view>
+
+            </view>
+        </view>
+    </view>
 </script>
 
 <!--查看这个角色的角色的弹框-->

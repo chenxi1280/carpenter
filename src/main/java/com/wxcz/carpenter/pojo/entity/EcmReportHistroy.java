@@ -55,7 +55,7 @@ public class EcmReportHistroy implements Serializable {
     /**
      * 投诉内容
      */
-    private String comtemt;
+    private String content;
 
     /**
      * 举报时间

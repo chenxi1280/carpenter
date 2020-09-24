@@ -55,7 +55,7 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
     public PageDTO ajaxList(ReportArtWorkQuery reportArtWorkQuery) {
 
         List<EcmReportHistroyVO> list = ecmReportHistroyDao.selectAjaxList(reportArtWorkQuery);
-        Integer count = ecmReportHistroyDao.selectAjaxCount(reportArtWorkQuery);
+        Integer count = list.size();
 
 
         //通过 作品list 查询对用的审核人list

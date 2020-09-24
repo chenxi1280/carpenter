@@ -1,0 +1,96 @@
+package com.wxcz.carpenter.task.broadcastHot;
+
+import com.wxcz.carpenter.dao.EcmArtworkBroadcastHistoryDao;
+import com.wxcz.carpenter.dao.EcmArtworkBroadcastHotDao;
+import com.wxcz.carpenter.pojo.entity.EcmArtworkBroadcastHistory;
+import com.wxcz.carpenter.pojo.entity.EcmArtworkBroadcastHot;
+import com.wxcz.carpenter.pojo.entity.EcmUserFlow;
+import com.wxcz.carpenter.pojo.entity.EcmUserHistoryFlow;
+import com.wxcz.carpenter.pojo.vo.EcmArtworkBroadcastHistoryVO;
+import com.wxcz.carpenter.pojo.vo.EcmArtworkBroadcastHotVO;
+import com.wxcz.carpenter.pojo.vo.EcmUserFlowVO;
+import com.wxcz.carpenter.pojo.vo.EcmUserHistoryFlowVO;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import javax.annotation.Resource;
+import java.util.*;
+import java.util.stream.Collectors;
+
+/**
+ * @author by cxd
+ * @Classname BroadcastHotHandle
+ * @Description TODO
+ * @Date 2020/9/18 13:17
+ */
+@Slf4j
+@Component
+@EnableScheduling
+public class BroadcastHotHandle {
+
+    @Resource
+    EcmArtworkBroadcastHistoryDao ecmArtworkBroadcastHistoryDao;
+    @Resource
+    EcmArtworkBroadcastHotDao ecmArtworkBroadcastHotDao;
+
+
+    /**
+     * @param: []
+     * @return: void
+     * @author: cxd
+     * @Date: 2020/9/18
+     * 描述 :  没日重新计算 作品播放次数 定时任务， 每日 5.10 启动
+     *          获取 过去24 小时的全部 播放记录 ，进行计算 ，
+     *          有数据不等 会用 之前的  播放记录数+ 昨天播放记录数
+     */
+    @Scheduled(cron = "0 10 5 ? * *")
+//    @Scheduled(cron = "0/10 * * * * ?")
+    private void handleBroadcastHot() {
+        // 获取 所有 播放记录
+//        List<EcmArtworkBroadcastHistoryVO> ecmArtworkBroadcastHistoryVOS = ecmArtworkBroadcastHistoryDao.selectAll();
+        // 获取过去一天的 播放视频的 视频 播放记录
+        List<EcmArtworkBroadcastHistoryVO> ecmArtworkBroadcastHistoryVOS = ecmArtworkBroadcastHistoryDao.selectByOneDay();
+
+        Map<Integer, List<EcmArtworkBroadcastHistoryVO>> collect = ecmArtworkBroadcastHistoryVOS.stream().collect( Collectors.groupingBy(EcmArtworkBroadcastHistory::getFkArtworkId));
+
+        Set<Integer> integers = collect.keySet();
+
+        List<EcmArtworkBroadcastHotVO> ecmArtworkBroadcastHotVOList = ecmArtworkBroadcastHotDao.selectByArtworkIds(integers);
+
+        collect.forEach( (k,v) -> {
+            ecmArtworkBroadcastHotVOList.forEach( ecmArtworkBroadcastHotVO -> {
+                if (k.equals(ecmArtworkBroadcastHotVO.getFkArkworkId())){
+                   if (!ecmArtworkBroadcastHotVO.getBroadcastCount().equals(v.size() + ecmArtworkBroadcastHotVO.getWaitCount())){
+                       ecmArtworkBroadcastHotVO.setBroadcastCount(v.size() + ecmArtworkBroadcastHotVO.getWaitCount());
+                   }else {
+                       ecmArtworkBroadcastHotVO.setBroadcastCount(null);
+                   }
+                    ecmArtworkBroadcastHotVO.setWaitCount( v.size() + ecmArtworkBroadcastHotVO.getWaitCount() );
+                }
+            });
+        });
+
+        // 全部重新计算
+//        collect.forEach( (k,v) -> {
+//            ecmArtworkBroadcastHotVOList.forEach( ecmArtworkBroadcastHotVO -> {
+//                if (k.equals(ecmArtworkBroadcastHotVO.getFkArkworkId())){
+//                    if (!ecmArtworkBroadcastHotVO.getBroadcastCount().equals(v.size() )){
+//                        ecmArtworkBroadcastHotVO.setBroadcastCount(v.size() );
+//                    }
+//                }
+//            });
+//        });
+
+        if (!CollectionUtils.isEmpty(ecmArtworkBroadcastHotVOList)){
+            ecmArtworkBroadcastHotDao.updateByNewBroadcastHot(ecmArtworkBroadcastHotVOList);
+        }
+
+
+    }
+
+
+
+}

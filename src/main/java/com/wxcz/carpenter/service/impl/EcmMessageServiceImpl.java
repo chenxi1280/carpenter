@@ -1,5 +1,6 @@
 package com.wxcz.carpenter.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.wxcz.carpenter.common.ReportMnum;
 import com.wxcz.carpenter.dao.EcmArtworkDao;
 import com.wxcz.carpenter.dao.EcmInnerMessageDao;
@@ -16,12 +17,14 @@ import com.wxcz.carpenter.pojo.vo.EcmUserVO;
 import com.wxcz.carpenter.service.BaseService;
 import com.wxcz.carpenter.service.EcmMessageService;
 import com.wxcz.carpenter.service.EcmReportHistroyService;
+import com.wxcz.carpenter.util.HttpUtils;
 import com.wxcz.carpenter.util.Parser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -88,18 +91,10 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
         try {
             EcmTemplate ecmTemplate = ecmTemplateDao.selectByPrimaryKey(pkTemplateId);
             List<EcmUserVO>  list = ecmUserDao.selectAll();
+            List<EcmInnerMessageVO> ecmInnerMessageVOS = msgReplace( ecmTemplate, list);
 
-
-
-            EcmInnerMessage ecmInnerMessage = new EcmInnerMessage();
-            ecmInnerMessage.setMessageStatus((short) 0);
-            ecmInnerMessage.setSendDate(new Date());
-            ecmInnerMessage.setReviewerId((Integer) getRequstSession().getAttribute("userId"));
-            ecmInnerMessage.setContent(ecmTemplate.getContent());
-            ecmInnerMessageDao.insertMsgAll(list,ecmInnerMessage);
-            //可替换的 全部消息 代码
-//            List<EcmInnerMessageVO> ecmInnerMessageVOS = msgReplace(ecmTemplate.getContent(), list);
-//            ecmInnerMessageDao.insertMsgPart(ecmInnerMessageVOS);
+            ecmInnerMessageDao.insertMsgPart(ecmInnerMessageVOS);
+            HttpUtils.post(HttpUtils.sendHttpsUrl, JSON.toJSONString(ecmInnerMessageVOS));
             return ResponseDTO.ok();
         } catch (Exception e){
 
@@ -109,7 +104,6 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
             return ResponseDTO.fail("发送错误，请重试");
 
         }
-//        return ResponseDTO.get(1 ==  ecmInnerMessageDao.insertMsgAll(list,ecmInnerMessage) );
     }
 
     @Override
@@ -121,7 +115,9 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
         List<EcmInnerMessageVO> ecmInnerMessageVOS = msgReplace( ecmTemplate, list);
 
         try {
+
             ecmInnerMessageDao.insertMsgPart(ecmInnerMessageVOS);
+            HttpUtils.post(HttpUtils.sendHttpsUrl, JSON.toJSONString(ecmInnerMessageVOS));
             return ResponseDTO.ok();
         } catch (Exception e){
 
@@ -143,7 +139,18 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
         EcmUser ecmUser = ecmUserDao.selectByPrimaryKey(ecmArt.getFkUserid());
         EcmInnerMessageVO insertMsgVO = getInsertMsgVO(ecmTemplateVo.getContent(),  ecmUser,ecmArt.getArtworkName());
         insertMsgVO.setFkTemplateId(ecmTemplateVo.getPkTemplateId());
-        return ecmInnerMessageDao.insertSelective(insertMsgVO);
+        insertMsgVO.setTemplateName(ecmTemplateVo.getTemplateName());
+
+        try {
+            Integer a = ecmInnerMessageDao.insertSelective(insertMsgVO);
+            List<EcmInnerMessageVO>  ecmInnerMessageVOS = new ArrayList<>(1);
+            ecmInnerMessageVOS.add(insertMsgVO);
+            HttpUtils.post(HttpUtils.sendHttpsUrl, JSON.toJSONString(ecmInnerMessageVOS));
+            return a;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
 
 
     }
@@ -183,24 +190,33 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
         ecmInnerMessageVO.setReviewerId(2);
         ecmInnerMessageVO.setFkUserId(ecmReportHistroyVO.getFkUserid());
         ecmInnerMessageVO.setFkTemplateId(ecmTemplateVo.getPkTemplateId());
+        ecmInnerMessageVO.setTemplateName(ecmTemplateVo.getTemplateName());
 
+        try {
+            Integer a = ecmInnerMessageDao.insertSelective(ecmInnerMessageVO);
+            List<EcmInnerMessageVO>  ecmInnerMessageVOS = new ArrayList<>(1);
+            ecmInnerMessageVOS.add(ecmInnerMessageVO);
+            HttpUtils.post(HttpUtils.sendHttpsUrl, JSON.toJSONString(ecmInnerMessageVOS));
+            return a;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
 
-        return ecmInnerMessageDao.insertSelective(ecmInnerMessageVO);
     }
 
-    // 站内信 msg 所用用户 发送
+    // 站内信 msg 所用用户 发送 无替换
     private List<EcmInnerMessageVO> msgReplace(EcmTemplate ecmTemplate , List<EcmUserVO>  list ){
 
 
         List<EcmInnerMessageVO> ecmInnerMessageVOS = new ArrayList<>();
 //        content.replaceAll("{userName}","")
         for (EcmUserVO ecmUserVO : list) {
-
             EcmInnerMessageVO ecmInnerMessageVO = getInsertMsgVO(ecmTemplate.getContent(), ecmUserVO);
             ecmInnerMessageVO.setFkTemplateId(ecmTemplate.getPkTemplateId());
+            ecmInnerMessageVO.setTemplateName(ecmTemplate.getTemplateName());
             ecmInnerMessageVOS.add(ecmInnerMessageVO);
         }
-
         return ecmInnerMessageVOS;
 
     }

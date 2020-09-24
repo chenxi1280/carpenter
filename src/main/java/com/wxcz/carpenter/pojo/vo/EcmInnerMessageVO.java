@@ -11,5 +11,9 @@ import lombok.Data;
  */
 @Data
 public class EcmInnerMessageVO extends EcmInnerMessage {
+    /**
+     * 模板名称
+     */
+    private String templateName;
 
 }

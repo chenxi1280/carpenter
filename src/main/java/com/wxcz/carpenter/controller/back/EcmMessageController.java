@@ -139,7 +139,7 @@ public class EcmMessageController extends BaseController {
     }
 
     /**
-     * @param: [EcmTemplateVO] 发送 用户的 ids ， 发送的 msg模板 id
+     * @param: [EcmTemplateVO] 发送 用户的 ids ， 发送的 msg模板 id 无 替换模板
      * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO
      * @author: cxd
      * @Date: 2020/8/25

@@ -1,19 +1,13 @@
 package com.wxcz.carpenter.service.impl;
 
-import com.wxcz.carpenter.dao.EcmArtworkDao;
-import com.wxcz.carpenter.dao.EcmArtworkNodesDao;
-import com.wxcz.carpenter.dao.EcmReportHistroyDao;
-import com.wxcz.carpenter.dao.EcmUserDao;
+import com.wxcz.carpenter.dao.*;
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.entity.EcmArtwork;
 import com.wxcz.carpenter.pojo.entity.EcmArtworkNodes;
 import com.wxcz.carpenter.pojo.entity.EcmReportHistroy;
 import com.wxcz.carpenter.pojo.query.EcmArtworkQuery;
-import com.wxcz.carpenter.pojo.vo.EcmArtworkNodesVo;
-import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
-import com.wxcz.carpenter.pojo.vo.EcmReportHistroyVO;
-import com.wxcz.carpenter.pojo.vo.EcmUserVO;
+import com.wxcz.carpenter.pojo.vo.*;
 import com.wxcz.carpenter.service.BaseService;
 import com.wxcz.carpenter.service.EcmArtworkService;
 import com.wxcz.carpenter.service.EcmMessageService;
@@ -27,6 +21,7 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author by cxd
@@ -51,6 +46,9 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
 
     @Resource
     EcmMessageService ecmMessageService;
+
+    @Resource
+    EcmArtworkBroadcastHotDao ecmArtworkBroadcastHotDao;
 
     @Override
     public PageDTO ajaxList(EcmArtworkQuery ecmArtworkQuery) {
@@ -97,6 +95,16 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
         if (ecmArtworkVO.getArtworkStatus() != null) {
             if (ecmArtworkVO.getArtworkStatus() == 1) {
                 return ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeyFail(ecmArtworkVO));
+            }
+        }
+        if (ecmArtworkVO.getArtworkStatus() == 4){
+            EcmArtworkBroadcastHotVO ecmArtworkBroadcastHotVO = ecmArtworkBroadcastHotDao.selectByArtworkId(ecmArtworkVO.getPkArtworkId());
+            if ( ecmArtworkBroadcastHotVO == null){
+                ecmArtworkBroadcastHotVO  = new EcmArtworkBroadcastHotVO();
+                ecmArtworkBroadcastHotVO.setWaitCount(0);
+                ecmArtworkBroadcastHotVO.setBroadcastCount(0);
+                ecmArtworkBroadcastHotVO.setFkArkworkId(ecmArtworkVO.getPkArtworkId());
+                ecmArtworkBroadcastHotDao.insertSelective(ecmArtworkBroadcastHotVO);
             }
         }
 
@@ -176,11 +184,12 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
 
         // 查询作品的 所有节点
         List<EcmArtworkNodesVo> ecmArtworkNodesVos = ecmArtworkNodesDao.selectByArtWorkId(ecmArtworkQuery.getPkArtworkId());
+        List<EcmArtworkNodesVo> collect = ecmArtworkNodesVos.stream().filter(ecmArtworkNodesVo -> !"Y".equals(ecmArtworkNodesVo.getIsDeleted())).collect(Collectors.toList());
         // 先创建一个需要修个作品对象
         ecmArtwork.setPkArtworkId(ecmArtworkQuery.getPkArtworkId());
         ecmArtwork.setLastModifyDate(new Date());
         // 循环遍历 比对 作品的 状态
-        for (EcmArtworkNodesVo ecmArtworkNodesVo : ecmArtworkNodesVos) {
+        for (EcmArtworkNodesVo ecmArtworkNodesVo : collect) {
             if (ecmArtworkNodesVo.getFkEndingId() == null) {
                 return ResponseDTO.fail("作品有节点未审核");
             } else if (ecmArtworkNodesVo.getFkEndingId() == 2) {
@@ -207,7 +216,7 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
         try {
 
             // 判断是否 存在 不通过 节点
-            for (EcmArtworkNodesVo ecmArtworkNodesVo : ecmArtworkNodesVos) {
+            for (EcmArtworkNodesVo ecmArtworkNodesVo : collect) {
                 // 判断是否 存在 不通过 节点
                 if (ecmArtworkNodesVo.getFkEndingId() == 5) {
                     // 设置作品状态
@@ -221,9 +230,6 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
                     return ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeySelective(ecmArtwork), "作不通过审核,以还原成草稿");
                 }
             }
-
-
-
             ecmMessageService.insertSystemMsg(ecmArtwork, "作品通过审核");
 
             // 发送 站内信  通过 ！！
@@ -256,11 +262,12 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
 
         // 查询作品的 所有节点
         List<EcmArtworkNodesVo> ecmArtworkNodesVos = ecmArtworkNodesDao.selectByArtWorkId(ecmArtworkQuery.getPkArtworkId());
+        List<EcmArtworkNodesVo> collect = ecmArtworkNodesVos.stream().filter(ecmArtworkNodesVo -> !"Y".equals(ecmArtworkNodesVo.getIsDeleted())).collect(Collectors.toList());
         // 先创建一个需要修个作品对象
         ecmArtwork.setPkArtworkId(ecmArtworkQuery.getPkArtworkId());
         ecmArtwork.setLastModifyDate(new Date());
         // 循环遍历 比对 作品的 状态
-        for (EcmArtworkNodesVo ecmArtworkNodesVo : ecmArtworkNodesVos) {
+        for (EcmArtworkNodesVo ecmArtworkNodesVo : collect) {
             if (ecmArtworkNodesVo.getFkEndingId() == null) {
                 return ResponseDTO.fail("作品有节点未审核");
             } else if (ecmArtworkNodesVo.getFkEndingId() == 2) {
@@ -280,7 +287,7 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
         try {
 
             // 判断是否 存在 不通过 节点
-            for (EcmArtworkNodesVo ecmArtworkNodesVo : ecmArtworkNodesVos) {
+            for (EcmArtworkNodesVo ecmArtworkNodesVo : collect) {
                 // 判断是否 存在 不通过 节点
                 if (ecmArtworkNodesVo.getFkEndingId() == 5) {
                     // 设置作品状态
@@ -335,7 +342,7 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
             EcmReportHistroy ecmReportHistroy = new EcmReportHistroy();
             ecmReportHistroy.setReState((short) 1);
             ecmReportHistroy.setFkArtworkId(ecmArtworkVO.getPkArtworkId());
-            ecmReportHistroy.setComtemt("测试");
+            ecmReportHistroy.setContent("测试");
             ecmReportHistroy.setCreatetime( new Date());
 //            ecmReportHistroy.setFkChUserid(ecmArtworkVO.getFkUserid());
             ecmReportHistroy.setFkArtworkNodeId(1);

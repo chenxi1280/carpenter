@@ -1,5 +1,13 @@
 package com.wxcz.carpenter;
 
+import com.alibaba.fastjson.JSON;
+import com.wxcz.carpenter.pojo.entity.EcmInnerMessage;
+import com.wxcz.carpenter.util.HttpUtils;
+import org.jsoup.Connection;
+
+import java.io.IOException;
+import java.util.Date;
+
 /**
  * @author by cxd
  * @Classname Text
@@ -17,29 +25,16 @@ public class Text {
      *
      */
 
-    public static void main(String[] args) {
-        int[] a = {1,1,2};
-        removeDuplicates(a);
-
-        for (int i : a) {
-            System.out.println(i);
-
-        }
+    public static void main(String[] args) throws IOException {
+        EcmInnerMessage ecmInnerMessage = new EcmInnerMessage();
+        ecmInnerMessage.setFkUserId(5);
+        ecmInnerMessage.setFkTemplateId(1);
+        ecmInnerMessage.setPkMessageId(240);
+        ecmInnerMessage.setMessageStatus((short) 0);
+        ecmInnerMessage.setContent("恭喜用户注册成功加入我们万象成帧的大家庭");
+        ecmInnerMessage.setSendDate(new Date());
+        Connection.Response post = HttpUtils.post("http://localhost:8008/pushMsg", JSON.toJSONString(ecmInnerMessage));
+        System.out.println("发送成功");
     }
 
-    public static int removeDuplicates(int[] nums) {
-        if (nums == null ) {
-            return 0;
-        }
-        int i = 0;
-        for (int j = 0; j < nums.length; j++) {
-            if (nums[i] != nums[j]) {
-                i++;
-                nums[i] = nums[j];
-            }
-
-        }
-
-        return i+1;
-    }
 }

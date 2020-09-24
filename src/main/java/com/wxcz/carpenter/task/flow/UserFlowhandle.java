@@ -85,6 +85,7 @@ public class UserFlowhandle {
             }
 
         });
+        // 保存没有出错的 用户流量数
         if (!CollectionUtils.isEmpty(ecmUserFlowArrayList)) {
             Integer c = ecmUserFlowDao.updateUserFlowCheck(ecmUserFlowArrayList);
         }

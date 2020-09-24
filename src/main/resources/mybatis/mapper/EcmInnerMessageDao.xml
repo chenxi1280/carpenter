@@ -127,10 +127,9 @@
         </foreach>
 
     </insert>
-    <insert id="insertMsgPart">
+    <insert id="insertMsgPart" keyColumn="pk_message_id" keyProperty="pkMessageId"  useGeneratedKeys="true">
 
         insert into ecm_inner_message
-
         (fk_user_id, reviewer_id, message_status,send_date, content,fk_template_id)
         values
         <foreach collection="list" separator="," index="index" item="item" >

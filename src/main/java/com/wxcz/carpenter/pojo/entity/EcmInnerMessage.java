@@ -1,5 +1,6 @@
 package com.wxcz.carpenter.pojo.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -39,6 +40,7 @@ public class EcmInnerMessage implements Serializable {
     /**
      * 发送时间
      */
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date sendDate;
 
     /**

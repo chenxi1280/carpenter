@@ -10,16 +10,16 @@
     <result column="re_state" jdbcType="SMALLINT" property="reState" />
     <result column="report_statue" jdbcType="SMALLINT" property="reportStatue" />
     <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
-    <result column="comtemt" jdbcType="VARCHAR" property="comtemt" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
     <result column="updata_time" jdbcType="TIMESTAMP" property="updataTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    report_id, fk_artwork_Id, fk_userId, fk_artWork_node_id, fk_ch_userId, re_state, 
-    report_statue, img_url, comtemt, createtime, updata_time
+    report_id, fk_artwork_Id, fk_userId, fk_artWork_node_id, fk_ch_userId, re_state,
+    report_statue, img_url, content, createtime, updata_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from ecm_report_histroy
     where report_id = #{reportId,jdbcType=INTEGER}
@@ -29,13 +29,13 @@
     where report_id = #{reportId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" keyColumn="report_id" keyProperty="reportId" parameterType="com.wxcz.carpenter.pojo.entity.EcmReportHistroy" useGeneratedKeys="true">
-    insert into ecm_report_histroy (fk_artwork_Id, fk_userId, fk_artWork_node_id, 
-      fk_ch_userId, re_state, report_statue, 
-      img_url, comtemt, createtime, 
+    insert into ecm_report_histroy (fk_artwork_Id, fk_userId, fk_artWork_node_id,
+      fk_ch_userId, re_state, report_statue,
+      img_url, content, createtime,
       updata_time)
-    values (#{fkArtworkId,jdbcType=INTEGER}, #{fkUserid,jdbcType=INTEGER}, #{fkArtworkNodeId,jdbcType=INTEGER}, 
-      #{fkChUserid,jdbcType=INTEGER}, #{reState,jdbcType=SMALLINT}, #{reportStatue,jdbcType=SMALLINT}, 
-      #{imgUrl,jdbcType=VARCHAR}, #{comtemt,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
+    values (#{fkArtworkId,jdbcType=INTEGER}, #{fkUserid,jdbcType=INTEGER}, #{fkArtworkNodeId,jdbcType=INTEGER},
+      #{fkChUserid,jdbcType=INTEGER}, #{reState,jdbcType=SMALLINT}, #{reportStatue,jdbcType=SMALLINT},
+      #{imgUrl,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP},
       #{updataTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" keyColumn="report_id" keyProperty="reportId" parameterType="com.wxcz.carpenter.pojo.entity.EcmReportHistroy" useGeneratedKeys="true">
@@ -62,8 +62,8 @@
       <if test="imgUrl != null">
         img_url,
       </if>
-      <if test="comtemt != null">
-        comtemt,
+      <if test="content != null">
+        content,
       </if>
       <if test="createtime != null">
         createtime,
@@ -94,8 +94,8 @@
       <if test="imgUrl != null">
         #{imgUrl,jdbcType=VARCHAR},
       </if>
-      <if test="comtemt != null">
-        #{comtemt,jdbcType=VARCHAR},
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
       </if>
       <if test="createtime != null">
         #{createtime,jdbcType=TIMESTAMP},
@@ -129,8 +129,8 @@
       <if test="imgUrl != null">
         img_url = #{imgUrl,jdbcType=VARCHAR},
       </if>
-      <if test="comtemt != null">
-        comtemt = #{comtemt,jdbcType=VARCHAR},
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
       </if>
       <if test="createtime != null">
         createtime = #{createtime,jdbcType=TIMESTAMP},
@@ -150,7 +150,7 @@
       re_state = #{reState,jdbcType=SMALLINT},
       report_statue = #{reportStatue,jdbcType=SMALLINT},
       img_url = #{imgUrl,jdbcType=VARCHAR},
-      comtemt = #{comtemt,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
       createtime = #{createtime,jdbcType=TIMESTAMP},
       updata_time = #{updataTime,jdbcType=TIMESTAMP}
     where report_id = #{reportId,jdbcType=INTEGER}
@@ -158,12 +158,12 @@
 
 
 
-    <!--  sql-->
+  <!--  sql-->
 
   <select id="selectAjaxList" resultType="com.wxcz.carpenter.pojo.vo.EcmReportHistroyVO">
     select  <include refid="Base_Column_List" />
     from ecm_report_histroy
-    where re_state =1
+    where re_state = 1
       <if test="reportId != null and reportId!=''">
         and report_id like CONCAT('%',#{reportId},'%')
       </if>
@@ -179,9 +179,6 @@
       <if test="fkArtworkNodeId != null and fkArtworkNodeId!=''">
         and fk_artWork_node_id like CONCAT('%',#{fkArtworkNodeId},'%')
       </if>
-
-
-
       <if test="reportStatue != null and reportStatue!=''">
         and report_statue like CONCAT('%',#{reportStatue},'%')
       </if>
