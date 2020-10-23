@@ -131,7 +131,7 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
             }
             ecmUserFlowVOS.forEach( flow -> {
                if (flow.getUserId().equals(ecmUserVO.getPkUserId())){
-                   ecmUserVO.setUpFlow(String.valueOf((flow.getTotalFlow() - flow.getSurplusFlow()) / 1204) +"MB" );
+                   ecmUserVO.setUpFlow(String.valueOf((flow.getTotalFlow() - flow.getTotalFlow()) / 1204) +"MB" );
                }
             });
             if (ecmUserVO.getUpFlow() == null){

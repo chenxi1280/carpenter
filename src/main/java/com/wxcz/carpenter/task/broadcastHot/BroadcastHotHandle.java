@@ -3,13 +3,8 @@ package com.wxcz.carpenter.task.broadcastHot;
 import com.wxcz.carpenter.dao.EcmArtworkBroadcastHistoryDao;
 import com.wxcz.carpenter.dao.EcmArtworkBroadcastHotDao;
 import com.wxcz.carpenter.pojo.entity.EcmArtworkBroadcastHistory;
-import com.wxcz.carpenter.pojo.entity.EcmArtworkBroadcastHot;
-import com.wxcz.carpenter.pojo.entity.EcmUserFlow;
-import com.wxcz.carpenter.pojo.entity.EcmUserHistoryFlow;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkBroadcastHistoryVO;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkBroadcastHotVO;
-import com.wxcz.carpenter.pojo.vo.EcmUserFlowVO;
-import com.wxcz.carpenter.pojo.vo.EcmUserHistoryFlowVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,7 +12,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
