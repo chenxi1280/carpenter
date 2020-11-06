@@ -19,7 +19,7 @@ import java.util.Base64;
  * 
  * 类名称：  EncryptUtil   
  * 描述：加密机密工具  
- *@author  wusc   
+ * @author  wusc
  * 创建时间：  2018年11月23日 下午1:08:36 
  * 修改备注：
  *

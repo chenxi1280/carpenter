@@ -17,11 +17,13 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * @author by cxd
@@ -76,11 +78,15 @@ public class EcmArtWorkController extends BaseController {
     public String artWorkNodePage(Integer pkArtworkId ,Model model) {
         // 同时把作品id 传回前端
         model.addAttribute("pkArtworkId", pkArtworkId);
-        EcmReportHistroyVO ecmReportHistroyVO = ecmReportHistroyService.getReportIdByArtWorkId(pkArtworkId);
+        List<EcmReportHistroyVO> ecmReportHistroyVOList = ecmReportHistroyService.getReportIdByArtWorkId(pkArtworkId);
 
-        if (ecmReportHistroyVO != null) {
-            model.addAttribute("reportId", ecmReportHistroyVO.getReportId());
+        if (!CollectionUtils.isEmpty(ecmReportHistroyVOList)){
+            EcmReportHistroyVO ecmReportHistroyVO = ecmReportHistroyVOList.get(0);
+            if (ecmReportHistroyVO != null) {
+                model.addAttribute("reportId", ecmReportHistroyVO.getReportId());
+            }
         }
+
         //通过session 拿到当前用户的id
         EcmArtwork ecmArtwork = new EcmArtwork();
         //         暂定 节点审核人 id

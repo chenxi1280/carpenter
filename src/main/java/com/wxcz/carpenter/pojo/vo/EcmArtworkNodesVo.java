@@ -19,6 +19,26 @@ public class EcmArtworkNodesVo extends EcmArtworkNodes {
      */
     private List<EcmArtworkNodesVo> nodesVos;
 
+    /**
+     * 投诉类型：1侵权，2违规，3其他
+     */
+    private Short reportStatue;
+
+    /**
+     * 投诉内容
+     */
+    private String content;
+
+    /**
+     * 是否为投诉节点
+     */
+    private int  isReport;
+    /**
+     * 截图地址
+     */
+    private String reportImgUrl;
+
+
 
 
 

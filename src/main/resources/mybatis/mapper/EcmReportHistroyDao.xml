@@ -191,34 +191,25 @@
   <select id="selectAjaxCount" resultType="java.lang.Integer">
     select count(*)
     from ecm_report_histroy
-    <where>
-      <if test="reportId != null and reportId!=''">
-        and report_id like CONCAT('%',#{reportId},'%')
-      </if>
+    where re_state = 1
+    <if test="reportId != null and reportId!=''">
+      and report_id like CONCAT('%',#{reportId},'%')
+    </if>
 
-      <if test="fkArtworkId != null and fkArtworkId!=''">
-        and fk_artwork_id like CONCAT('%',#{fkArtworkId},'%')
-      </if>
+    <if test="fkArtworkId != null and fkArtworkId!=''">
+      and fk_artwork_id like CONCAT('%',#{fkArtworkId},'%')
+    </if>
 
-      <if test="fkUserid != null and fkUserid!=''">
-        and fk_userId like CONCAT('%',#{fkUserid},'%')
-      </if>
+    <if test="fkUserid != null and fkUserid!=''">
+      and fk_userId like CONCAT('%',#{fkUserid},'%')
+    </if>
 
-      <if test="fkArtworkNodeId != null and fkArtworkNodeId!=''">
-        and fk_artWork_node_id like CONCAT('%',#{fkArtworkNodeId},'%')
-      </if>
-
-
-
-      <if test="reState != null ">
-        and re_state like CONCAT('%',#{reState},'%')
-      </if>
-
-      <if test="reportStatue != null and reportStatue!=''">
-        and report_statue like CONCAT('%',#{reportStatue},'%')
-      </if>
-
-    </where>
+    <if test="fkArtworkNodeId != null and fkArtworkNodeId!=''">
+      and fk_artWork_node_id like CONCAT('%',#{fkArtworkNodeId},'%')
+    </if>
+    <if test="reportStatue != null and reportStatue!=''">
+      and report_statue like CONCAT('%',#{reportStatue},'%')
+    </if>
 
   </select>
   <select id="selectByArtWorkId" resultType="com.wxcz.carpenter.pojo.vo.EcmReportHistroyVO">
@@ -240,5 +231,11 @@
     where fk_artwork_id = #{pkArtworkId}
 
     </update>
+  <update id="updateReportHistroySByAtrworkId">
+     update ecm_report_histroy
+    set re_state = 2,fk_ch_userId =null
+    where fk_artwork_id = #{pkArtworkId}
+
+  </update>
 
 </mapper>

@@ -207,7 +207,7 @@ public class ShiroConfig {
         // 1：必须设置 SecurityManager
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         // 登陆错误或者被拦截之后，去访问访问的路径（方法）而不是页面
-        shiroFilterFactoryBean.setLoginUrl("/login");
+        shiroFilterFactoryBean.setLoginUrl("/ims/login");
         // 设置登陆成功执行方法的路径
         shiroFilterFactoryBean.setSuccessUrl("/back/home");
 

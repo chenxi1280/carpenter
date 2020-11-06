@@ -55,7 +55,7 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
     public PageDTO ajaxList(ReportArtWorkQuery reportArtWorkQuery) {
 
         List<EcmReportHistroyVO> list = ecmReportHistroyDao.selectAjaxList(reportArtWorkQuery);
-        Integer count = list.size();
+        Integer count =  ecmReportHistroyDao.selectAjaxCount(reportArtWorkQuery);
 
 
         //通过 作品list 查询对用的审核人list
@@ -66,7 +66,6 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
             List<EcmUserVO> ecmUserVOS = ecmUserDao.selectUserNameByList(list);
             //查询作品名字
             List<EcmArtworkVO> ecmArtworkVOList = ecmArtworkDao.selectByReportList(list);
-
 
             // 遍历 赋值 作品VO中的审核人名字
             list.forEach(ecmReportHistroyVO -> {
@@ -99,9 +98,6 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
 
             });
         }
-
-
-
         return PageDTO.setPageData(count,list);
     }
 
@@ -117,9 +113,10 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
             }
         }else {
             // 没有审核人 ，当前用户做为审核人  需要修改，在前端 有 节点详情的时候需修改 单个节点的信息
-            ecmArtworkNodesDao.updateByReportHistroy(ecmReportHistroy.getFkArtworkId());
+            // ecmArtworkNodesDao.updateByReportHistroy(ecmReportHistroy.getFkArtworkId());
             // 单个节点的信息
             //ecmArtworkNodesDao.updateByReportHistroyNode(ecmReportHistroy.getFkArtworkNodeId());
+
             return ResponseDTO.get(1 == ecmReportHistroyDao.updateByPrimaryKeySelective(ecmReportHistroy));
         }
         return ResponseDTO.fail("error");
@@ -133,17 +130,41 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
             return ResponseDTO.fail("查询id为空");
         }
         List<EcmArtworkNodesVo> list = ecmArtworkNodesDao.selectByArtWorkId(ecmArtworkVO.getPkArtworkId());
-        EcmReportHistroy ecmReportHistroy = ecmReportHistroyDao.selectByPrimaryKey(ecmArtworkVO.getReportId());
+        List<EcmReportHistroyVO> ecmReportHistroyVOList = ecmReportHistroyDao.selectByArtWorkId(ecmArtworkVO.getPkArtworkId());
+        // 优化到chair举报
+        List<EcmArtworkNodesVo> ecmArtworkNodesVos = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(ecmReportHistroyVOList)) {
+            list.forEach( v -> {
+                ecmReportHistroyVOList.forEach( ecmReportHistroyVO -> {
+                   if (ecmReportHistroyVO.getFkArtworkNodeId().equals(v.getPkDetailId())) {
+                       EcmArtworkNodesVo ecmArtworkNodesVo = new EcmArtworkNodesVo();
+                       v.setFkEndingId(6);
+                       v.setContent(ecmReportHistroyVO.getContent());
+                       v.setReportStatue(ecmReportHistroyVO.getReportStatue());
+                       v.setReportImgUrl(ecmReportHistroyVO.getImgUrl());
+                       v.setIsReport(1);
+                       ecmArtworkNodesVo.setFkEndingId(6);
+                       ecmArtworkNodesVo.setPkDetailId(v.getPkDetailId());
+                       ecmArtworkNodesVos.add(ecmArtworkNodesVo);
+                   }
+                });
+            });
+        }
 
+        EcmReportHistroy ecmReportHistroy = ecmReportHistroyDao.selectByPrimaryKey(ecmArtworkVO.getReportId());
+        if (!CollectionUtils.isEmpty(ecmArtworkNodesVos)) {
+            ecmArtworkNodesDao.updateByAtrworkNodes(ecmArtworkNodesVos);
+        }
         Map map = new HashMap(2);
         map.put("artWork",TreeUtil.buildTree(list).get(0));
+
         map.put("reportHistroy",ecmReportHistroy);
         return ResponseDTO.ok("success", map);
 
     }
 
     @Override
-    public EcmReportHistroyVO getReportIdByArtWorkId(Integer pkArtworkId) {
+    public  List<EcmReportHistroyVO> getReportIdByArtWorkId(Integer pkArtworkId) {
         return ecmReportHistroyDao.selectByArtWorkId(pkArtworkId) ;
     }
 

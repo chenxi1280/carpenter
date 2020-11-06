@@ -90,7 +90,7 @@ public class EcmReportHistroyController extends BaseController {
      * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO
      * @author: cxd
      * @Date: 2020/8/25
-     * 描述 : 根据 投诉作品id 获取 作品节点信息
+     * 描述 : 根据 作品id 获取 作品节点信息
      *       保存成功: status 200  msg "success”
      *       保存失败: status 500  msg "error“
      */

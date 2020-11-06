@@ -130,7 +130,6 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
                     }
                 });
                 listVOs.forEach(ecmUserVO -> {
-
                     if (ecmArtworkVO.getFkUserid() != null) {
                         if (ecmUserVO.getPkUserId().equals(ecmArtworkVO.getFkUserid())) {
                             ecmArtworkVO.setUsername(ecmUserVO.getUsername());
@@ -176,9 +175,14 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
         if (!userId.equals(artwork.getFkAuditId()) &&artwork.getFkAuditId() != null ){
             return ResponseDTO.fail("无权限");
         }
-        if (artwork.getLogoPathStatus() == 0 ){
+        if ( artwork.getLogoPathStatus()  == null) {
             return ResponseDTO.fail("图片未审核");
         }
+
+        if (artwork.getLogoPathStatus() == 0) {
+            return ResponseDTO.fail("图片未审核");
+        }
+
 
 
 
@@ -201,17 +205,14 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
             }
         }
 
-        if (artwork.getLogoPathStatus() == 2 ){
+        if (artwork.getLogoPathStatus() == 2) {
             // 发送站内信 不通过
             ecmMessageService.insertSystemMsg(ecmArtwork, "封面未通过");
             // 设置作品状态
             ecmArtwork.setArtworkStatus((short) 0);
-
             ecmArtwork.setLastModifyDate(new Date());
             return ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeySelective(ecmArtwork), "作不通过审核,以还原成草稿");
-        }
-
-
+       }
 
         try {
 
@@ -248,7 +249,8 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
     @Override
     public ResponseDTO reCheckArtWork(EcmArtworkQuery ecmArtworkQuery) {
         Integer userId = (Integer) getRequstSession().getAttribute("userId");
-        EcmReportHistroyVO ecmReportHistroyVO = ecmReportHistroyDao.selectByArtWorkId(ecmArtworkQuery.getPkArtworkId());
+        // 可优化
+        EcmReportHistroyVO ecmReportHistroyVO = ecmReportHistroyDao.selectByArtWorkId(ecmArtworkQuery.getPkArtworkId()).get(0);
 
         EcmArtwork ecmArtwork = new EcmArtwork();
 
@@ -258,7 +260,6 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
         if (!userId.equals(ecmReportHistroyVO.getFkChUserid()) && ecmReportHistroyVO.getFkChUserid() != null ){
             return ResponseDTO.fail("无权限");
         }
-
 
         // 查询作品的 所有节点
         List<EcmArtworkNodesVo> ecmArtworkNodesVos = ecmArtworkNodesDao.selectByArtWorkId(ecmArtworkQuery.getPkArtworkId());
@@ -284,6 +285,7 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
         ecmReportHistroy.setUpdataTime(new Date());
         ecmReportHistroy.setReState((short) 2);
         ecmReportHistroy.setFkChUserid(userId);
+        ecmReportHistroy.setFkArtworkId(ecmReportHistroyVO.getFkArtworkId());
         try {
 
             // 判断是否 存在 不通过 节点
@@ -294,7 +296,6 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
                     ecmArtwork.setArtworkStatus((short) 0);
                     // 判断是不是 违规 作品
                     // 改变节点状态
-
 //                    ecmReportHistroyDao.updateStateSuccessByPrimaryKey(ecmReportHistroyVO.getReportId());
                     ecmReportHistroyDao.updateByPrimaryKeySelective(ecmReportHistroy);
                     ecmMessageService.insertViolationMsg(ecmReportHistroyVO, "作品涉嫌违规");
@@ -307,7 +308,8 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
 
             // 用户id ，发送人 ， 内容
 //            ecmReportHistroyDao.updateStateSuccessByPrimaryKey(ecmReportHistroyVO.getReportId());
-            ecmReportHistroyDao.updateByPrimaryKeySelective(ecmReportHistroy);
+            ecmReportHistroyDao.updateReportHistroySByAtrworkId(ecmReportHistroy.getFkArtworkId());
+//            ecmReportHistroyDao.updateByPrimaryKeySelective(ecmReportHistroy);
             // 修改作品状态
 
             return ResponseDTO.ok("作品以确认无问题！");
@@ -337,7 +339,7 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
     @Override
     public ResponseDTO chengArtWorkReport(EcmArtworkVO ecmArtworkVO) {
         // 更新时间
-        EcmReportHistroyVO ecmReportHistroyVO = ecmReportHistroyDao.selectByArtWorkId(ecmArtworkVO.getPkArtworkId());
+        EcmReportHistroyVO ecmReportHistroyVO = ecmReportHistroyDao.selectByArtWorkId(ecmArtworkVO.getPkArtworkId()).get(0);
         if (ecmReportHistroyVO == null ){
             EcmReportHistroy ecmReportHistroy = new EcmReportHistroy();
             ecmReportHistroy.setReState((short) 1);

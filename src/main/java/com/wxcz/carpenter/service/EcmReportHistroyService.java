@@ -8,6 +8,8 @@ import com.wxcz.carpenter.pojo.query.EcmArtworkQuery;
 import com.wxcz.carpenter.pojo.query.ReportArtWorkQuery;
 import com.wxcz.carpenter.pojo.vo.EcmReportHistroyVO;
 
+import java.util.List;
+
 /**
  * @author by cxd
  * @Classname ReportArtWorkService
@@ -54,7 +56,7 @@ public interface EcmReportHistroyService {
      * @Date: 2020/8/25
      * 描述 : 根据作品id 获取 投诉 详情
      */
-    EcmReportHistroyVO getReportIdByArtWorkId(Integer pkArtworkId);
+    List<EcmReportHistroyVO> getReportIdByArtWorkId(Integer pkArtworkId);
 
     /**
      * @param: [ecmReportHistroy]

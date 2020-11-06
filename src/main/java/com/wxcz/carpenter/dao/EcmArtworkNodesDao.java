@@ -2,6 +2,7 @@ package com.wxcz.carpenter.dao;
 
 import com.wxcz.carpenter.pojo.entity.EcmArtworkNodes;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkNodesVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -57,4 +58,6 @@ public interface EcmArtworkNodesDao {
      * 描述 : 根据作品id 更新 投诉 节点状态 为被投诉状态
      */
     Integer updateByReportHistroyNode(Integer fkArtworkNodeId);
+
+    Integer updateByAtrworkNodes(@Param("list") List<EcmArtworkNodesVo> ecmArtworkNodesVos);
 }

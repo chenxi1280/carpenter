@@ -57,7 +57,9 @@ public interface EcmReportHistroyDao {
      * @Date: 2020/8/25
      * 描述 : 根据 作品id 查询投诉信息
      */
-    EcmReportHistroyVO selectByArtWorkId(Integer pkArtworkId);
+    List<EcmReportHistroyVO> selectByArtWorkId(Integer pkArtworkId);
 
     Integer updateStateSuccessByArtWorkId(Integer pkArtworkId);
+
+    Integer updateReportHistroySByAtrworkId(Integer fkArtworkId);
 }

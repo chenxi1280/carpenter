@@ -29,11 +29,13 @@
         var thisObj = $(obj) //js对象转jquery对象
         thisObj.parents().addClass('layui-this')
         thisObj.siblings().css("layui-nav-item layui-nav-itemed")
-
+        console.log(thisObj)
         $('#video').attr("src", thisObj.attr('sr'))
-
-
         $('#itemsText').text(thisObj.attr('itemsText'))
+        $('#img').attr("src",thisObj.attr('reportImgUrl'))
+        $('#comtemt').text(thisObj.attr('reportContent'))
+        $('#reState').text(thisObj.attr('reStateText'))
+
         nodeId = $(obj).attr("id")
 
     }
@@ -66,20 +68,18 @@
 
             <div style="display: flex">
                 <div>
-                    <video width="90%" height="100%" controls="controls" style="padding-left: 10%"
+                    <video width="315px" height="560px" controls="controls" style="margin-left: 20px"
                            id="video" src="">
                     </video>
+
                 </div>
-                <div style="flex-direction: row-reverse ;padding-left: 10%; padding-top: 5%">
+
+                <div style="flex-direction: row-reverse ;padding-left: 20px; padding-top: 5%">
 
                     <div>
                         <h2 id="itemsText">
 
                         </h2>
-                    </div>
-
-
-                    <div>
 
                         <h1 id="reState"></h1>
 
@@ -88,16 +88,17 @@
                         <img  id="img" src="">
                     </div>
 
-
                 </div>
 
-                <div style="padding-top: 20%; padding-left :10%;display: flex;">
-
-                    <button type="button" id="nodeyes" class="layui-btn layui-btn-radius">通过检查</button>
-                    <button type="button" id="nodeno" class="layui-btn layui-btn-radius layui-btn-danger">不通过检查
-                    </button>
-
+                <div style="padding-top: 5%; margin-left: 20px; display: flex;">
+                    <div>
+                    <button type="button" id="nodeyes" class="layui-btn layui-btn-radius">不处理</button>
+                    </div>
+                    <div>
+                    <button type="button" id="nodeno" class="layui-btn layui-btn-radius layui-btn-danger">处理</button>
+                    </div>
                 </div>
+
             </div>
 
 
@@ -140,44 +141,64 @@
             processData: true,//布尔值,一般都不用设置，规定通过请求发送的数据是否转换为查询字符串。默认是 true。如果此时上传的时候，有图片，这里必须设置false,
             success: function (res) {// 请求成功，回调函数,data，指的就是服务器返回的数据
                 let data = res.data;
-                let reportHistroy = data.reportHistroy;
-                console.log(res.data)
-                if (reportHistroy != null) {
 
-                    if (reportHistroy.reState == 1) {
-                        console.log(111)
-                        $('#reState').text("投诉理由：侵权")
-                    } else if (reportHistroy.reState == 2) {
-                        $('#reState').text("投诉理由：违规")
-                    } else if (reportHistroy.reState == 3) {
-                        $('#reState').text("投诉理由：其他")
-                    }
-                    if (reportHistroy.comtemt != null) {
-                        $('#comtemt').text("投诉原因：" + reportHistroy.comtemt)
-                    } else {
-                        $('#comtemt').text("投诉原因：无")
-                    }
-                    if (reportHistroy.imgUrl != null) {
-
-                        $('#img').attr("src", reportHistroy.imgUrl)
-                        $('#img').css("width","270px")
-                        $('#img').css("height","480px")
-                    }
-                }
+                // let reportHistroy = data.reportHistroy;
+                //
+                // if (reportHistroy != null) {
+                //     if (reportHistroy.reState == 1) {
+                //         $('#reState').text("投诉理由：侵权")
+                //     } else if (reportHistroy.reState == 2) {
+                //         $('#reState').text("投诉理由：违规")
+                //     } else if (reportHistroy.reState == 3) {
+                //         $('#reState').text("投诉理由：其他")
+                //     }
+                //     if (reportHistroy.comtemt != null) {
+                //         $('#comtemt').text("投诉原因：" + reportHistroy.comtemt)
+                //     } else {
+                //         $('#comtemt').text("投诉原因：无")
+                //     }
+                //     if (reportHistroy.imgUrl != null) {
+                //         $('#img').attr("src", reportHistroy.imgUrl)
+                //         $('#img').css("width","270px")
+                //         $('#img').css("height","480px")
+                //     }
+                // }
                 f(data.artWork);
                 element.init('nav')
 
 
             },
         });
-
+        // 生产过审节点
         function f(artWorkVo) {
             if (artWorkVo != null) {
+                console.log(artWorkVo)
+                let reStateText = ""
+                if (artWorkVo.isReport) {
+                    if (artWorkVo.reState == 1) {
+                        reStateText = "投诉理由：侵权"
+                        $('#reState').text("投诉理由：侵权")
+                    } else if (artWorkVo.reState == 2) {
+                        reStateText = "投诉理由：违规"
+                        $('#reState').text("投诉理由：违规")
+                    } else if (artWorkVo.reState == 3) {
+                        reStateText = "投诉理由：其他"
+                        $('#reState').text("投诉理由：其他")
+                    }
+                    if (artWorkVo.content != null) {
+                        $('#comtemt').text("投诉原因：" + artWorkVo.content)
+                    } else {
+                        $('#comtemt').text("投诉原因：无")
+                    }
+                    if (artWorkVo.reportImgUrl != null) {
+                        // $('#img').attr("src", artWorkVo.reportImgUrl)
+                        $('#img').css("width","270px")
+                        $('#img').css("height","480px")
+                    }
+                }
 
-
-                addTree(artWorkVo.pkDetailId, artWorkVo.videoUrl, artWorkVo.itemsText, artWorkVo.fkEndingId)
+                addTree(artWorkVo.pkDetailId, artWorkVo.videoUrl, artWorkVo.videoText, artWorkVo.fkEndingId ,artWorkVo.alevel,artWorkVo.reportImgUrl,artWorkVo.content,reStateText,artWorkVo.isReport)
                 if (artWorkVo.nodesVos != null) {
-
                     artWorkVo.nodesVos.forEach(v => {
                         f(v);
                     })
@@ -187,18 +208,18 @@
         }
 
         // 修改
-        function addTree(id, videoUrl, itemsText, fkEndingId) {
+        function addTree(id, videoUrl, itemsText, fkEndingId,islink,reportImgUrl,reportContent,reStateText,isReport) {
 
-            let parseJSON = $.parseJSON(itemsText);
-            var chooseText = '选项信息：'
-            parseJSON.forEach(v => {
+            // let parseJSON = itemsText;
+            // console.log(parseJSON)
+            var chooseText = '选项信息：' + itemsText
 
-                chooseText += v.value
-            })
+            // parseJSON.forEach(v => {
+            //     chooseText += v.value
+            // })
 
 
             var item;
-
             if (fkEndingId == 1) {
                 item = 'layui-icon-star-fill';
             } else if (fkEndingId == 2) {
@@ -211,12 +232,17 @@
                 item = 'layui-icon-close';
             } else if (fkEndingId == 6) {
                 item = 'layui-icon-add-circle-fine';
-            } else {
+            }else {
                 item = 'layui-icon-circle-dot'
             }
-
-
-            let s = '<li  data-name="home" class="layui-nav-item layui-nav-itemed " > <a onclick="mya(this)" id="' + id + '" sr="' + videoUrl + '" itemsText="' + chooseText + '">  <i class="layui-icon ' + item + '"></i>     <cite>' + id + '</cite>  </a></li>'
+            if (isReport) {
+                itemsText = itemsText.substring(0,6) + '(被投诉)'
+            }
+            if (islink != null) {
+                if ( islink )  itemsText   = itemsText.substring(0,7)  + '（跳转）'
+            }
+            let s = '<li  data-name="home" class="layui-nav-item layui-nav-itemed " > <a  onclick="mya(this)" id="' + id + '" sr="' + videoUrl + '" itemsText="' + chooseText + '" ' +
+                ' reportImgUrl = "'+reportImgUrl+'" reportContent = "'+reportContent+'" reStateText = "'+reStateText+'"   >  <i class="layui-icon ' + item + '"></i>     <cite>'  +itemsText+ '</cite>  </a></li>'
             $('#LAY-system-side-menu').append(s)
 
         }
