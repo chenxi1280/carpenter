@@ -102,5 +102,5 @@ public interface EcmMessageService {
 
     Integer insertSystemMsgByNode(EcmArtworkNodesVo ecmArtworkNodesVo, Integer templateId);
 
-    Integer insertViolationMsg(EcmArtworkNodesVo ecmArtworkNodesVo, Integer templateId);
+    Integer insertViolationMsg(EcmArtworkNodesVo ecmArtworkNodesVo, EcmReportHistroy ecmReportHistroy, Integer templateId);
 }

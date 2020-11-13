@@ -42,6 +42,8 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
     @Resource
     EcmArtworkDao ecmArtworkDao;
 
+    @Resource
+    EcmReportHistroyDao ecmReportHistroyDao;
 
     @Resource
     EcmTemplateDao ecmTemplateDao;
@@ -235,7 +237,7 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
         EcmArtwork ecmArt = ecmArtworkDao.selectByPrimaryKey(ecmArtworkNodesVo.getFkArtworkId());
         EcmUser ecmUser = ecmUserDao.selectByPrimaryKey(ecmArt.getFkUserid());
         EcmArtworkNodes ecmArtworkNodes = ecmArtworkNodesDao.selectByPrimaryKey(ecmArtworkNodesVo.getPkDetailId());
-        EcmInnerMessageVO insertMsgVO = getInsertMsgVO(ecmTemplateVo.getContent(),  ecmUser,ecmArt.getArtworkName(),ecmArtworkNodes.getVideoText());
+        EcmInnerMessageVO insertMsgVO = getInsertMsgVO(ecmTemplateVo.getContent(),ecmUser,ecmArt.getArtworkName(),ecmArtworkNodes.getVideoText());
         insertMsgVO.setFkTemplateId(ecmTemplateVo.getPkTemplateId());
         insertMsgVO.setTemplateName(ecmTemplateVo.getTemplateName());
 
@@ -252,9 +254,34 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
     }
 
     @Override
-    public Integer insertViolationMsg(EcmArtworkNodesVo ecmArtworkNodesVo, Integer templateId) {
+    public Integer insertViolationMsg(EcmArtworkNodesVo ecmArtworkNodesVo,  EcmReportHistroy ecmReportHistroy,Integer templateId) {
 
-        return null;
+        // 指定
+        EcmReportHistroy ecmReportHistroyVO = ecmReportHistroyDao.selectByPrimaryKey(ecmReportHistroy.getReportId());
+
+        EcmTemplate ecmTemplateVo = ecmTemplateDao.selectByPrimaryKey(templateId);
+//        EcmTemplate ecmTemplateVo = ecmTemplateDao.selectByPrimaryKey(10);
+        EcmArtwork ecmArt = ecmArtworkDao.selectByPrimaryKey(ecmArtworkNodesVo.getFkArtworkId());
+        EcmUser ecmUser = ecmUserDao.selectByPrimaryKey(ecmArt.getFkUserid());
+        EcmArtworkNodes ecmArtworkNodes = ecmArtworkNodesDao.selectByPrimaryKey(ecmArtworkNodesVo.getPkDetailId());
+        EcmInnerMessageVO insertMsgVO = getInsertMsgVO(ecmTemplateVo.getContent(),  ecmUser,ecmArt.getArtworkName(),ecmArtworkNodes.getVideoText(),ReportMnum.getByValue(ecmReportHistroyVO.getReportStatue()).getName());
+//        insertMsgVO
+//        insertMsgVO.set
+//        insertMsgVO.setContent(Parser.parse("#{","}", insertMsgVO.getContent(),ReportMnum.getByValue(insertMsgVO.getReportStatue()).getName() ));
+
+        insertMsgVO.setFkTemplateId(ecmTemplateVo.getPkTemplateId());
+        insertMsgVO.setTemplateName(ecmTemplateVo.getTemplateName());
+
+        try {
+            Integer a = ecmInnerMessageDao.insertSelective(insertMsgVO);
+            List<EcmInnerMessageVO>  ecmInnerMessageVOS = new ArrayList<>(1);
+            ecmInnerMessageVOS.add(insertMsgVO);
+            HttpUtils.post(HttpUtils.sendHttpsUrl, JSON.toJSONString(ecmInnerMessageVOS));
+            return a;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     // 站内信 msg 所用用户 发送 无替换
@@ -311,6 +338,27 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
     }
 
     // 站内信 msg 模板替换方法
+    private EcmInnerMessageVO getInsertMsgVO(String content, EcmUser ecmUserVO ,String artWorkName ,String nodeName ,String stuts ){
+        EcmInnerMessageVO ecmInnerMessageVO = new EcmInnerMessageVO();
+        // ${} 替换名字
+        ecmInnerMessageVO.setContent(Parser.parse0(content, ecmUserVO.getUsername()));
+//         !{} 替换作品
+        ecmInnerMessageVO.setContent(Parser.parse("!{","}", ecmInnerMessageVO.getContent(),artWorkName ));
+//         @{}替换节点名字
+        ecmInnerMessageVO.setContent(Parser.parse("@{","}", ecmInnerMessageVO.getContent(),nodeName ));
+
+        // #{} 替换节点违规信息
+        ecmInnerMessageVO.setContent(Parser.parse("#{","}", ecmInnerMessageVO.getContent(), stuts ));
+
+
+        ecmInnerMessageVO.setMessageStatus((short) 0);
+        ecmInnerMessageVO.setSendDate(new Date());
+        ecmInnerMessageVO.setReviewerId((Integer) getRequstSession().getAttribute("userId"));
+        ecmInnerMessageVO.setFkUserId(ecmUserVO.getPkUserId());
+        return ecmInnerMessageVO;
+    }
+
+    // 站内信 msg 模板替换方法
     private EcmInnerMessageVO getInsertMsgVO(String content, EcmUser ecmUserVO ){
         EcmInnerMessageVO ecmInnerMessageVO = new EcmInnerMessageVO();
         // ${} 替换名字
@@ -326,6 +374,5 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
         ecmInnerMessageVO.setFkUserId(ecmUserVO.getPkUserId());
         return ecmInnerMessageVO;
     }
-
 
 }

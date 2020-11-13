@@ -301,12 +301,12 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
 //                    ecmReportHistroyDao.updateStateSuccessByPrimaryKey(ecmReportHistroyVO.getReportId());
                     ecmReportHistroyDao.updateByPrimaryKeySelective(ecmReportHistroy);
 
-                    ecmMessageService.insertViolationMsg(ecmReportHistroy, "作品涉嫌违规");
-//                    ecmMessageService.insertViolationMsg(ecmArtworkNodesVo, 12);
+//                    ecmMessageService.insertViolationMsg(ecmReportHistroy, "作品涉嫌违规");
+                    ecmMessageService.insertViolationMsg(ecmArtworkNodesVo, ecmReportHistroy,12);
                     // 发送 站内信  违规 ！！
                     ecmArtwork.setLastModifyDate(new Date());
                     ecmArtwork.setFkAuditId(userId);
-                    ecmArtworkNodesDao.updateLinkNodeByFailCheckArtwork(ecmArtwork.getPkArtworkId());
+//                    ecmArtworkNodesDao.updateLinkNodeByFailCheckArtwork(ecmArtwork.getPkArtworkId());
                     return ResponseDTO.get(1 == ecmArtworkDao.updateByPrimaryKeySelective(ecmArtwork), "作不通过审核,以还原成草稿");
                 }
             }
