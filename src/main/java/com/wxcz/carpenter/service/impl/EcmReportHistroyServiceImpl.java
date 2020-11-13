@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author by cxd
@@ -130,11 +131,17 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
             return ResponseDTO.fail("查询id为空");
         }
         List<EcmArtworkNodesVo> list = ecmArtworkNodesDao.selectByArtWorkId(ecmArtworkVO.getPkArtworkId());
+        List<EcmArtworkNodesVo> y = list.stream().filter(ecmArtworkNodesVo -> {
+            if (ecmArtworkNodesVo.getIsDeleted() != null){
+                return !ecmArtworkNodesVo.getIsDeleted().equals("Y");
+            }
+            return true;
+        }).collect(Collectors.toList());
         List<EcmReportHistroyVO> ecmReportHistroyVOList = ecmReportHistroyDao.selectByArtWorkId(ecmArtworkVO.getPkArtworkId());
         // 优化到chair举报
         List<EcmArtworkNodesVo> ecmArtworkNodesVos = new ArrayList<>();
         if (!CollectionUtils.isEmpty(ecmReportHistroyVOList)) {
-            list.forEach( v -> {
+            y.forEach( v -> {
                 ecmReportHistroyVOList.forEach( ecmReportHistroyVO -> {
                    if (ecmReportHistroyVO.getFkArtworkNodeId().equals(v.getPkDetailId())) {
                        EcmArtworkNodesVo ecmArtworkNodesVo = new EcmArtworkNodesVo();
@@ -156,8 +163,7 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
             ecmArtworkNodesDao.updateByAtrworkNodes(ecmArtworkNodesVos);
         }
         Map map = new HashMap(2);
-        map.put("artWork",TreeUtil.buildTree(list).get(0));
-
+        map.put("artWork",TreeUtil.buildTree(y).get(0));
         map.put("reportHistroy",ecmReportHistroy);
         return ResponseDTO.ok("success", map);
 
@@ -171,7 +177,7 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
     @Override
     public EcmReportHistroyVO getReportHistoryVOByEcmReportHistroy(EcmReportHistroy ecmReportHistroy) {
 
-        EcmUser ecmUser = ecmUserDao.selectByPrimaryKey(ecmReportHistroy.getFkUserid());
+//        EcmUser ecmUser = ecmUserDao.selectByPrimaryKey(ecmReportHistroy.getFkUserid());
 
         EcmArtwork ecmArtwork = ecmArtworkDao.selectByPrimaryKey(ecmReportHistroy.getFkArtworkId());
 
@@ -179,7 +185,7 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
 
         EcmReportHistroyVO ecmReportHistroyVO = (EcmReportHistroyVO) ecmReportHistroy;
 
-        ecmReportHistroyVO.setUsername(ecmUser.getUsername());
+//        ecmReportHistroyVO.setUsername(ecmUser.getUsername());
         ecmReportHistroyVO.setArtWorkNameNodeName(ecmArtworkNodesVos.getVideoText());
         ecmReportHistroyVO.setArtWorkName(ecmArtwork.getArtworkName());
 

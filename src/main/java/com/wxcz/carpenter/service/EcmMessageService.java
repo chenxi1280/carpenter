@@ -5,6 +5,7 @@ import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.entity.EcmArtwork;
 import com.wxcz.carpenter.pojo.entity.EcmReportHistroy;
 import com.wxcz.carpenter.pojo.query.EcmTemplateQuery;
+import com.wxcz.carpenter.pojo.vo.EcmArtworkNodesVo;
 import com.wxcz.carpenter.pojo.vo.EcmTemplateVo;
 
 /**
@@ -96,4 +97,10 @@ public interface EcmMessageService {
      * 描述 : 作品违规站内信 发送方法
      */
     Integer insertViolationMsg(EcmReportHistroy ecmReportHistroy, String template);
+
+    Integer insertSystemMsgByNode(EcmArtworkNodesVo ecmArtworkNodesVo, String msg);
+
+    Integer insertSystemMsgByNode(EcmArtworkNodesVo ecmArtworkNodesVo, Integer templateId);
+
+    Integer insertViolationMsg(EcmArtworkNodesVo ecmArtworkNodesVo, Integer templateId);
 }

@@ -24,12 +24,12 @@
     <result column="chosen_text" jdbcType="VARCHAR" property="chosenText" />
   </resultMap>
   <sql id="Base_Column_List">
-    pk_detail_id, parent_id, video_code, parent_code, video_url, branch_pre, revolution_id, 
-    video_text, fk_artwork_id, items, items_text, items_bak_text, css_vo, fk_achievement_id, 
+    pk_detail_id, parent_id, video_code, parent_code, video_url, branch_pre, revolution_id,
+    video_text, fk_artwork_id, items, items_text, items_bak_text, css_vo, fk_achievement_id,
     fk_ending_id, isleaf, a_level, is_deleted, parent_list, chosen_text
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from ecm_artwork_nodes
     where pk_detail_id = #{pkDetailId,jdbcType=INTEGER}
@@ -39,19 +39,19 @@
     where pk_detail_id = #{pkDetailId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" keyColumn="pk_detail_id" keyProperty="pkDetailId" parameterType="com.wxcz.carpenter.pojo.entity.EcmArtworkNodes" useGeneratedKeys="true">
-    insert into ecm_artwork_nodes (parent_id, video_code, parent_code, 
-      video_url, branch_pre, revolution_id, 
-      video_text, fk_artwork_id, items, 
-      items_text, items_bak_text, css_vo, 
-      fk_achievement_id, fk_ending_id, isleaf, 
-      a_level, is_deleted, parent_list, 
+    insert into ecm_artwork_nodes (parent_id, video_code, parent_code,
+      video_url, branch_pre, revolution_id,
+      video_text, fk_artwork_id, items,
+      items_text, items_bak_text, css_vo,
+      fk_achievement_id, fk_ending_id, isleaf,
+      a_level, is_deleted, parent_list,
       chosen_text)
-    values (#{parentId,jdbcType=INTEGER}, #{videoCode,jdbcType=VARCHAR}, #{parentCode,jdbcType=VARCHAR}, 
-      #{videoUrl,jdbcType=VARCHAR}, #{branchPre,jdbcType=BOOLEAN}, #{revolutionId,jdbcType=VARCHAR}, 
-      #{videoText,jdbcType=VARCHAR}, #{fkArtworkId,jdbcType=INTEGER}, #{items,jdbcType=VARCHAR}, 
-      #{itemsText,jdbcType=VARCHAR}, #{itemsBakText,jdbcType=VARCHAR}, #{cssVo,jdbcType=VARCHAR}, 
-      #{fkAchievementId,jdbcType=INTEGER}, #{fkEndingId,jdbcType=INTEGER}, #{isleaf,jdbcType=VARCHAR}, 
-      #{aLevel,jdbcType=INTEGER}, #{isDeleted,jdbcType=VARCHAR}, #{parentList,jdbcType=VARCHAR}, 
+    values (#{parentId,jdbcType=INTEGER}, #{videoCode,jdbcType=VARCHAR}, #{parentCode,jdbcType=VARCHAR},
+      #{videoUrl,jdbcType=VARCHAR}, #{branchPre,jdbcType=BOOLEAN}, #{revolutionId,jdbcType=VARCHAR},
+      #{videoText,jdbcType=VARCHAR}, #{fkArtworkId,jdbcType=INTEGER}, #{items,jdbcType=VARCHAR},
+      #{itemsText,jdbcType=VARCHAR}, #{itemsBakText,jdbcType=VARCHAR}, #{cssVo,jdbcType=VARCHAR},
+      #{fkAchievementId,jdbcType=INTEGER}, #{fkEndingId,jdbcType=INTEGER}, #{isleaf,jdbcType=VARCHAR},
+      #{aLevel,jdbcType=INTEGER}, #{isDeleted,jdbcType=VARCHAR}, #{parentList,jdbcType=VARCHAR},
       #{chosenText,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" keyColumn="pk_detail_id" keyProperty="pkDetailId" parameterType="com.wxcz.carpenter.pojo.entity.EcmArtworkNodes" useGeneratedKeys="true">
@@ -288,7 +288,7 @@
 
   </update>
   <update id="updateByReportHistroyNode">
-          update ecm_artwork_nodes
+      update ecm_artwork_nodes
       set fk_ending_id = 6
       where pk_detail_id =  #{fkArtworkNodeId}
   </update>
@@ -313,6 +313,12 @@
     <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
       #{item.pkDetailId}
     </foreach>
+  </update>
+  <update id="updateLinkNodeByFailCheckArtwork">
+     update ecm_artwork_nodes
+    set fk_ending_id = null
+    where fk_artwork_id =  #{pkArtworkId} and a_level=1
+
   </update>
 
 </mapper>

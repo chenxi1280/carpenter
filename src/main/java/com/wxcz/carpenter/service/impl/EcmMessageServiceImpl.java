@@ -2,18 +2,12 @@ package com.wxcz.carpenter.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.wxcz.carpenter.common.ReportMnum;
-import com.wxcz.carpenter.dao.EcmArtworkDao;
-import com.wxcz.carpenter.dao.EcmInnerMessageDao;
-import com.wxcz.carpenter.dao.EcmTemplateDao;
-import com.wxcz.carpenter.dao.EcmUserDao;
+import com.wxcz.carpenter.dao.*;
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.entity.*;
 import com.wxcz.carpenter.pojo.query.EcmTemplateQuery;
-import com.wxcz.carpenter.pojo.vo.EcmInnerMessageVO;
-import com.wxcz.carpenter.pojo.vo.EcmReportHistroyVO;
-import com.wxcz.carpenter.pojo.vo.EcmTemplateVo;
-import com.wxcz.carpenter.pojo.vo.EcmUserVO;
+import com.wxcz.carpenter.pojo.vo.*;
 import com.wxcz.carpenter.service.BaseService;
 import com.wxcz.carpenter.service.EcmMessageService;
 import com.wxcz.carpenter.service.EcmReportHistroyService;
@@ -54,6 +48,9 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
 
     @Resource
     EcmReportHistroyService ecmReportHistroyService;
+
+    @Resource
+    EcmArtworkNodesDao ecmArtworkNodesDao;
 
 
     @Override
@@ -117,6 +114,7 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
         try {
 
             ecmInnerMessageDao.insertMsgPart(ecmInnerMessageVOS);
+            System.out.println( JSON.toJSONString(ecmInnerMessageVOS));
             HttpUtils.post(HttpUtils.sendHttpsUrl, JSON.toJSONString(ecmInnerMessageVOS));
             return ResponseDTO.ok();
         } catch (Exception e){
@@ -166,7 +164,6 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
     public Integer insertViolationMsg(EcmReportHistroy ecmReportHistroy, String template) {
         EcmTemplateVo ecmTemplateVo = ecmTemplateDao.selectByTitle(template);
         // 节点 id  名称 作品 id 作品名字
-
         EcmReportHistroyVO ecmReportHistroyVO = ecmReportHistroyService.getReportHistoryVOByEcmReportHistroy(ecmReportHistroy);
 
         EcmInnerMessageVO ecmInnerMessageVO = new EcmInnerMessageVO();
@@ -203,6 +200,61 @@ public class EcmMessageServiceImpl implements EcmMessageService, BaseService {
             return null;
         }
 
+    }
+
+    @Override
+    public Integer insertSystemMsgByNode(EcmArtworkNodesVo ecmArtworkNodesVo, String msg) {
+        // 模糊 还是 指定
+        EcmTemplateVo ecmTemplateVo = ecmTemplateDao.selectByTitle(msg);
+//        EcmTemplate ecmTemplateVo = ecmTemplateDao.selectByPrimaryKey(10);
+        EcmArtwork ecmArt = ecmArtworkDao.selectByPrimaryKey(ecmArtworkNodesVo.getFkArtworkId());
+        EcmUser ecmUser = ecmUserDao.selectByPrimaryKey(ecmArt.getFkUserid());
+        EcmArtworkNodes ecmArtworkNodes = ecmArtworkNodesDao.selectByPrimaryKey(ecmArtworkNodesVo.getPkDetailId());
+        EcmInnerMessageVO insertMsgVO = getInsertMsgVO(ecmTemplateVo.getContent(),  ecmUser,ecmArt.getArtworkName(),ecmArtworkNodes.getVideoText());
+        insertMsgVO.setFkTemplateId(ecmTemplateVo.getPkTemplateId());
+        insertMsgVO.setTemplateName(ecmTemplateVo.getTemplateName());
+
+        try {
+            Integer a = ecmInnerMessageDao.insertSelective(insertMsgVO);
+            List<EcmInnerMessageVO>  ecmInnerMessageVOS = new ArrayList<>(1);
+            ecmInnerMessageVOS.add(insertMsgVO);
+            HttpUtils.post(HttpUtils.sendHttpsUrl, JSON.toJSONString(ecmInnerMessageVOS));
+            return a;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    @Override
+    public Integer insertSystemMsgByNode(EcmArtworkNodesVo ecmArtworkNodesVo, Integer templateId) {
+        // 模糊 还是 指定
+        EcmTemplate ecmTemplateVo = ecmTemplateDao.selectByPrimaryKey(templateId);
+//        EcmTemplate ecmTemplateVo = ecmTemplateDao.selectByPrimaryKey(10);
+        EcmArtwork ecmArt = ecmArtworkDao.selectByPrimaryKey(ecmArtworkNodesVo.getFkArtworkId());
+        EcmUser ecmUser = ecmUserDao.selectByPrimaryKey(ecmArt.getFkUserid());
+        EcmArtworkNodes ecmArtworkNodes = ecmArtworkNodesDao.selectByPrimaryKey(ecmArtworkNodesVo.getPkDetailId());
+        EcmInnerMessageVO insertMsgVO = getInsertMsgVO(ecmTemplateVo.getContent(),  ecmUser,ecmArt.getArtworkName(),ecmArtworkNodes.getVideoText());
+        insertMsgVO.setFkTemplateId(ecmTemplateVo.getPkTemplateId());
+        insertMsgVO.setTemplateName(ecmTemplateVo.getTemplateName());
+
+        try {
+            Integer a = ecmInnerMessageDao.insertSelective(insertMsgVO);
+            List<EcmInnerMessageVO>  ecmInnerMessageVOS = new ArrayList<>(1);
+            ecmInnerMessageVOS.add(insertMsgVO);
+            HttpUtils.post(HttpUtils.sendHttpsUrl, JSON.toJSONString(ecmInnerMessageVOS));
+            return a;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public Integer insertViolationMsg(EcmArtworkNodesVo ecmArtworkNodesVo, Integer templateId) {
+
+        return null;
     }
 
     // 站内信 msg 所用用户 发送 无替换

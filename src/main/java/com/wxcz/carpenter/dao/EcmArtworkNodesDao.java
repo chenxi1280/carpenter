@@ -60,4 +60,6 @@ public interface EcmArtworkNodesDao {
     Integer updateByReportHistroyNode(Integer fkArtworkNodeId);
 
     Integer updateByAtrworkNodes(@Param("list") List<EcmArtworkNodesVo> ecmArtworkNodesVos);
+
+    Integer updateLinkNodeByFailCheckArtwork(Integer pkArtworkId);
 }
