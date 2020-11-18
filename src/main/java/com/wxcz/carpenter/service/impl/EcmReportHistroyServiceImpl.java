@@ -131,12 +131,14 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
             return ResponseDTO.fail("查询id为空");
         }
         List<EcmArtworkNodesVo> list = ecmArtworkNodesDao.selectByArtWorkId(ecmArtworkVO.getPkArtworkId());
-        List<EcmArtworkNodesVo> y = list.stream().filter(ecmArtworkNodesVo -> {
-            if (ecmArtworkNodesVo.getIsDeleted() != null){
-                return !ecmArtworkNodesVo.getIsDeleted().equals("Y");
-            }
-            return true;
-        }).collect(Collectors.toList());
+//        List<EcmArtworkNodesVo> y = list.stream().filter(ecmArtworkNodesVo -> {
+//            if (ecmArtworkNodesVo.getIsDeleted() != null){
+//                return !ecmArtworkNodesVo.getIsDeleted().equals("Y");
+//            }
+//            return true;
+//        }).collect(Collectors.toList());
+        List<EcmArtworkNodesVo> y = list.stream().filter(ecmArtworkNodesVo -> !"Y".equals(ecmArtworkNodesVo.getIsDeleted())).collect(Collectors.toList());
+
         List<EcmReportHistroyVO> ecmReportHistroyVOList = ecmReportHistroyDao.selectByArtWorkId(ecmArtworkVO.getPkArtworkId());
         // 优化到chair举报
         List<EcmArtworkNodesVo> ecmArtworkNodesVos = new ArrayList<>();

@@ -19,8 +19,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -153,8 +152,9 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
             return ResponseDTO.fail("查询id为空");
         }
         List<EcmArtworkNodesVo> list = ecmArtworkNodesDao.selectByArtWorkId(ecmArtworkVO.getPkArtworkId());
-        List<EcmArtworkNodesVo> y = list.stream().filter(ecmArtworkNodesVo -> ecmArtworkNodesVo.getIsDeleted().equals("Y")).collect(Collectors.toList());
-        return ResponseDTO.ok("success", TreeUtil.buildTree(y).get(0));
+//        List<EcmArtworkNodesVo> y = list.stream().filter(ecmArtworkNodesVo -> ecmArtworkNodesVo.getIsDeleted().equals("Y")).collect(Collectors.toList());
+        List<EcmArtworkNodesVo> collect = list.stream().filter(ecmArtworkNodesVo -> !"Y".equals(ecmArtworkNodesVo.getIsDeleted())).collect(Collectors.toList());
+        return ResponseDTO.ok("success", TreeUtil.buildTree(collect).get(0));
     }
 
     @Override
@@ -186,6 +186,26 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
         // 查询作品的 所有节点
         List<EcmArtworkNodesVo> ecmArtworkNodesVos = ecmArtworkNodesDao.selectByArtWorkId(ecmArtworkQuery.getPkArtworkId());
         List<EcmArtworkNodesVo> collect = ecmArtworkNodesVos.stream().filter(ecmArtworkNodesVo -> !"Y".equals(ecmArtworkNodesVo.getIsDeleted())).collect(Collectors.toList());
+//
+//        Set<Integer> ids = new HashSet<>();
+//        Iterator<EcmArtworkNodesVo> iterator = collect.iterator();
+//
+//        ecmArtworkNodesVos.forEach( ecmArtworkNodesVo ->  {
+//            ids.add(ecmArtworkNodesVo.getPkDetailId());
+//            getRemoveNodeId(ecmArtworkNodesVo,ecmArtworkNodesVos,ids);
+//        });
+//
+//        while (iterator.hasNext()) {
+//            EcmArtworkNodesVo ecmArtworkNodesVo = iterator.next();
+//            ids.forEach( e -> {
+//                if ( e.equals(ecmArtworkNodesVo.getPkDetailId())){
+//                    iterator.remove();
+//                }
+//            });
+//        }
+//
+
+
         // 先创建一个需要修个作品对象
         ecmArtwork.setPkArtworkId(ecmArtworkQuery.getPkArtworkId());
         ecmArtwork.setLastModifyDate(new Date());
@@ -246,6 +266,14 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
             return ResponseDTO.fail("网络错误");
         }
 
+    }
+    private void getRemoveNodeId(EcmArtworkNodesVo ecmArtworkNodesVo, List<EcmArtworkNodesVo> ecmArtworkNodesVoList,  Set<Integer> ids) {
+        ecmArtworkNodesVoList.forEach(v -> {
+            if (v.getParentId().equals(ecmArtworkNodesVo.getPkDetailId())) {
+                ids.add(v.getPkDetailId());
+                getRemoveNodeId(v,ecmArtworkNodesVoList,ids);
+            }
+        });
     }
 
     @Override

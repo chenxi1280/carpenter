@@ -163,6 +163,7 @@
                 //         $('#img').css("height","480px")
                 //     }
                 // }
+                console.log(data)
                 f(data.artWork);
                 element.init('nav')
 
@@ -171,6 +172,7 @@
         });
         // 生产过审节点
         function f(artWorkVo) {
+
             if (artWorkVo != null) {
                 console.log(artWorkVo)
                 let reStateText = ""

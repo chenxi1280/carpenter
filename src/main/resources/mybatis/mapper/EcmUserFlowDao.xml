@@ -145,6 +145,7 @@
     <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
       #{item.userId}
     </foreach>
+
   </update>
 
   <update id="updateUserFlowByCheck">
