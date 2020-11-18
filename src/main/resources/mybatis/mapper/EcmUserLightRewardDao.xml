@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wxcz.carpenter.dao.EcmUserLightRewardDao">
+  <resultMap id="BaseResultMap" type="com.wxcz.carpenter.pojo.entity.EcmUserLightReward">
+    <id column="ecm_user_light_reward_id" jdbcType="INTEGER" property="ecmUserLightRewardId" />
+    <result column="fk_ecm_user_light_vip_id" jdbcType="INTEGER" property="fkEcmUserLightVipId" />
+    <result column="fk_ecm_user_light_event_id" jdbcType="INTEGER" property="fkEcmUserLightEventId" />
+    <result column="reward_light" jdbcType="VARCHAR" property="rewardLight" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ecm_user_light_reward_id, fk_ecm_user_light_vip_id, fk_ecm_user_light_event_id, reward_light
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ecm_user_light_reward
+    where ecm_user_light_reward_id = #{ecmUserLightRewardId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ecm_user_light_reward
+    where ecm_user_light_reward_id = #{ecmUserLightRewardId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="ecm_user_light_reward_id" keyProperty="ecmUserLightRewardId" parameterType="com.wxcz.carpenter.pojo.entity.EcmUserLightReward" useGeneratedKeys="true">
+    insert into ecm_user_light_reward (fk_ecm_user_light_vip_id, fk_ecm_user_light_event_id,
+      reward_light)
+    values (#{fkEcmUserLightVipId,jdbcType=INTEGER}, #{fkEcmUserLightEventId,jdbcType=INTEGER},
+      #{rewardLight,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="ecm_user_light_reward_id" keyProperty="ecmUserLightRewardId" parameterType="com.wxcz.carpenter.pojo.entity.EcmUserLightReward" useGeneratedKeys="true">
+    insert into ecm_user_light_reward
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="fkEcmUserLightVipId != null">
+        fk_ecm_user_light_vip_id,
+      </if>
+      <if test="fkEcmUserLightEventId != null">
+        fk_ecm_user_light_event_id,
+      </if>
+      <if test="rewardLight != null">
+        reward_light,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="fkEcmUserLightVipId != null">
+        #{fkEcmUserLightVipId,jdbcType=INTEGER},
+      </if>
+      <if test="fkEcmUserLightEventId != null">
+        #{fkEcmUserLightEventId,jdbcType=INTEGER},
+      </if>
+      <if test="rewardLight != null">
+        #{rewardLight,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wxcz.carpenter.pojo.entity.EcmUserLightReward">
+    update ecm_user_light_reward
+    <set>
+      <if test="fkEcmUserLightVipId != null">
+        fk_ecm_user_light_vip_id = #{fkEcmUserLightVipId,jdbcType=INTEGER},
+      </if>
+      <if test="fkEcmUserLightEventId != null">
+        fk_ecm_user_light_event_id = #{fkEcmUserLightEventId,jdbcType=INTEGER},
+      </if>
+      <if test="rewardLight != null">
+        reward_light = #{rewardLight,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ecm_user_light_reward_id = #{ecmUserLightRewardId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wxcz.carpenter.pojo.entity.EcmUserLightReward">
+    update ecm_user_light_reward
+    set fk_ecm_user_light_vip_id = #{fkEcmUserLightVipId,jdbcType=INTEGER},
+      fk_ecm_user_light_event_id = #{fkEcmUserLightEventId,jdbcType=INTEGER},
+      reward_light = #{rewardLight,jdbcType=VARCHAR}
+    where ecm_user_light_reward_id = #{ecmUserLightRewardId,jdbcType=INTEGER}
+  </update>
+
+<!--  sql-->
+  <select id="ajaxLightRewardList" resultType="com.wxcz.carpenter.pojo.vo.EcmUserLightRewardVO">
+    select <include refid="Base_Column_List" />
+    from ecm_user_light_reward
+    limit #{start},#{limit}
+
+  </select>
+  <select id="ajaxLightRewardListCount" resultType="java.lang.Integer">
+    select count(*)
+    from ecm_user_light_reward
+
+  </select>
+
+</mapper>

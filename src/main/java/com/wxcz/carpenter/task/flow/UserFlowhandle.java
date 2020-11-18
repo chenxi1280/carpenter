@@ -44,7 +44,7 @@ public class UserFlowhandle {
      * 1.先计算过去24小时 用户使用的 流量 是否计算正确
      * 2.计算不正确的用户，会单独在计算该用户的所有使用流量记录，并修改
      */
-    @Scheduled(cron = "0 10 4 ? * *")
+//    @Scheduled(cron = "0 10 4 ? * *")
 //    @Scheduled(cron = "0/10 * * * * ?")
     private void handleUserFlowCheck() {
 
@@ -58,6 +58,7 @@ public class UserFlowhandle {
         List<EcmUserFlow> ecmUserFlowArrayList = new ArrayList<>();
 
         Map<Integer, List<EcmUserHistoryFlowVO>> collect = ecmUserHistoryFlowVOList.stream().collect(Collectors.groupingBy(EcmUserHistoryFlow::getUserId));
+        //数据错误的用户id 的集合
         Set<Integer> integers = collect.keySet();
         List<EcmUserFlowVO> userFlowList = ecmUserFlowDao.selectByUserIds(integers);
 
@@ -97,7 +98,7 @@ public class UserFlowhandle {
                         ecmUserFlow.setUpdateTime(new Date());
                         // 没有出错的 用户 修改 checkflow字段
                         ecmUserFlowArrayList.add(ecmUserFlow);
-                        
+
                     }
                 }
             }

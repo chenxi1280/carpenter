@@ -15,28 +15,28 @@
 <body class="layui-card-body layui-card">
 <div style="padding: 10px;" class="layui-card">
     <div style="display: flex">
-        <form id="queryForm" class="layui-form" method="post"
-              style="display: flex;align-items: center;padding-left: 50px">
-            <div class="layui-hide-xs" style="display: flex;align-items: center">
-                <span style="width: fit-content">id：</span>
-                <input class="layui-input" name="pkTemplateId" id="nickName"
-                       style="width: 120px;"/>
-            </div>
-            <div class="layui-hide-xs" style="display: flex;align-items: center;margin-left: 20px">
-                <label style="width:  fit-content">昵称：</label><input class="layui-input" name="userName" id="realName"
-                                                                     style="width: 120px"/>
-            </div>
-            <div style="display: flex;align-items: center;margin-left: 20px">
-                <label style="width:  fit-content">手机号：</label><input class="layui-input" name="phone" id="phone"
-                                                                      style="width: 120px"/>
-            </div>
+<!--        <form id="queryForm" class="layui-form" method="post"-->
+<!--              style="display: flex;align-items: center;padding-left: 50px">-->
+<!--            <div class="layui-hide-xs" style="display: flex;align-items: center">-->
+<!--                <span style="width: fit-content">id：</span>-->
+<!--                <input class="layui-input" name="pkTemplateId" id="nickName"-->
+<!--                       style="width: 120px;"/>-->
+<!--            </div>-->
+<!--            <div class="layui-hide-xs" style="display: flex;align-items: center;margin-left: 20px">-->
+<!--                <label style="width:  fit-content">昵称：</label><input class="layui-input" name="userName" id="realName"-->
+<!--                                                                     style="width: 120px"/>-->
+<!--            </div>-->
+<!--            <div style="display: flex;align-items: center;margin-left: 20px">-->
+<!--                <label style="width:  fit-content">手机号：</label><input class="layui-input" name="phone" id="phone"-->
+<!--                                                                      style="width: 120px"/>-->
+<!--            </div>-->
 
-            <div style="display: flex;align-items: center;margin-left: 20px">
-                <button type="button" class="layui-btn" id="queryBtn" lay-submit lay-filter="queryForm">查询</button>
-            </div>
-        </form>
+<!--            <div style="display: flex;align-items: center;margin-left: 20px">-->
+<!--                <button type="button" class="layui-btn" id="queryBtn" lay-submit lay-filter="queryForm">查询</button>-->
+<!--            </div>-->
+<!--        </form>-->
         <div style="padding-left: 5%"></div>
-        <button class="layui-btn layui-btn-normal" onclick="" id="addMsgBtn"> 新建模板</button>
+        <button class="layui-btn layui-btn-normal" onclick="" id="addMsgBtn"> 新建会员 </button>
     </div>
     <table id="tTable" lay-filter="tTableFilter" style="padding-top: 10px"></table>
     <!--        <div th:include="plugins/splitBar::splitBar"></div>-->
@@ -49,21 +49,22 @@
 
         <form class="layui-form">
 
-            <input type="text" style="display: none" name="pkTemplateId" id="pkTemplateId">
+            <input type="text" style="display: none" name="ecmUserLightVipId" id="ecmUserLightVipId">
 
             <div class="layui-form-item">
-                <label class="layui-form-label">消息名字</label>
+                <label class="layui-form-label">会员名称</label>
                 <div class="layui-input-block">
-                    <input type="text" name="templateName" lay-verify="title"
-                           autocomplete="off" placeholder="请输入" class="layui-input" id="msgname">
+                    <input type="text" name="ecmUserLightVipName" lay-verify="title"
+                           autocomplete="off" placeholder="请输入" class="layui-input" id="ecmUserLightVipName">
                 </div>
             </div>
 
 
             <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">消息内容</label>
+                <label class="layui-form-label">会员光上限</label>
                 <div class="layui-input-block">
-                    <textarea name="content" placeholder="请输入内容" class="layui-textarea" id="msgcontext"></textarea>
+                    <input type="text" name="ecmUserLightUpLimit" lay-verify="title"
+                           autocomplete="off" placeholder="请输入" class="layui-input" id="ecmUserLightUpLimit">
                 </div>
             </div>
 
@@ -93,18 +94,20 @@
 
 
             <div class="layui-form-item">
-                <label class="layui-form-label">消息名字</label>
+                <label class="layui-form-label">会员名称</label>
                 <div class="layui-input-block">
-                    <input type="text" name="templateName" lay-verify="title"
+                    <input type="text" name="ecmUserLightVipName" lay-verify="title"
                            autocomplete="off" placeholder="请输入" class="layui-input">
                 </div>
             </div>
 
 
             <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">消息内容</label>
+                <label class="layui-form-label">会员光上限</label>
                 <div class="layui-input-block">
-                    <textarea name="content" placeholder="请输入内容" class="layui-textarea"></textarea>
+<!--                    <input name="ecmUserLightUpLimit" placeholder="请输入内容" class="layui-textarea">-->
+                    <input type="text" name="ecmUserLightUpLimit" lay-verify="number"
+                           autocomplete="off" placeholder="请输入" class="layui-input">
                 </div>
             </div>
 
@@ -139,19 +142,19 @@
         var tTable = table.render({
             elem: '#tTable'
             , page: true
-            , url: '/ims/back/message/ajaxMsgTemplateList' //数据接口
+            , url: '/ims/back/lightManagement/ajaxLightVipList' //数据接口
             , cols: [[ //表头
-                {type: 'checkbox', fixed: 'left'}
-                , {field: 'pkTemplateId', title: 'ID', width: 120}
-                , {field: 'templateName', title: '模板名称', width: 120}
-                , {field: 'content', title: '模板内容', width: 120}
-                , {field: 'createDate', title: '创建时间', width: 180}
-                , {field: 'updateDate', title: '上次操作时间', width: 180}
+                // {type: 'checkbox', fixed: 'left'},
+                {field: 'ecmUserLightVipId', title: 'ID', width: 120}
+                , {field: 'ecmUserLightVipName', title: '用户光会员名称', width: 150}
+                , {field: 'ecmUserLightUpLimit', title: '光上线', width: 120}
+                // , {field: 'createDate', title: '创建时间', width: 180}
+                // , {field: 'updateDate', title: '上次操作时间', width: 180}
                 , {
                     field: '', title: '操作', width: 180, templet: function (d) {
                         return '<div >' +
                             '<button class="layui-btn   layui-btn-warm layui-btn-xs" lay-event="editmes">修改</button>' +
-                            '<button class="layui-btn  layui-btn-danger layui-btn-xs" lay-event="delmes">删除</button>' +
+                            // '<button class="layui-btn  layui-btn-danger layui-btn-xs" lay-event="delmes">删除</button>' +
                             '</div>'
                     }
                 }
@@ -179,6 +182,7 @@
             }
             ;
         });
+
         $('#addMsgBtn').click(function () {
             addaddMsgBtn()
         })
@@ -195,24 +199,23 @@
 
             form.render();
 
-
             form.on('submit(addMsg)', function (data) {
 
 
                 var d = data.field
-                if (d.templateName == null || d.templateName == '') {
-                    layer.msg("标题不能为空")
+                if (d.ecmUserLightVipName == null || d.ecmUserLightVipName == '') {
+                    layer.msg("会员名不能为空")
                     return false;
                 }
 
-                if (d.content == null || d.content == '') {
-                    layer.msg("内容不能为空")
+                if (d.ecmUserLightUpLimit == null || d.ecmUserLightUpLimit == '' || !/^[0-9]*$/.test(d.ecmUserLightUpLimit)) {
+                    layer.msg("上限不能为空")
                     return false;
                 }
 
                 $.ajax({
                     type: 'post',// ajax请求的方式，post或get
-                    url: '/ims/back/message/addMsgTemplate',
+                    url: '/ims/back/lightManagement/addLightVip',
                     // contentType: "application/json",// 默认就是表单数据(不写)，如果此时要传递的是json字符串，
                     // 那么此时就用application/json,如果此时要传递图片"multipart/form-data，还有数组，集合，还有对象，那么contentType必须指定为false
                     data: data.field,// 要上传的参数,把数组对象转换为JSON字符串
@@ -256,9 +259,9 @@
                     });
 
 
-                    $("#pkTemplateId").val(d.pkTemplateId)
-                    $('#msgname').val(d.templateName)
-                    $('#msgcontext').val(d.content)
+                    $("#ecmUserLightVipId").val(d.ecmUserLightVipId)
+                    $('#ecmUserLightVipName').val(d.ecmUserLightVipName)
+                    $('#ecmUserLightUpLimit').val(d.ecmUserLightUpLimit)
 
 
                     form.render();
@@ -267,21 +270,20 @@
                     //提交 调整
                     form.on('submit(sureDispatch)', function (data) {
 
-
                         var d = data.field
-                        if (d.templateName == null || d.templateName == '') {
-                            layer.msg("标题不能为空")
+                        if (d.ecmUserLightVipName == null || d.ecmUserLightVipName == '') {
+                            layer.msg("会员名不能为空")
                             return false;
                         }
 
-                        if (d.content == null || d.content == '') {
-                            layer.msg("内容不能为空")
+                        if (d.ecmUserLightUpLimit == null || d.ecmUserLightUpLimit == '' || !/^[0-9]*$/.test(d.ecmUserLightUpLimit)) {
+                            layer.msg("上限不能为空")
                             return false;
                         }
 
                         $.ajax({
                             type: 'post',// ajax请求的方式，post或get
-                            url: '/ims/back/message/updataMsgTemplate',
+                            url: '/ims/back/lightManagement/updataLightVip',
                             // contentType: "application/json",// 默认就是表单数据(不写)，如果此时要传递的是json字符串，
                             // 那么此时就用application/json,如果此时要传递图片"multipart/form-data，还有数组，集合，还有对象，那么contentType必须指定为false
                             data: data.field,// 要上传的参数,把数组对象转换为JSON字符串

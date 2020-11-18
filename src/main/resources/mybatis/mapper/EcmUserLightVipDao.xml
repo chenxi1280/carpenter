@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wxcz.carpenter.dao.EcmUserLightVipDao">
+  <resultMap id="BaseResultMap" type="com.wxcz.carpenter.pojo.entity.EcmUserLightVip">
+    <id column="ecm_user_light_vip_id" jdbcType="INTEGER" property="ecmUserLightVipId" />
+    <result column="ecm_user_light_vip_name" jdbcType="VARCHAR" property="ecmUserLightVipName" />
+    <result column="ecm_user_light_up_limit" jdbcType="INTEGER" property="ecmUserLightUpLimit" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ecm_user_light_vip_id, ecm_user_light_vip_name, ecm_user_light_up_limit
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ecm_user_light_vip
+    where ecm_user_light_vip_id = #{ecmUserLightVipId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ecm_user_light_vip
+    where ecm_user_light_vip_id = #{ecmUserLightVipId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="ecm_user_light_vip_id" keyProperty="ecmUserLightVipId" parameterType="com.wxcz.carpenter.pojo.entity.EcmUserLightVip" useGeneratedKeys="true">
+    insert into ecm_user_light_vip (ecm_user_light_vip_name, ecm_user_light_up_limit
+      )
+    values (#{ecmUserLightVipName,jdbcType=VARCHAR}, #{ecmUserLightUpLimit,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="ecm_user_light_vip_id" keyProperty="ecmUserLightVipId" parameterType="com.wxcz.carpenter.pojo.entity.EcmUserLightVip" useGeneratedKeys="true">
+    insert into ecm_user_light_vip
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ecmUserLightVipName != null">
+        ecm_user_light_vip_name,
+      </if>
+      <if test="ecmUserLightUpLimit != null">
+        ecm_user_light_up_limit,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ecmUserLightVipName != null">
+        #{ecmUserLightVipName,jdbcType=VARCHAR},
+      </if>
+      <if test="ecmUserLightUpLimit != null">
+        #{ecmUserLightUpLimit,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wxcz.carpenter.pojo.entity.EcmUserLightVip">
+    update ecm_user_light_vip
+    <set>
+      <if test="ecmUserLightVipName != null">
+        ecm_user_light_vip_name = #{ecmUserLightVipName,jdbcType=VARCHAR},
+      </if>
+      <if test="ecmUserLightUpLimit != null">
+        ecm_user_light_up_limit = #{ecmUserLightUpLimit,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ecm_user_light_vip_id = #{ecmUserLightVipId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wxcz.carpenter.pojo.entity.EcmUserLightVip">
+    update ecm_user_light_vip
+    set ecm_user_light_vip_name = #{ecmUserLightVipName,jdbcType=VARCHAR},
+      ecm_user_light_up_limit = #{ecmUserLightUpLimit,jdbcType=INTEGER}
+    where ecm_user_light_vip_id = #{ecmUserLightVipId,jdbcType=INTEGER}
+  </update>
+
+<!--  sql-->
+
+  <select id="ajaxLightVipList" resultType="com.wxcz.carpenter.pojo.vo.EcmUserLightVipVO">
+    select  <include refid="Base_Column_List" />
+    from ecm_user_light_vip
+    limit #{start},#{limit}
+
+  </select>
+  <select id="ajaxLightVipListCount" resultType="java.lang.Integer">
+    select count(*)
+    from ecm_user_light_vip
+  </select>
+    <select id="selectByEcmUserLightRewardVOList" resultType="com.wxcz.carpenter.pojo.vo.EcmUserLightVipVO">
+      select  <include refid="Base_Column_List" />
+      from ecm_user_light_vip
+      <foreach collection="ids" separator="," open="(" item="item" close=")">#{item.ecmUserLightVipId}</foreach>
+
+    </select>
+
+
+</mapper>
