@@ -17,7 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author by cxd
@@ -98,6 +101,38 @@ public class EcmLightManagementServiceImpl implements EcmLightManagementService 
     @Override
     public ResponseDTO updataLightEvent(EcmUserLightEventVO ecmUserLightEventVO) {
         return  ResponseDTO.get(1 == ecmUserLightEventDao.updateByPrimaryKeySelective(ecmUserLightEventVO));
+    }
+
+    @Override
+    public PageDTO ajaxLightVipListAndLightEventList(EcmLightManagementQuery ecmLightManagementQuery) {
+
+        List<EcmUserLightVipVO> vipVOS = ecmUserLightVipDao.ajaxLightVipList(ecmLightManagementQuery);
+        List<EcmUserLightEventVO> eventVOList = ecmUserLightEventDao.ajaxLightEventList(ecmLightManagementQuery);
+        Map<String,List> map = new HashMap(2);
+        map.put("vip",vipVOS);
+        map.put("event",eventVOList);
+
+        return PageDTO.setPageData(10000,map);
+    }
+
+    @Override
+    public ResponseDTO addLightReward(EcmUserLightRewardVO ecmUserLightRewardVO) {
+        ecmUserLightRewardVO.setCreateTime(new Date());
+        ecmUserLightRewardVO.setRewardState(0);
+        return ResponseDTO.get(1 == ecmUserLightRewardDao.insertSelective(ecmUserLightRewardVO));
+    }
+
+    @Override
+    public ResponseDTO updataLightReward(EcmUserLightRewardVO ecmUserLightRewardVO) {
+        ecmUserLightRewardVO.setUpdataTime(new Date());
+        return ResponseDTO.get(1 == ecmUserLightRewardDao.updateByPrimaryKeySelective(ecmUserLightRewardVO));
+    }
+
+    @Override
+    public ResponseDTO delLightReward(EcmUserLightRewardVO ecmUserLightRewardVO) {
+        ecmUserLightRewardVO.setUpdataTime(new Date());
+        ecmUserLightRewardVO.setRewardState(1);
+        return ResponseDTO.get(1 == ecmUserLightRewardDao.updateByPrimaryKeySelective(ecmUserLightRewardVO));
     }
 
 

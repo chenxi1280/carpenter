@@ -78,7 +78,9 @@
     <select id="selectByEcmUserLightRewardVOList" resultType="com.wxcz.carpenter.pojo.vo.EcmUserLightVipVO">
       select  <include refid="Base_Column_List" />
       from ecm_user_light_vip
-      <foreach collection="ids" separator="," open="(" item="item" close=")">#{item.ecmUserLightVipId}</foreach>
+      where
+      ecm_user_light_vip_id in
+      <foreach collection="ids" separator="," open="(" item="item" close=")">#{item.fkEcmUserLightVipId}</foreach>
 
     </select>
 

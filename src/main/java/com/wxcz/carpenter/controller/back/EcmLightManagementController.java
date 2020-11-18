@@ -4,6 +4,7 @@ import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.query.EcmLightManagementQuery;
 import com.wxcz.carpenter.pojo.vo.EcmUserLightEventVO;
+import com.wxcz.carpenter.pojo.vo.EcmUserLightRewardVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserLightVipVO;
 import com.wxcz.carpenter.service.EcmLightManagementService;
 import org.apache.shiro.SecurityUtils;
@@ -96,5 +97,30 @@ public class EcmLightManagementController {
     @ResponseBody
     public ResponseDTO updataLightEvent(EcmUserLightEventVO ecmUserLightEventVO){
         return ecmLightManagementService.updataLightEvent(ecmUserLightEventVO);
+    }
+
+    @RequestMapping("ajaxLightVipListAndLightEventList")
+    @ResponseBody
+    public PageDTO ajaxLightVipListAndLightEventList(EcmLightManagementQuery ecmLightManagementQuery) {
+        return ecmLightManagementService.ajaxLightVipListAndLightEventList(ecmLightManagementQuery);
+    }
+
+    @RequestMapping("addLightReward")
+    @ResponseBody
+    public ResponseDTO addLightReward(EcmUserLightRewardVO ecmUserLightRewardVO) {
+        return ecmLightManagementService.addLightReward(ecmUserLightRewardVO);
+    }
+
+
+
+    @RequestMapping("updataLightReward")
+    @ResponseBody
+    public ResponseDTO updataLightReward(EcmUserLightRewardVO ecmUserLightRewardVO){
+        return ecmLightManagementService.updataLightReward(ecmUserLightRewardVO);
+    }
+    @RequestMapping("delLightReward")
+    @ResponseBody
+    public ResponseDTO delLightReward(EcmUserLightRewardVO ecmUserLightRewardVO){
+        return ecmLightManagementService.delLightReward(ecmUserLightRewardVO);
     }
 }

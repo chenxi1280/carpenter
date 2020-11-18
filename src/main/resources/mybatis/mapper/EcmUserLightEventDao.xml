@@ -65,8 +65,6 @@
     from ecm_user_light_event
     where ecm_user_light_event_id in
     <foreach collection="ids" separator="," open="(" item="item" close=")">#{item.fkEcmUserLightEventId}</foreach>
-
-
   </select>
 
 </mapper>

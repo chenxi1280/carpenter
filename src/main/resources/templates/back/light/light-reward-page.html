@@ -48,39 +48,55 @@
     <div style="padding: 20px">
 
         <form class="layui-form">
+            <input type="text" style="display: none" name="ecmUserLightRewardId" id="ecmUserLightRewardId">
 
-            <input type="text" style="display: none" name="pkTemplateId" id="pkTemplateId">
+<!--            <div class="layui-form-item">-->
+<!--                <label class="layui-form-label">会员</label>-->
+<!--                <div class="layui-input-block">-->
+<!--                    <select name="fkEcmUserLightVipId" lay-verify="" id="upLightVipId">-->
+<!--                        <option value="">请选择</option>-->
+<!--                    </select>-->
+<!--                </div>-->
+<!--            </div>-->
 
-            <div class="layui-form-item">
-                <label class="layui-form-label">消息名字</label>
-                <div class="layui-input-block">
-                    <input type="text" name="templateName" lay-verify="title"
-                           autocomplete="off" placeholder="请输入" class="layui-input" id="msgname">
-                </div>
-            </div>
+
+<!--            <div class="layui-form-item layui-form-text">-->
+<!--                <label class="layui-form-label">事件</label>-->
+<!--                <div class="layui-input-block">-->
+<!--                    <select name="fkEcmUserLightEventId" lay-verify="" id="upLightEventId" >-->
+<!--                        <option value="">请选择</option>-->
+<!--                    </select>-->
+<!--                </div>-->
+<!--            </div>-->
 
 
             <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">消息内容</label>
-                <div class="layui-input-block">
-                    <textarea name="content" placeholder="请输入内容" class="layui-textarea" id="msgcontext"></textarea>
+                <label class="layui-form-label">奖励方式</label>
+                <div class="layui-input-block" style="display:  flex" >
+
+                    <div style="width: 60px" >
+                        <select name="rewardLightNumberAdd" id="rewardLightNumberAdd"  >
+                            <option value="+">+</option>
+                            <option value="-">-</option>
+                        </select>
+                    </div>
+                    <div>
+                        <input  type="number"  style="width: 120px"  id="rewardLightNumber" name="rewardLightNumber" required lay-verify="required" placeholder="请输入数值" autocomplete="off" class="layui-input">
+                    </div>
                 </div>
             </div>
 
-            <!--            <div style="text-align: center">-->
-            <!--                <input type="submit" class="layui-btn layui-btn-danger" lay-submit onclick="return false;"-->
-            <!--                       lay-filter="sureDispatch">-->
-            <!--            </div>-->
 
-            <!--            <div class="layui-form-item">-->
-            <!--                <div class="layui-input-block">-->
-            <button class="layui-btn layui-btn-fluid" lay-submit onclick="return false;" lay-filter="sureDispatch">提交
-            </button>
+            <div class="layui-form-item">
 
-            <!--                </div>-->
-            <!--            </div>-->
+                <button class="layui-btn layui-btn-fluid" lay-submit onclick="return false;" lay-filter="sureDispatch">提交
+                </button>
+            </div>
 
         </form>
+
+
+    </div>
 
     </div>
 
@@ -93,18 +109,37 @@
 
 
             <div class="layui-form-item">
-                <label class="layui-form-label">消息名字</label>
+                <label class="layui-form-label">会员</label>
                 <div class="layui-input-block">
-                    <input type="text" name="templateName" lay-verify="title"
-                           autocomplete="off" placeholder="请输入" class="layui-input">
+                    <select name="fkEcmUserLightVipId" lay-verify="" id="addLightVipId">
+                        <option value="">请选择</option>
+                    </select>
                 </div>
             </div>
 
 
             <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">消息内容</label>
+                <label class="layui-form-label">事件</label>
                 <div class="layui-input-block">
-                    <textarea name="content" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    <select name="fkEcmUserLightEventId" lay-verify="" id="addLightEventId" >
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">奖励方式</label>
+                <div class="layui-input-block" style="display:  flex" >
+                    <div style="width: 60px" >
+                        <select name="rewardLightNumberAdd"  >
+                            <option value="+">+</option>
+                            <option value="-">-</option>
+                        </select>
+                    </div>
+                    <div>
+                        <input  type="number"  style="width: 120px" name="rewardLightNumber" required lay-verify="required" placeholder="请输入数值" autocomplete="off" class="layui-input">
+                    </div>
                 </div>
             </div>
 
@@ -144,7 +179,7 @@
                 // {type: 'checkbox', fixed: 'left'},
                 {field: 'ecmUserLightRewardId', title: 'ID', width: 120}
                 , {field: 'ecmUserLightVipName', title: '用户会员光名称', width: 120}
-                , {field: 'eventName', title: '光事件名称', width: 120}
+                , {field: 'ecmUserLightEventName', title: '光事件名称', width: 120}
                 , {field: 'rewardLight', title: '奖励计算式', width: 180}
                 // , {field: 'updateDate', title: '上次操作时间', width: 180}
                 , {
@@ -194,7 +229,7 @@
 
             $.ajax({
                 type: 'post',// ajax请求的方式，post或get
-                url: '/ims/back/lightManagement/ajaxLightVipList'  ,
+                url: '/ims/back/lightManagement/ajaxLightVipListAndLightEventList'  ,
                 contentType: "application/json",// 默认就是表单数据(不写)，如果此时要传递的是json字符串，
                 // 那么此时就用application/json,如果此时要传递图片"multipart/form-data，还有数组，集合，还有对象，那么contentType必须指定为false
                 data: {page:0 ,limit: 100000},// 要上传的参数,把数组对象转换为JSON字符串
@@ -204,6 +239,20 @@
                     // layer.msg(res.msg);
                     console.log(res)
                     let data = res.data
+                    console.log(data)
+                    data.vip.forEach( (v,index)=> {
+                        //第二个参数是选项的指定位置
+                        $("#addLightVipId").append("<option value='"+v.ecmUserLightVipId+"'>"+v.ecmUserLightVipName+"</option>")
+                        form.render();
+                    })
+
+                    data.event.forEach( (v,index)=> {
+
+                        //第二个参数是选项的指定位置
+                        $("#addLightEventId").append("<option value='"+v.ecmUserLightEventId+"'>"+v.ecmUserLightEventName+"</option>")
+                        form.render();
+                    })
+                    // $("#addLightVipId").attr()
 
                 },
             });
@@ -216,19 +265,27 @@
 
 
                 var d = data.field
-                if (d.templateName == null || d.templateName == '') {
-                    layer.msg("标题不能为空")
+                if (d.rewardLightNumber == null || d.rewardLightNumber == '') {
+                    layer.msg("数值不能为空")
                     return false;
                 }
 
-                if (d.content == null || d.content == '') {
-                    layer.msg("内容不能为空")
+
+                if (d.fkEcmUserLightEventId == null || d.fkEcmUserLightEventId == '') {
+                    layer.msg("事件不能为空")
                     return false;
                 }
+                if (d.fkEcmUserLightVipId == null || d.fkEcmUserLightVipId == '') {
+                    layer.msg("不能为空")
+                    return false;
+                }
+
+                data.field.rewardLight = d.rewardLightNumberAdd + d.rewardLightNumber
+
 
                 $.ajax({
                     type: 'post',// ajax请求的方式，post或get
-                    url: '/ims/back/lightManagement/ajaxLightRewardList',
+                    url: '/ims/back/lightManagement/addLightReward',
                     // contentType: "application/json",// 默认就是表单数据(不写)，如果此时要传递的是json字符串，
                     // 那么此时就用application/json,如果此时要传递图片"multipart/form-data，还有数组，集合，还有对象，那么contentType必须指定为false
                     data: data.field,// 要上传的参数,把数组对象转换为JSON字符串
@@ -270,12 +327,12 @@
                         title: '编辑消息',
                         content: $('#showeditDiv').html() //这里content是一个普通的String
                     });
+                    form.render();
 
 
-                    $("#pkTemplateId").val(d.pkTemplateId)
-                    $('#msgname').val(d.templateName)
-                    $('#msgcontext').val(d.content)
-
+                    $("#ecmUserLightRewardId").val(d.ecmUserLightRewardId)
+                    $('#rewardLightNumber').val(d.rewardLight.substring(1))
+                    // $('#rewardLightNumberAdd')
 
                     form.render();
 
@@ -285,19 +342,16 @@
 
 
                         var d = data.field
-                        if (d.templateName == null || d.templateName == '') {
-                            layer.msg("标题不能为空")
+                        if (d.rewardLightNumber == null || d.rewardLightNumber == '') {
+                            layer.msg("数值不能为空")
                             return false;
                         }
+                        data.field.rewardLight = d.rewardLightNumberAdd + d.rewardLightNumber
 
-                        if (d.content == null || d.content == '') {
-                            layer.msg("内容不能为空")
-                            return false;
-                        }
 
                         $.ajax({
                             type: 'post',// ajax请求的方式，post或get
-                            url: '/ims/back/message/updataMsgTemplate',
+                            url: '/ims/back/lightManagement/updataLightReward',
                             // contentType: "application/json",// 默认就是表单数据(不写)，如果此时要传递的是json字符串，
                             // 那么此时就用application/json,如果此时要传递图片"multipart/form-data，还有数组，集合，还有对象，那么contentType必须指定为false
                             data: data.field,// 要上传的参数,把数组对象转换为JSON字符串
@@ -338,16 +392,24 @@
 
                         $.ajax({
                             type: 'post',// ajax请求的方式，post或get
-                            url: '/ims/back/message/delMsgTemplate',
+                            url: '/ims/back/lightManagement/delLightReward',
                             // contentType: "application/json",// 默认就是表单数据(不写)，如果此时要传递的是json字符串，
                             // 那么此时就用application/json,如果此时要传递图片"multipart/form-data，还有数组，集合，还有对象，那么contentType必须指定为false
                             data: {
-                                pkTemplateId: d.pkTemplateId
+                                ecmUserLightRewardId: d.ecmUserLightRewardId
                             },// 要上传的参数,把数组对象转换为JSON字符串
                             dataType: 'json',// 服务器响应数据：json,text,html,xml
                             processData: true,//布尔值,一般都不用设置，规定通过请求发送的数据是否转换为查询字符串。默认是 true。如果此时上传的时候，有图片，这里必须设置false,
                             success: function (res) {// 请求成功，回调函数,data，指的就是服务器返回的数据
                                 layer.msg(res.msg);
+
+                                let page = $('.layui-laypage-skip .layui-input').val();
+                                let limit = $('.layui-laypage-limits').find('option:selected').val();
+
+                                tTable.reload({
+                                    page: page,
+                                    size: limit,
+                                });
                             },
                         });
 

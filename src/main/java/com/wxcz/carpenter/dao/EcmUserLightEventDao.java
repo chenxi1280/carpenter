@@ -25,7 +25,7 @@ public interface EcmUserLightEventDao {
 
     Integer ajaxLightEventListCount(EcmLightManagementQuery ecmTemplateQuery);
 
-    List<EcmUserLightEventVO> selectByEcmUserLightRewardVOList(@Param("list") List<EcmUserLightRewardVO> list);
+    List<EcmUserLightEventVO> selectByEcmUserLightRewardVOList(@Param("ids") List<EcmUserLightRewardVO> list);
 
 
 }

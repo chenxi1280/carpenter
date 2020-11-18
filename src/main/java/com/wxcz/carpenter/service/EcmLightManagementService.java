@@ -4,6 +4,7 @@ import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.query.EcmLightManagementQuery;
 import com.wxcz.carpenter.pojo.vo.EcmUserLightEventVO;
+import com.wxcz.carpenter.pojo.vo.EcmUserLightRewardVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserLightVipVO;
 
 /**
@@ -27,4 +28,13 @@ public interface EcmLightManagementService {
     ResponseDTO updataLightVip(EcmUserLightVipVO ecmUserLightVipVO);
 
     ResponseDTO updataLightEvent(EcmUserLightEventVO ecmUserLightEventVO);
+
+    PageDTO ajaxLightVipListAndLightEventList(EcmLightManagementQuery ecmLightManagementQuery);
+
+    ResponseDTO addLightReward(EcmUserLightRewardVO ecmUserLightRewardVO);
+
+    ResponseDTO updataLightReward(EcmUserLightRewardVO ecmUserLightRewardVO);
+
+    ResponseDTO delLightReward(EcmUserLightRewardVO ecmUserLightRewardVO);
+
 }

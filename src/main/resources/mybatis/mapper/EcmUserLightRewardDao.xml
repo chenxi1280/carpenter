@@ -6,9 +6,13 @@
     <result column="fk_ecm_user_light_vip_id" jdbcType="INTEGER" property="fkEcmUserLightVipId" />
     <result column="fk_ecm_user_light_event_id" jdbcType="INTEGER" property="fkEcmUserLightEventId" />
     <result column="reward_light" jdbcType="VARCHAR" property="rewardLight" />
+    <result column="reward_state" jdbcType="INTEGER" property="rewardState" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="updata_time" jdbcType="TIMESTAMP" property="updataTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    ecm_user_light_reward_id, fk_ecm_user_light_vip_id, fk_ecm_user_light_event_id, reward_light
+    ecm_user_light_reward_id, fk_ecm_user_light_vip_id, fk_ecm_user_light_event_id, reward_light,
+    reward_state, create_time, updata_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
@@ -22,9 +26,11 @@
   </delete>
   <insert id="insert" keyColumn="ecm_user_light_reward_id" keyProperty="ecmUserLightRewardId" parameterType="com.wxcz.carpenter.pojo.entity.EcmUserLightReward" useGeneratedKeys="true">
     insert into ecm_user_light_reward (fk_ecm_user_light_vip_id, fk_ecm_user_light_event_id,
-      reward_light)
+      reward_light, reward_state, create_time,
+      updata_time)
     values (#{fkEcmUserLightVipId,jdbcType=INTEGER}, #{fkEcmUserLightEventId,jdbcType=INTEGER},
-      #{rewardLight,jdbcType=VARCHAR})
+      #{rewardLight,jdbcType=VARCHAR}, #{rewardState,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+      #{updataTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" keyColumn="ecm_user_light_reward_id" keyProperty="ecmUserLightRewardId" parameterType="com.wxcz.carpenter.pojo.entity.EcmUserLightReward" useGeneratedKeys="true">
     insert into ecm_user_light_reward
@@ -38,6 +44,15 @@
       <if test="rewardLight != null">
         reward_light,
       </if>
+      <if test="rewardState != null">
+        reward_state,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updataTime != null">
+        updata_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="fkEcmUserLightVipId != null">
@@ -48,6 +63,15 @@
       </if>
       <if test="rewardLight != null">
         #{rewardLight,jdbcType=VARCHAR},
+      </if>
+      <if test="rewardState != null">
+        #{rewardState,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updataTime != null">
+        #{updataTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -63,6 +87,15 @@
       <if test="rewardLight != null">
         reward_light = #{rewardLight,jdbcType=VARCHAR},
       </if>
+      <if test="rewardState != null">
+        reward_state = #{rewardState,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updataTime != null">
+        updata_time = #{updataTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where ecm_user_light_reward_id = #{ecmUserLightRewardId,jdbcType=INTEGER}
   </update>
@@ -70,7 +103,10 @@
     update ecm_user_light_reward
     set fk_ecm_user_light_vip_id = #{fkEcmUserLightVipId,jdbcType=INTEGER},
       fk_ecm_user_light_event_id = #{fkEcmUserLightEventId,jdbcType=INTEGER},
-      reward_light = #{rewardLight,jdbcType=VARCHAR}
+      reward_light = #{rewardLight,jdbcType=VARCHAR},
+      reward_state = #{rewardState,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      updata_time = #{updataTime,jdbcType=TIMESTAMP}
     where ecm_user_light_reward_id = #{ecmUserLightRewardId,jdbcType=INTEGER}
   </update>
 
@@ -78,6 +114,7 @@
   <select id="ajaxLightRewardList" resultType="com.wxcz.carpenter.pojo.vo.EcmUserLightRewardVO">
     select <include refid="Base_Column_List" />
     from ecm_user_light_reward
+    where reward_state != 1
     limit #{start},#{limit}
 
   </select>
