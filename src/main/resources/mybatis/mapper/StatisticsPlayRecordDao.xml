@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wxcz.carpenter.dao.StatisticsPlayRecordDao">
+  <resultMap id="BaseResultMap" type="com.wxcz.carpenter.pojo.entity.StatisticsPlayRecord">
+    <id column="pk_play_record_id" jdbcType="INTEGER" property="pkPlayRecordId" />
+    <result column="fk_artwork_id" jdbcType="INTEGER" property="fkArtworkId" />
+    <result column="fk_artwork_detail_id" jdbcType="INTEGER" property="fkArtworkDetailId" />
+    <result column="fk_user_id" jdbcType="INTEGER" property="fkUserId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    pk_play_record_id, fk_artwork_id, fk_artwork_detail_id, fk_user_id, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from statistics_play_record
+    where pk_play_record_id = #{pkPlayRecordId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from statistics_play_record
+    where pk_play_record_id = #{pkPlayRecordId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="pk_play_record_id" keyProperty="pkPlayRecordId" parameterType="com.wxcz.carpenter.pojo.entity.StatisticsPlayRecord" useGeneratedKeys="true">
+    insert into statistics_play_record (fk_artwork_id, fk_artwork_detail_id, fk_user_id,
+      create_time)
+    values (#{fkArtworkId,jdbcType=INTEGER}, #{fkArtworkDetailId,jdbcType=INTEGER}, #{fkUserId,jdbcType=INTEGER},
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="pk_play_record_id" keyProperty="pkPlayRecordId" parameterType="com.wxcz.carpenter.pojo.entity.StatisticsPlayRecord" useGeneratedKeys="true">
+    insert into statistics_play_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="fkArtworkId != null">
+        fk_artwork_id,
+      </if>
+      <if test="fkArtworkDetailId != null">
+        fk_artwork_detail_id,
+      </if>
+      <if test="fkUserId != null">
+        fk_user_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="fkArtworkId != null">
+        #{fkArtworkId,jdbcType=INTEGER},
+      </if>
+      <if test="fkArtworkDetailId != null">
+        #{fkArtworkDetailId,jdbcType=INTEGER},
+      </if>
+      <if test="fkUserId != null">
+        #{fkUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wxcz.carpenter.pojo.entity.StatisticsPlayRecord">
+    update statistics_play_record
+    <set>
+      <if test="fkArtworkId != null">
+        fk_artwork_id = #{fkArtworkId,jdbcType=INTEGER},
+      </if>
+      <if test="fkArtworkDetailId != null">
+        fk_artwork_detail_id = #{fkArtworkDetailId,jdbcType=INTEGER},
+      </if>
+      <if test="fkUserId != null">
+        fk_user_id = #{fkUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where pk_play_record_id = #{pkPlayRecordId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wxcz.carpenter.pojo.entity.StatisticsPlayRecord">
+    update statistics_play_record
+    set fk_artwork_id = #{fkArtworkId,jdbcType=INTEGER},
+      fk_artwork_detail_id = #{fkArtworkDetailId,jdbcType=INTEGER},
+      fk_user_id = #{fkUserId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where pk_play_record_id = #{pkPlayRecordId,jdbcType=INTEGER}
+  </update>
+
+
+<!--  sql-->
+
+  <select id="selectDailyUsers" resultType="com.wxcz.carpenter.pojo.vo.StatisticsPlayRecordVO">
+    select distinct a.fk_user_id from statistics_play_record as a where to_days(a.create_time) = to_days(now()) and a.fk_user_id not in
+    (select distinct fk_user_id from statistics_play_record  where to_days(create_time) != to_days(now()));
+  </select>
+
+</mapper>
