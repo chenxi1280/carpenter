@@ -12,4 +12,8 @@ import lombok.Data;
 @Data
 public class StatisticsPlayRecordVO extends StatisticsPlayRecord {
     private Integer userIdCount;
+
+    private Integer playCount;
+
+    private String queryDateTime;
 }

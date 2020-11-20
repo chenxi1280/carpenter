@@ -1,11 +1,13 @@
 package com.wxcz.carpenter.controller.back;
 
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
+import com.wxcz.carpenter.pojo.query.UsersRetentionQuery;
 import com.wxcz.carpenter.service.StatisticsService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -23,13 +25,23 @@ public class StatisticsController {
 
     @RequestMapping("/getDailyUsers")
     @ResponseBody
-    public ResponseDTO getDailyUsers() {
-        Subject subject = SecurityUtils.getSubject();
-        if (!subject.hasRole("superadmin")){
-            return ResponseDTO.fail("无权限");
-        }
+    public ResponseDTO getDailyUsers(@RequestBody UsersRetentionQuery usersRetentionQuery) {
+//        Subject subject = SecurityUtils.getSubject();
+//        if (!subject.hasRole("superadmin")){
+//            return ResponseDTO.fail("无权限");
+//        }
 
-        return statisticsService.getDailyUsers();
+        return statisticsService.getDailyUsers( usersRetentionQuery);
     }
 
+    @RequestMapping("/getUsersRetention")
+    @ResponseBody
+    public ResponseDTO getUsersRetention(@RequestBody UsersRetentionQuery usersRetentionQuery) {
+//        Subject subject = SecurityUtils.getSubject();
+//        if (!subject.hasRole("superadmin")){
+//            return ResponseDTO.fail("无权限");
+//        }
+
+        return statisticsService.getUsersRetention(usersRetentionQuery);
+    }
 }

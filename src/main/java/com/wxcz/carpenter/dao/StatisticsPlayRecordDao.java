@@ -1,7 +1,9 @@
 package com.wxcz.carpenter.dao;
 
 import com.wxcz.carpenter.pojo.entity.StatisticsPlayRecord;
+import com.wxcz.carpenter.pojo.query.UsersRetentionQuery;
 import com.wxcz.carpenter.pojo.vo.StatisticsPlayRecordVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -18,6 +20,11 @@ public interface StatisticsPlayRecordDao {
 
     int updateByPrimaryKey(StatisticsPlayRecord record);
 
-    List<StatisticsPlayRecordVO> selectDailyUsers();
+    List<StatisticsPlayRecordVO> selectDailyUsers(UsersRetentionQuery usersRetentionQuery);
 
+    List<StatisticsPlayRecordVO> getUsersRetention(UsersRetentionQuery usersRetentionQuery);
+
+    List<StatisticsPlayRecordVO> selectDailyUsersByTimeList(@Param("list") List<StatisticsPlayRecordVO> list,@Param("queryDateTime") String queryDateTime);
+
+    List<StatisticsPlayRecordVO> selectDailyUsersByStatisticsPlayRecordVOList(@Param("list")List<StatisticsPlayRecordVO> list);
 }

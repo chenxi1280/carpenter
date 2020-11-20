@@ -78,8 +78,11 @@ public class UserFlowhandle {
                     if (ecmUserFlow.getPermanentFlow() > 0) {
                         if (!ecmUserFlow.getCheckFlow().equals(ecmUserFlow.getPermanentFlow() + count)) {
                             //流量计算不正确 校准流量
+                            if (ecmUserFlow.getCheckFlow() == null){
+                                ecmUserFlow.setCheckFlow((ecmUserFlow.getPermanentFlow() - count));
+                            }
                             ecmUserFlow.setCheckFlow(-(ecmUserFlow.getCheckFlow() - count));
-                            ecmUserFlow.setPermanentFlow(ecmUserFlow.getCheckFlow() - count);
+                            ecmUserFlow.setPermanentFlow(ecmUserFlow.getCheckFlow() );
                         } else {
                             ecmUserFlow.setCheckFlow(-ecmUserFlow.getPermanentFlow());
                         }
@@ -91,7 +94,7 @@ public class UserFlowhandle {
                         if (!ecmUserFlow.getUsedFlow().equals(ecmUserFlow.getCheckFlow() + count)) {
                             //流量计算不正确 校准流量
                             ecmUserFlow.setCheckFlow(ecmUserFlow.getCheckFlow() + count);
-                            ecmUserFlow.setPermanentFlow(ecmUserFlow.getCheckFlow() + count);
+                            ecmUserFlow.setPermanentFlow(ecmUserFlow.getCheckFlow() );
                         } else {
                             ecmUserFlow.setCheckFlow(ecmUserFlow.getUsedFlow());
                         }

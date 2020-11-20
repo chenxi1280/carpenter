@@ -89,8 +89,30 @@
 <!--  sql-->
 
   <select id="selectDailyUsers" resultType="com.wxcz.carpenter.pojo.vo.StatisticsPlayRecordVO">
-    select distinct a.fk_user_id from statistics_play_record as a where to_days(a.create_time) = to_days(now()) and a.fk_user_id not in
-    (select distinct fk_user_id from statistics_play_record  where to_days(create_time) != to_days(now()));
+    select distinct a.fk_user_id from statistics_play_record as a where to_days(a.create_time) = to_days(#{queryDateTime}) and a.fk_user_id not in
+    (select distinct fk_user_id from statistics_play_record  where to_days(create_time) != to_days(#{queryDateTime}));
+  </select>
+
+    <select id="getUsersRetention" resultType="com.wxcz.carpenter.pojo.vo.StatisticsPlayRecordVO">
+      SELECT fk_user_id,COUNT(pk_play_record_id) as playCount FROM statistics_play_record
+      where DATE_ADD(#{queryDateTime}, INTERVAL #{days} DAY) >= date(start_time) and date(createTime) >= #{queryDateTime}
+      group by fk_user_id
+    </select>
+  <select id="selectDailyUsersByTimeList" resultType="com.wxcz.carpenter.pojo.vo.StatisticsPlayRecordVO">
+    select <include refid="Base_Column_List" />
+    from statistics_play_record
+    where to_days(create_time)  = to_days(#{queryDateTime})
+    and fk_user_id in <foreach collection="list" open="(" close=")" item="item" separator=",">#{item.fkUserId} </foreach>
+
+  </select>
+  <select id="selectDailyUsersByStatisticsPlayRecordVOList"
+          resultType="com.wxcz.carpenter.pojo.vo.StatisticsPlayRecordVO">
+    select <include refid="Base_Column_List" />
+    from statistics_play_record
+    where
+    to_days(create_time)  in  <foreach collection="list" open="(" close=")" item="item" separator=","> to_days(#{item.queryDateTime}) </foreach>
+    and fk_user_id in <foreach collection="list" open="(" close=")" item="item" separator=",">#{item.fkUserId} </foreach>
+
   </select>
 
 </mapper>

@@ -1,6 +1,7 @@
 package com.wxcz.carpenter.service;
 
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
+import com.wxcz.carpenter.pojo.query.UsersRetentionQuery;
 
 /**
  * @author by cxd
@@ -9,6 +10,8 @@ import com.wxcz.carpenter.pojo.dto.ResponseDTO;
  * @Date 2020/11/19 10:24
  */
 public interface StatisticsService {
-    ResponseDTO getDailyUsers();
+    ResponseDTO getDailyUsers(UsersRetentionQuery usersRetentionQuery);
+
+    ResponseDTO getUsersRetention(UsersRetentionQuery usersRetentionQuery);
 
 }
