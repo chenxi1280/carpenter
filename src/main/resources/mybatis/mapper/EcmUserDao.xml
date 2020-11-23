@@ -331,6 +331,23 @@
         </foreach>
 
     </select>
+    <update id="updataUserLogoStatus">
+
+        update ecm_user
+        <set>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="userLogoUrl != null">
+                user_logo_url = null,
+            </if>
+            <if test="userLogoStatus != null">
+                user_logo_status = #{userLogoStatus,jdbcType=TINYINT},
+            </if>
+        </set>
+        where pk_user_id = #{pkUserId,jdbcType=INTEGER}
+
+    </update>
 
 
 </mapper>

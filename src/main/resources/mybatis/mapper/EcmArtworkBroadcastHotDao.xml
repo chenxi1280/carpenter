@@ -81,6 +81,7 @@
     where fk_arkwork_id in <foreach collection="ids" item="id" close=")" open="(" separator=",">
     #{id}
     </foreach>
+
   </select>
     <select id="selectByArtworkId" resultType="com.wxcz.carpenter.pojo.vo.EcmArtworkBroadcastHotVO">
       select <include refid="Base_Column_List" />
@@ -93,10 +94,10 @@
     update ecm_artwork_broadcast_hot
     <trim prefix="set" suffixOverrides=",">
 
-      <trim prefix="broadcast_count =case" suffix="end,">
+      <trim prefix="broadcast_count = case" suffix="end,">
         <foreach collection="list" item="item" index="index">
 
-          <if test="item.broadcastCount!=null">
+          <if test="item.broadcastCount != null">
             when fk_arkwork_id=#{item.fkArkworkId}
             then #{item.broadcastCount}
           </if>

@@ -27,4 +27,8 @@ public interface StatisticsPlayRecordDao {
     List<StatisticsPlayRecordVO> selectDailyUsersByTimeList(@Param("list") List<StatisticsPlayRecordVO> list,@Param("queryDateTime") String queryDateTime);
 
     List<StatisticsPlayRecordVO> selectDailyUsersByStatisticsPlayRecordVOList(@Param("list")List<StatisticsPlayRecordVO> list);
+
+    List<StatisticsPlayRecordVO> getViewedPerCapita(UsersRetentionQuery usersRetentionQuery);
+
+    List<StatisticsPlayRecordVO> getPlayCountByQueryTime(UsersRetentionQuery usersRetentionQuery);
 }

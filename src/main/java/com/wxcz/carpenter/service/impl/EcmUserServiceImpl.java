@@ -250,7 +250,7 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
         String msg = "审核已通过";
         if (ecmUserVO.getUserLogoStatus() ==2 ){
 
-//            ecmUserVO.setUserLogoUrl("https://sike-1259692143.cos.ap-chongqing.myqcloud.com/img/1599099032542img.png");
+            ecmUserVO.setUserLogoUrl("https://sike-1259692143.cos.ap-chongqing.myqcloud.com/img/1599099032542img.png");
             msg = "审核不通过";
             // 站内信发送
             EcmTemplateVo ecmTemplateVo = new EcmTemplateVo();
@@ -260,7 +260,8 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
             ecmMessageService.addMsgPart(ecmTemplateVo);
 
         }
-        ecmUserDao.updateByPrimaryKeySelective(ecmUserVO);
+        ecmUserVO.setUpdateTime(new Date());
+        ecmUserDao.updataUserLogoStatus(ecmUserVO);
 
         return ResponseDTO.ok(msg);
     }

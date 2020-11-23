@@ -114,5 +114,17 @@
     and fk_user_id in <foreach collection="list" open="(" close=")" item="item" separator=",">#{item.fkUserId} </foreach>
 
   </select>
+  <select id="getViewedPerCapita" resultType="com.wxcz.carpenter.pojo.vo.StatisticsPlayRecordVO">
+    select  fk_user_id,COUNT(fk_user_id) as userIdCount from
+    statistics_play_record where  to_days(create_time) = to_days(#{queryDateTime})  group by fk_user_id
+
+  </select>
+  <select id="getPlayCountByQueryTime" resultType="com.wxcz.carpenter.pojo.vo.StatisticsPlayRecordVO">
+    select <include refid="Base_Column_List" />
+    from statistics_play_record
+    where  to_days(create_time) = to_days(#{queryDateTime})
+
+  </select>
+
 
 </mapper>

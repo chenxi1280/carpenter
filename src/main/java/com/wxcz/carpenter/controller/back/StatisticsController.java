@@ -41,7 +41,31 @@ public class StatisticsController {
 //        if (!subject.hasRole("superadmin")){
 //            return ResponseDTO.fail("无权限");
 //        }
-
         return statisticsService.getUsersRetention(usersRetentionQuery);
     }
+//    观看总数/有效用户 人均观看作品数
+    @RequestMapping("/getViewedPerCapita")
+    @ResponseBody
+    public ResponseDTO getViewedPerCapita(@RequestBody UsersRetentionQuery usersRetentionQuery) {
+//        Subject subject = SecurityUtils.getSubject();
+//        if (!subject.hasRole("superadmin")){
+//            return ResponseDTO.fail("无权限");
+//        }
+        return statisticsService.getViewedPerCapita(usersRetentionQuery);
+
+    }
+
+
+    //平均完播率
+    @RequestMapping("/getAverageCompletionRate")
+    @ResponseBody
+    public ResponseDTO getAverageCompletionRate(@RequestBody UsersRetentionQuery usersRetentionQuery) {
+//        Subject subject = SecurityUtils.getSubject();
+//        if (!subject.hasRole("superadmin")){
+//            return ResponseDTO.fail("无权限");
+//        }
+        return statisticsService.getAverageCompletionRate(usersRetentionQuery);
+
+    }
+
 }

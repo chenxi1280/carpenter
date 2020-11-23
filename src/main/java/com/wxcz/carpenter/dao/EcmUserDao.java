@@ -32,7 +32,7 @@ public interface EcmUserDao {
      * @return: com.wxcz.carpenter.pojo.vo.EcmUserVO
      * @author: cxd
      * @Date: 2020/8/14
-     * 描述 : 登录查询sql 
+     * 描述 : 登录查询sql
      */
     EcmUserVO login(EcmUserQuery query);
 
@@ -107,4 +107,6 @@ public interface EcmUserDao {
      * 描述 : 根据id 集合查询用户集合
      */
     List<EcmUserVO> selectIds(@Param("ids") List<Integer> asList);
+
+    int updataUserLogoStatus(EcmUserVO ecmUserVO);
 }

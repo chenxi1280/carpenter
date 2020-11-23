@@ -14,4 +14,7 @@ public interface StatisticsService {
 
     ResponseDTO getUsersRetention(UsersRetentionQuery usersRetentionQuery);
 
+    ResponseDTO getViewedPerCapita(UsersRetentionQuery usersRetentionQuery);
+
+    ResponseDTO getAverageCompletionRate(UsersRetentionQuery usersRetentionQuery);
 }

@@ -43,28 +43,39 @@ public class BroadcastHotHandle {
      *          获取 过去24 小时的全部 播放记录 ，进行计算 ，
      *          有数据不等 会用 之前的  播放记录数+ 昨天播放记录数
      */
-    @Scheduled(cron = "0 10 5 ? * *")
-//    @Scheduled(cron = "0/10 * * * * ?")
-    private void handleBroadcastHot() {
+//    @Scheduled(cron = "0 10 5 ? * *")
+    @Scheduled(cron = "0/10 * * * * ?")
+    private void handleBroadcastHot()  {
         // 获取 所有 播放记录
 //        List<EcmArtworkBroadcastHistoryVO> ecmArtworkBroadcastHistoryVOS = ecmArtworkBroadcastHistoryDao.selectAll();
         // 获取过去一天的 播放视频的 视频 播放记录
+        System.out.println("热度定时任务开始工作");
         List<EcmArtworkBroadcastHistoryVO> ecmArtworkBroadcastHistoryVOS = ecmArtworkBroadcastHistoryDao.selectByOneDay();
 
         Map<Integer, List<EcmArtworkBroadcastHistoryVO>> collect = ecmArtworkBroadcastHistoryVOS.stream().collect( Collectors.groupingBy(EcmArtworkBroadcastHistory::getFkArtworkId));
 
         Set<Integer> integers = collect.keySet();
 
+        if (CollectionUtils.isEmpty(integers)) {
+            return;
+        }
+
         List<EcmArtworkBroadcastHotVO> ecmArtworkBroadcastHotVOList = ecmArtworkBroadcastHotDao.selectByArtworkIds(integers);
+
+//        throw new  NullPointerException("");
 
         collect.forEach( (k,v) -> {
             ecmArtworkBroadcastHotVOList.forEach( ecmArtworkBroadcastHotVO -> {
                 if (k.equals(ecmArtworkBroadcastHotVO.getFkArkworkId())){
+
                    if (!ecmArtworkBroadcastHotVO.getBroadcastCount().equals(v.size() + ecmArtworkBroadcastHotVO.getWaitCount())){
                        ecmArtworkBroadcastHotVO.setBroadcastCount(v.size() + ecmArtworkBroadcastHotVO.getWaitCount());
+//                       throw new  NullPointerException("");
                    }else {
+                       System.out.println("没有出现问题");
                        ecmArtworkBroadcastHotVO.setBroadcastCount(null);
                    }
+                    ecmArtworkBroadcastHotVO.setBroadcastCount(null);
                     ecmArtworkBroadcastHotVO.setWaitCount( v.size() + ecmArtworkBroadcastHotVO.getWaitCount() );
                 }
             });
@@ -81,10 +92,11 @@ public class BroadcastHotHandle {
 //            });
 //        });
 
+
         if (!CollectionUtils.isEmpty(ecmArtworkBroadcastHotVOList)){
             ecmArtworkBroadcastHotDao.updateByNewBroadcastHot(ecmArtworkBroadcastHotVOList);
         }
-
+        System.out.println("热度定时任务完成工作");
 
     }
 
