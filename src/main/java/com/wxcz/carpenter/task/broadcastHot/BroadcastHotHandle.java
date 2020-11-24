@@ -70,9 +70,8 @@ public class BroadcastHotHandle {
 
                    if (!ecmArtworkBroadcastHotVO.getBroadcastCount().equals(v.size() + ecmArtworkBroadcastHotVO.getWaitCount())){
                        ecmArtworkBroadcastHotVO.setBroadcastCount(v.size() + ecmArtworkBroadcastHotVO.getWaitCount());
-//                       throw new  NullPointerException("");
                    }else {
-                       System.out.println("没有出现问题");
+//                       System.out.println("没有出现问题");
                        ecmArtworkBroadcastHotVO.setBroadcastCount(null);
                    }
                     ecmArtworkBroadcastHotVO.setBroadcastCount(null);
