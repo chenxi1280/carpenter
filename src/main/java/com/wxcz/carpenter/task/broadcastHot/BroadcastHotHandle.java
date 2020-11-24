@@ -50,33 +50,30 @@ public class BroadcastHotHandle {
 //        List<EcmArtworkBroadcastHistoryVO> ecmArtworkBroadcastHistoryVOS = ecmArtworkBroadcastHistoryDao.selectAll();
         // 获取过去一天的 播放视频的 视频 播放记录
         System.out.println("热度定时任务开始工作");
-        List<EcmArtworkBroadcastHistoryVO> ecmArtworkBroadcastHistoryVOS = ecmArtworkBroadcastHistoryDao.selectByOneDay();
+        List<EcmArtworkBroadcastHistoryVO> ecmArtworkBroadcastHistoryVOS = ecmArtworkBroadcastHistoryDao.selectHotByOneDay();
 
-        Map<Integer, List<EcmArtworkBroadcastHistoryVO>> collect = ecmArtworkBroadcastHistoryVOS.stream().collect( Collectors.groupingBy(EcmArtworkBroadcastHistory::getFkArtworkId));
+//        Map<Integer, List<EcmArtworkBroadcastHistoryVO>> collect = ecmArtworkBroadcastHistoryVOS.stream().collect( Collectors.groupingBy(EcmArtworkBroadcastHistory::getFkArtworkId));
 
-        Set<Integer> integers = collect.keySet();
+//        Set<Integer> integers = collect.keySet();
 
-        if (CollectionUtils.isEmpty(integers)) {
+        if (CollectionUtils.isEmpty(ecmArtworkBroadcastHistoryVOS)) {
             return;
         }
-
-        List<EcmArtworkBroadcastHotVO> ecmArtworkBroadcastHotVOList = ecmArtworkBroadcastHotDao.selectByArtworkIds(integers);
-
-//        throw new  NullPointerException("");
-
-        collect.forEach( (k,v) -> {
+        List<EcmArtworkBroadcastHotVO> ecmArtworkBroadcastHotVOList = ecmArtworkBroadcastHotDao.selectByEcmArtworkBroadcastHistoryVOs(ecmArtworkBroadcastHistoryVOS);
+        ecmArtworkBroadcastHistoryVOS.forEach( v -> {
             ecmArtworkBroadcastHotVOList.forEach( ecmArtworkBroadcastHotVO -> {
-                if (k.equals(ecmArtworkBroadcastHotVO.getFkArkworkId())){
-
-                   if (!ecmArtworkBroadcastHotVO.getBroadcastCount().equals(v.size() + ecmArtworkBroadcastHotVO.getWaitCount())){
-                       ecmArtworkBroadcastHotVO.setBroadcastCount(v.size() + ecmArtworkBroadcastHotVO.getWaitCount());
-                   }else {
-//                       System.out.println("没有出现问题");
-                       ecmArtworkBroadcastHotVO.setBroadcastCount(null);
-                   }
-                    ecmArtworkBroadcastHotVO.setBroadcastCount(null);
-                    ecmArtworkBroadcastHotVO.setWaitCount( v.size() + ecmArtworkBroadcastHotVO.getWaitCount() );
+                if (v.getFkArtworkId().equals(ecmArtworkBroadcastHotVO.getFkArkworkId())){
+                    if (ecmArtworkBroadcastHotVO.getBroadcastCount() != null){
+                        if (!ecmArtworkBroadcastHotVO.getBroadcastCount().equals(v.getArtworkCount() + ecmArtworkBroadcastHotVO.getWaitCount())){
+                            ecmArtworkBroadcastHotVO.setBroadcastCount(v.getArtworkCount() + ecmArtworkBroadcastHotVO.getWaitCount());
+                        }else {
+                           System.out.println("没有出现问题");
+                           ecmArtworkBroadcastHotVO.setBroadcastCount(null);
+                        }
+                        ecmArtworkBroadcastHotVO.setWaitCount( v.getArtworkCount() + ecmArtworkBroadcastHotVO.getWaitCount() );
+                    }
                 }
+
             });
         });
 

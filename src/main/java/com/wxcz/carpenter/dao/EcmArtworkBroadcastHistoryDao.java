@@ -22,4 +22,6 @@ public interface EcmArtworkBroadcastHistoryDao {
 
     List<EcmArtworkBroadcastHistoryVO> selectByOneDay();
 
+    List<EcmArtworkBroadcastHistoryVO> selectHotByOneDay();
+
 }

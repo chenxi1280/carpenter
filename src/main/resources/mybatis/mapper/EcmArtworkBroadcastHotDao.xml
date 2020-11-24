@@ -89,8 +89,16 @@
       where fk_arkwork_id = #{pkArtworkId}
 
     </select>
+  <select id="selectByEcmArtworkBroadcastHistoryVOs" resultType="com.wxcz.carpenter.pojo.vo.EcmArtworkBroadcastHotVO">
+    select <include refid="Base_Column_List" />
+    from ecm_artwork_broadcast_hot
+    where fk_arkwork_id
+    in <foreach collection="list" item="item" close=")" open="(" separator=",">
+    #{item.fkArtworkId}
+  </foreach>
+  </select>
 
-    <update id="updateByNewBroadcastHot">
+  <update id="updateByNewBroadcastHot">
     update ecm_artwork_broadcast_hot
     <trim prefix="set" suffixOverrides=",">
 

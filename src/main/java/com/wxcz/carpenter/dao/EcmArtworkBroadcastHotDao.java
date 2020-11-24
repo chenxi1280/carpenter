@@ -1,6 +1,7 @@
 package com.wxcz.carpenter.dao;
 
 import com.wxcz.carpenter.pojo.entity.EcmArtworkBroadcastHot;
+import com.wxcz.carpenter.pojo.vo.EcmArtworkBroadcastHistoryVO;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkBroadcastHotVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -26,4 +27,6 @@ public interface EcmArtworkBroadcastHotDao {
     int updateByNewBroadcastHot(@Param("list") List<EcmArtworkBroadcastHotVO> ecmArtworkBroadcastHotVOList);
 
     EcmArtworkBroadcastHotVO selectByArtworkId(Integer pkArtworkId);
+
+    List<EcmArtworkBroadcastHotVO> selectByEcmArtworkBroadcastHistoryVOs(@Param("list")  List<EcmArtworkBroadcastHistoryVO> ecmArtworkBroadcastHistoryVOS);
 }
