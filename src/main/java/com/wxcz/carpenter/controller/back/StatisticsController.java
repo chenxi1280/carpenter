@@ -3,6 +3,7 @@ package com.wxcz.carpenter.controller.back;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.query.UsersRetentionQuery;
 import com.wxcz.carpenter.service.StatisticsService;
+import com.wxcz.carpenter.util.DateUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @Date 2020/11/19 10:21
  */
 @Controller
+@RequestMapping("/back/statistics")
 public class StatisticsController {
 
     @Autowired
@@ -25,7 +27,7 @@ public class StatisticsController {
 
     @RequestMapping("/getDailyUsers")
     @ResponseBody
-    public ResponseDTO getDailyUsers(@RequestBody UsersRetentionQuery usersRetentionQuery) {
+    public ResponseDTO getDailyUsers(  UsersRetentionQuery usersRetentionQuery) {
 //        Subject subject = SecurityUtils.getSubject();
 //        if (!subject.hasRole("superadmin")){
 //            return ResponseDTO.fail("无权限");
@@ -34,19 +36,30 @@ public class StatisticsController {
         return statisticsService.getDailyUsers( usersRetentionQuery);
     }
 
-    @RequestMapping("/getUsersRetention")
+    @RequestMapping("/getAddDailyUsers")
     @ResponseBody
-    public ResponseDTO getUsersRetention(@RequestBody UsersRetentionQuery usersRetentionQuery) {
+    public ResponseDTO getAddDailyUsers(  UsersRetentionQuery usersRetentionQuery) {
 //        Subject subject = SecurityUtils.getSubject();
 //        if (!subject.hasRole("superadmin")){
 //            return ResponseDTO.fail("无权限");
 //        }
+
+        return statisticsService.getAddDailyUsers( usersRetentionQuery);
+    }
+    @RequestMapping("/getUsersRetention")
+    @ResponseBody
+    public ResponseDTO getUsersRetention( UsersRetentionQuery usersRetentionQuery) {
+//        Subject subject = SecurityUtils.getSubject();
+//        if (!subject.hasRole("superadmin")){
+//            return ResponseDTO.fail("无权限");
+//        }
+//        usersRetentionQuery.setQueryDateTime(DateUtil.getStringDateShort(usersRetentionQuery.getQueryTime()));
         return statisticsService.getUsersRetention(usersRetentionQuery);
     }
 //    观看总数/有效用户 人均观看作品数
     @RequestMapping("/getViewedPerCapita")
     @ResponseBody
-    public ResponseDTO getViewedPerCapita(@RequestBody UsersRetentionQuery usersRetentionQuery) {
+    public ResponseDTO getViewedPerCapita( UsersRetentionQuery usersRetentionQuery) {
 //        Subject subject = SecurityUtils.getSubject();
 //        if (!subject.hasRole("superadmin")){
 //            return ResponseDTO.fail("无权限");
@@ -65,6 +78,18 @@ public class StatisticsController {
 //            return ResponseDTO.fail("无权限");
 //        }
         return statisticsService.getAverageCompletionRate(usersRetentionQuery);
+
+    }
+
+
+    @RequestMapping("/getStatisticsUserExcl")
+    @ResponseBody
+    public ResponseDTO getStatisticsUserExcl(UsersRetentionQuery usersRetentionQuery) {
+//        Subject subject = SecurityUtils.getSubject();
+//        if (!subject.hasRole("superadmin")){
+//            return ResponseDTO.fail("无权限");
+//        }
+        return statisticsService.getStatisticsUserExcl(usersRetentionQuery);
 
     }
 

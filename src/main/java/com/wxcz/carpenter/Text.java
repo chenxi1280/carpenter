@@ -24,20 +24,8 @@ public class Text {
      * 测试自动化部署 第3次
      *
      */
+    public static void main(String[] args) {
 
-    public static void main(String[] args) throws IOException {
-//        EcmInnerMessage ecmInnerMessage = new EcmInnerMessage();
-//        ecmInnerMessage.setFkUserId(5);
-//        ecmInnerMessage.setFkTemplateId(1);
-//        ecmInnerMessage.setPkMessageId(240);
-//        ecmInnerMessage.setMessageStatus((short) 0);
-//        ecmInnerMessage.setContent("恭喜用户注册成功加入我们万象成帧的大家庭");
-//        ecmInnerMessage.setSendDate(new Date());
-////        Connection.Response post = HttpUtils.post("http://localhost:8008/pushMsg", JSON.toJSONString(ecmInnerMessage));
-//        System.out.println("发送成功");
-        Integer  b = null;
-        Integer a =  b + 0;
-        System.out.println(a);
     }
 
 }

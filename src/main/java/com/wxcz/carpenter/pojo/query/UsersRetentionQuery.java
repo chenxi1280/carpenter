@@ -1,5 +1,6 @@
 package com.wxcz.carpenter.pojo.query;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
@@ -12,9 +13,12 @@ import java.util.Date;
  */
 @Data
 public class UsersRetentionQuery {
-    //前端传递的 查询日期 ex："2020-11-20"
+    //前端传递的 查询日期 ex："2020/11/20"
     private String queryDateTime;
     private Date queryTime;
     //查询的天数
     private int days;
+    private String addQueryDateTime;
+    private String subQueryDateTime;
+
 }

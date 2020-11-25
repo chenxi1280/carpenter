@@ -44,7 +44,7 @@ public class BroadcastHotHandle {
      *          有数据不等 会用 之前的  播放记录数+ 昨天播放记录数
      */
 //    @Scheduled(cron = "0 10 5 ? * *")
-    @Scheduled(cron = "0/10 * * * * ?")
+//    @Scheduled(cron = "0/10 * * * * ?")
     private void handleBroadcastHot()  {
         // 获取 所有 播放记录
 //        List<EcmArtworkBroadcastHistoryVO> ecmArtworkBroadcastHistoryVOS = ecmArtworkBroadcastHistoryDao.selectAll();
@@ -68,9 +68,10 @@ public class BroadcastHotHandle {
                             ecmArtworkBroadcastHotVO.setBroadcastCount(v.getArtworkCount() + ecmArtworkBroadcastHotVO.getWaitCount());
                         }else {
                            System.out.println("没有出现问题");
-                           ecmArtworkBroadcastHotVO.setBroadcastCount(null);
                         }
                         ecmArtworkBroadcastHotVO.setWaitCount( v.getArtworkCount() + ecmArtworkBroadcastHotVO.getWaitCount() );
+                    }else {
+                        ecmArtworkBroadcastHotVO.setBroadcastCount(v.getArtworkCount() + ecmArtworkBroadcastHotVO.getWaitCount());
                     }
                 }
 

@@ -31,4 +31,6 @@ public interface StatisticsPlayRecordDao {
     List<StatisticsPlayRecordVO> getViewedPerCapita(UsersRetentionQuery usersRetentionQuery);
 
     List<StatisticsPlayRecordVO> getPlayCountByQueryTime(UsersRetentionQuery usersRetentionQuery);
+
+    List<StatisticsPlayRecordVO> selectDailyUsersByTime(UsersRetentionQuery usersRetentionQuery);
 }

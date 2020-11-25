@@ -12,9 +12,13 @@ import com.wxcz.carpenter.pojo.query.UsersRetentionQuery;
 public interface StatisticsService {
     ResponseDTO getDailyUsers(UsersRetentionQuery usersRetentionQuery);
 
+    ResponseDTO getAddDailyUsers(UsersRetentionQuery usersRetentionQuery);
+
     ResponseDTO getUsersRetention(UsersRetentionQuery usersRetentionQuery);
 
     ResponseDTO getViewedPerCapita(UsersRetentionQuery usersRetentionQuery);
 
     ResponseDTO getAverageCompletionRate(UsersRetentionQuery usersRetentionQuery);
+
+    ResponseDTO getStatisticsUserExcl(UsersRetentionQuery usersRetentionQuery);
 }

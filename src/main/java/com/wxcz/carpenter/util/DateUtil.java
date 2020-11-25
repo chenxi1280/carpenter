@@ -57,8 +57,8 @@ public class DateUtil {
     /****
      * 传入具体日期 ，返回具体日期增加一天
      */
-    public static String subDay(String date) throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    public static String addDay(String date) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         Date dt = sdf.parse(date);
         Calendar rightNow = Calendar.getInstance();
         rightNow.setTime(dt);
@@ -66,6 +66,67 @@ public class DateUtil {
         Date dt1 = rightNow.getTime();
         String reStr = sdf.format(dt1);
         return reStr;
+    }
+    /****
+     * 传入具体日期 ，返回具体日期增加一天
+     */
+    public static String addDay(String date,int days) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        Date dt = sdf.parse(date);
+        Calendar rightNow = Calendar.getInstance();
+        rightNow.setTime(dt);
+        rightNow.add(Calendar.DAY_OF_MONTH, +days);
+        Date dt1 = rightNow.getTime();
+        String reStr = sdf.format(dt1);
+        return reStr;
+    }
+    /****
+     * 传入具体日期 ，返回具体日期减少一天
+     */
+    public static String subDay(String date) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        Date dt = sdf.parse(date);
+        Calendar rightNow = Calendar.getInstance();
+        rightNow.setTime(dt);
+        rightNow.add(Calendar.DAY_OF_MONTH, -1);
+        Date dt1 = rightNow.getTime();
+        String reStr = sdf.format(dt1);
+        return reStr;
+    }
+
+    public static String subDay(String date,int days) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        Date dt = sdf.parse(date);
+        Calendar rightNow = Calendar.getInstance();
+        rightNow.setTime(dt);
+        rightNow.add(Calendar.DAY_OF_MONTH, -days);
+        Date dt1 = rightNow.getTime();
+        String reStr = sdf.format(dt1);
+        return reStr;
+    }
+    public static String getStringDateShort(Date currentTime ) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String dateString = formatter.format(currentTime);
+        return dateString;
+    }
+
+
+    public static long getDaySub(String beginDateStr,String endDateStr) {
+
+        long day = 0;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+        Date beginDate;
+        Date endDate;
+        try {
+            beginDate = format.parse(beginDateStr);
+            endDate = format.parse(endDateStr);
+            day = (endDate.getTime()-beginDate.getTime())/(24*60*60*1000);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        System.out.println("day:"+day);
+
+        return day;
     }
 
     public static void main(String[] args) throws ParseException {
@@ -80,6 +141,7 @@ public class DateUtil {
         String timeStamp2 = date2TimeStamp(date, "yyyy-MM-dd HH:mm:ss");
         System.out.println(timeStamp2);  //运行输出:1470278082
 
-        System.out.println(subDay("2020-12-31"));
+        System.out.println(  getDaySub("2020/12/01","2021/01/01"));
+
     }
 }

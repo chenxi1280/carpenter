@@ -80,23 +80,24 @@ public class UserFlowhandle {
                             //流量计算不正确 校准流量
                             if (ecmUserFlow.getCheckFlow() == null){
                                 ecmUserFlow.setCheckFlow((ecmUserFlow.getPermanentFlow() - count));
+                            }else {
+                                ecmUserFlow.setCheckFlow(ecmUserFlow.getCheckFlow() - count);
+                                ecmUserFlow.setPermanentFlow(ecmUserFlow.getCheckFlow());
                             }
-                            ecmUserFlow.setCheckFlow(-(ecmUserFlow.getCheckFlow() - count));
-                            ecmUserFlow.setPermanentFlow(ecmUserFlow.getCheckFlow() );
                         } else {
-                            ecmUserFlow.setCheckFlow(-ecmUserFlow.getPermanentFlow());
+                            ecmUserFlow.setCheckFlow(ecmUserFlow.getPermanentFlow());
                         }
                         ecmUserFlow.setUpdateTime(new Date());
                         // 没有出错的 用户 修改 checkflow字段
                         ecmUserFlowArrayList.add(ecmUserFlow);
                     }
                     if (ecmUserFlow.getPermanentFlow().equals(0) && ecmUserFlow.getUsedFlow() >= 0) {
-                        if (!ecmUserFlow.getUsedFlow().equals(ecmUserFlow.getCheckFlow() + count)) {
+                        if (!ecmUserFlow.getUsedFlow().equals(ecmUserFlow.getCheckFlow() + count - 500)) {
                             //流量计算不正确 校准流量
-                            ecmUserFlow.setCheckFlow(ecmUserFlow.getCheckFlow() + count);
+                            ecmUserFlow.setCheckFlow(ecmUserFlow.getCheckFlow() + count - 500);
                             ecmUserFlow.setPermanentFlow(ecmUserFlow.getCheckFlow() );
                         } else {
-                            ecmUserFlow.setCheckFlow(ecmUserFlow.getUsedFlow());
+                            ecmUserFlow.setCheckFlow(ecmUserFlow.getUsedFlow() + 500);
                         }
                         ecmUserFlow.setUpdateTime(new Date());
                         // 没有出错的 用户 修改 checkflow字段
@@ -106,14 +107,12 @@ public class UserFlowhandle {
                 }
             }
 
-            // 批量更新
-            // 保存修改记录
-            if (!CollectionUtils.isEmpty(ecmUserFlowArrayList)) {
+        }
+        // 批量更新
+        // 保存修改记录
+        if (!CollectionUtils.isEmpty(ecmUserFlowArrayList)) {
                 Integer c = ecmUserFlowDao.updateUserFlowCheck(ecmUserFlowArrayList);
                 log.info("核算后今日修改的用户流量为" + c + "用户");
-            }
-
-
         }
     }
 

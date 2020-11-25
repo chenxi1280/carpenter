@@ -89,8 +89,9 @@
 <!--  sql-->
 
   <select id="selectDailyUsers" resultType="com.wxcz.carpenter.pojo.vo.StatisticsPlayRecordVO">
-    select distinct a.fk_user_id from statistics_play_record as a where to_days(a.create_time) = to_days(#{queryDateTime}) and a.fk_user_id not in
-    (select distinct fk_user_id from statistics_play_record  where to_days(create_time) != to_days(#{queryDateTime}));
+    select distinct a.fk_user_id from statistics_play_record as a where to_days(a.create_time) = to_days(#{queryDateTime})
+    and a.fk_user_id not in
+    (select distinct fk_user_id from statistics_play_record  where to_days(#{queryDateTime})  >  to_days(create_time))
   </select>
 
     <select id="getUsersRetention" resultType="com.wxcz.carpenter.pojo.vo.StatisticsPlayRecordVO">
@@ -123,6 +124,18 @@
     select <include refid="Base_Column_List" />
     from statistics_play_record
     where  to_days(create_time) = to_days(#{queryDateTime})
+
+  </select>
+  <select id="selectDailyUsersByTime" resultType="com.wxcz.carpenter.pojo.vo.StatisticsPlayRecordVO">
+    select <include refid="Base_Column_List" />
+    from statistics_play_record
+    where to_days(create_time)  = to_days(#{queryDateTime})
+    and fk_user_id  in (
+    select distinct a.fk_user_id from statistics_play_record as a
+    where to_days(a.create_time) = to_days(#{addQueryDateTimey}) and a.fk_user_id not in (select distinct fk_user_id
+    from statistics_play_record  where  to_days(create_time)) >= to_days(#{addQueryDateTimey})
+
+
 
   </select>
 
