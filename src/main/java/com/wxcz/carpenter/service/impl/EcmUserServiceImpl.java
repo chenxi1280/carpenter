@@ -154,7 +154,7 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
         });
 
 
-        Integer count = list.size();
+        Integer count = ecmUserDao.selectCountByQuery(ecmUserQuery);
         return PageDTO.setPageData(count,list);
     }
 

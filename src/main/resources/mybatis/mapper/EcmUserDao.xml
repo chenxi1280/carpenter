@@ -280,11 +280,16 @@
             <if test="phone != null ">
                 and mobile like CONCAT('%',#{phone},'%')
             </if>
-            <if test="isValid != null and isValid!='' ">
-                and is_valid in #{isValid}
+
+            <if test="isValid != null and isValid != '' ">
+                and is_valid = #{isValid}
             </if>
+
             <if test="userLogoStatus != null ">
-                and user_logo_status in #{userLogoStatus}
+                and user_logo_status = #{userLogoStatus}
+            </if>
+            <if test="roles != null and roles!=''">
+                and roles like CONCAT('%',#{roles},'%')
             </if>
         </where>
 
