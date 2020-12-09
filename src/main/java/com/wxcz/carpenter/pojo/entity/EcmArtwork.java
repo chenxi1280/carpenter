@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * ecm_artwork
- * @author 
+ * @author
  */
 @Data
 public class EcmArtwork implements Serializable {
@@ -56,6 +56,17 @@ public class EcmArtwork implements Serializable {
      * 审核人
      */
     private Integer fkAuditId;
+
+
+    /**
+     * 播放模式
+     */
+    private Integer playMode;
+
+    /**
+     * 是否为多结局
+     */
+    private Integer isEndings;
 
     private static final long serialVersionUID = 1L;
 }

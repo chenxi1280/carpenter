@@ -13,10 +13,13 @@
     <result column="last_modify_date" jdbcType="TIMESTAMP" property="lastModifyDate" />
     <result column="four_letter_tips" jdbcType="VARCHAR" property="fourLetterTips" />
     <result column="fk_audit_id" jdbcType="INTEGER" property="fkAuditId" />
+    <result column="play_mode" jdbcType="INTEGER" property="playMode" />
+    <result column="is_endings" jdbcType="INTEGER" property="isEndings" />
   </resultMap>
   <sql id="Base_Column_List">
     pk_artwork_id, fk_userId, artwork_name, artwork_describe, artwork_status, logo_path,
-    logo_path_status, last_create_date, last_modify_date, four_letter_tips, fk_audit_id
+    logo_path_status, last_create_date, last_modify_date, four_letter_tips, fk_audit_id,
+    play_mode, is_endings
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select

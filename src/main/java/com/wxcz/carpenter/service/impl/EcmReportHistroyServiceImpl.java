@@ -1,9 +1,7 @@
 package com.wxcz.carpenter.service.impl;
 
-import com.wxcz.carpenter.dao.EcmArtworkDao;
-import com.wxcz.carpenter.dao.EcmArtworkNodesDao;
-import com.wxcz.carpenter.dao.EcmReportHistroyDao;
-import com.wxcz.carpenter.dao.EcmUserDao;
+import com.alibaba.fastjson.JSON;
+import com.wxcz.carpenter.dao.*;
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.entity.EcmArtwork;
@@ -12,10 +10,7 @@ import com.wxcz.carpenter.pojo.entity.EcmReportHistroy;
 import com.wxcz.carpenter.pojo.entity.EcmUser;
 import com.wxcz.carpenter.pojo.query.EcmArtworkQuery;
 import com.wxcz.carpenter.pojo.query.ReportArtWorkQuery;
-import com.wxcz.carpenter.pojo.vo.EcmArtworkNodesVo;
-import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
-import com.wxcz.carpenter.pojo.vo.EcmReportHistroyVO;
-import com.wxcz.carpenter.pojo.vo.EcmUserVO;
+import com.wxcz.carpenter.pojo.vo.*;
 import com.wxcz.carpenter.service.EcmReportHistroyService;
 import com.wxcz.carpenter.util.TreeUtil;
 import org.springframework.stereotype.Service;
@@ -49,6 +44,9 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
 
     @Resource
     EcmUserDao ecmUserDao;
+
+    @Resource
+    EcmArtworkEndingsDao ecmArtworkEndingsDao;
 
 
 
@@ -161,11 +159,27 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
         }
 
         EcmReportHistroy ecmReportHistroy = ecmReportHistroyDao.selectByPrimaryKey(ecmArtworkVO.getReportId());
+        // 更新 节点 表 中  节点的投诉举报数据
         if (!CollectionUtils.isEmpty(ecmArtworkNodesVos)) {
             ecmArtworkNodesDao.updateByAtrworkNodes(ecmArtworkNodesVos);
         }
+        //是否为多结局 作品
+//        if (ecmArtwork.getIsEndings()!=null) {
+//            if (ecmArtwork.getIsEndings().equals(1)){
+//                List<EcmArtworkEndingsVO> ecmArtworkEndingsVOList = ecmArtworkEndingsDao.selectByArtwId(ecmArtwork.getPkArtworkId());
+//                if (!CollectionUtils.isEmpty(ecmReportHistroyVOList)){
+//                    ecmArtworkEndingsVOList.forEach( v -> {
+//                        EcmArtworkNodesVo ecmArtworkNodesVo = new EcmArtworkNodesVo();
+////                        ecmArtworkNodesVo.set
+//
+//
+//                    });
+//                }
+//            }
+//        }
+
         Map map = new HashMap(2);
-        map.put("artWork",TreeUtil.buildTree(y).get(0));
+        map.put("artWork",y);
         map.put("reportHistroy",ecmReportHistroy);
         return ResponseDTO.ok("success", map);
 

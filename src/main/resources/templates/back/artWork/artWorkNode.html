@@ -175,36 +175,34 @@
 
             if (artWorkVo != null) {
                 console.log(artWorkVo)
-                let reStateText = ""
-                if (artWorkVo.isReport) {
-                    if (artWorkVo.reState == 1) {
-                        reStateText = "投诉理由：侵权"
-                        $('#reState').text("投诉理由：侵权")
-                    } else if (artWorkVo.reState == 2) {
-                        reStateText = "投诉理由：违规"
-                        $('#reState').text("投诉理由：违规")
-                    } else if (artWorkVo.reState == 3) {
-                        reStateText = "投诉理由：其他"
-                        $('#reState').text("投诉理由：其他")
-                    }
-                    if (artWorkVo.content != null) {
-                        $('#comtemt').text("投诉原因：" + artWorkVo.content)
-                    } else {
-                        $('#comtemt').text("投诉原因：无")
-                    }
-                    if (artWorkVo.reportImgUrl != null) {
-                        // $('#img').attr("src", artWorkVo.reportImgUrl)
-                        $('#img').css("width","270px")
-                        $('#img').css("height","480px")
-                    }
-                }
+                artWorkVo.forEach( v => {
+                    let reStateText = ""
 
-                addTree(artWorkVo.pkDetailId, artWorkVo.videoUrl, artWorkVo.videoText, artWorkVo.fkEndingId ,artWorkVo.alevel,artWorkVo.reportImgUrl,artWorkVo.content,reStateText,artWorkVo.isReport)
-                if (artWorkVo.nodesVos != null) {
-                    artWorkVo.nodesVos.forEach(v => {
-                        f(v);
-                    })
-                }
+                    if (v.isReport) {
+                        if (v.reState == 1) {
+                            reStateText = "投诉理由：侵权"
+                            $('#reState').text("投诉理由：侵权")
+                        } else if (v.reState == 2) {
+                            reStateText = "投诉理由：违规"
+                            $('#reState').text("投诉理由：违规")
+                        } else if (v.reState == 3) {
+                            reStateText = "投诉理由：其他"
+                            $('#reState').text("投诉理由：其他")
+                        }
+                        if (v.content != null) {
+                            $('#comtemt').text("投诉原因：" + v.content)
+                        } else {
+                            $('#comtemt').text("投诉原因：无")
+                        }
+                        if (v.reportImgUrl != null) {
+                            // $('#img').attr("src", artWorkVo.reportImgUrl)
+                            $('#img').css("width","270px")
+                            $('#img').css("height","480px")
+                        }
+                    }
+                    addTree(v.pkDetailId, v.videoUrl, v.videoText, v.fkEndingId ,v.alevel,v.reportImgUrl,v.content,reStateText,v.isReport)
+                })
+
             }
 
         }
