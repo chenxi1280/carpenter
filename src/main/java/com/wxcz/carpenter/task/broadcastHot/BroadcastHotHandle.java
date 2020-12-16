@@ -43,7 +43,7 @@ public class BroadcastHotHandle {
      *          获取 过去24 小时的全部 播放记录 ，进行计算 ，
      *          有数据不等 会用 之前的  播放记录数+ 昨天播放记录数
      */
-//    @Scheduled(cron = "0 10 5 ? * *")
+    @Scheduled(cron = "0 10 5 ? * *")
 //    @Scheduled(cron = "0/10 * * * * ?")
     private void handleBroadcastHot()  {
         // 获取 所有 播放记录

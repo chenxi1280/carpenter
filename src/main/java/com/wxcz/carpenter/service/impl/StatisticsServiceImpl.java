@@ -5,6 +5,7 @@ import com.wxcz.carpenter.dao.StatisticsPlayRecordDao;
 import com.wxcz.carpenter.dao.StatisticsStorylineNaturalshowDao;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.dto.StatisticUserExcl;
+import com.wxcz.carpenter.pojo.entity.StatisticsPlayRecord;
 import com.wxcz.carpenter.pojo.entity.StatisticsStorylineNaturalshow;
 import com.wxcz.carpenter.pojo.query.UsersRetentionQuery;
 import com.wxcz.carpenter.pojo.vo.StatisticsPlayRecordVO;
@@ -16,12 +17,14 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
+import static com.wxcz.carpenter.common.CommomConfig.LINUX_CONFIG_UPLOAD_PATH;
+import static com.wxcz.carpenter.common.CommomConfig.WINDOW_CONFIG_UPLOAD_PATH;
 import static com.wxcz.carpenter.util.DateUtil.*;
 import static java.lang.Double.NaN;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
 
 /**
  * @author by cxd
@@ -189,14 +192,14 @@ public class StatisticsServiceImpl implements StatisticsService {
                 s.setPerCompleteViews((Double) getAverageCompletionRate(usersRetentionQuery).getData());
                 s.setPerViews((Double) getViewedPerCapita(usersRetentionQuery).getData());
 
-                if (i % 7 == 0) {
+                if (i >=  7) {
                     s.setSevenRate(getAddDaysRate(usersRetentionQuery, 7));
                 }
-                if (i % 15 == 0) {
-                    s.setSevenRate(getAddDaysRate(usersRetentionQuery, 15));
+                if (i  >=  15 ) {
+                    s.setFifteenRate(getAddDaysRate(usersRetentionQuery, 15));
                 }
-                if (i % 30 == 0) {
-                    s.setSevenRate(getAddDaysRate(usersRetentionQuery, 30));
+                if (i >= 30 ) {
+                    s.setThirtyRate(getAddDaysRate(usersRetentionQuery, 30));
                 }
                 ls.add(s);
             }
@@ -209,7 +212,13 @@ public class StatisticsServiceImpl implements StatisticsService {
 //        ls.add(new StatisticUserExcl("2020/11/28",0,0.1,0.1,0.1,100.00,0.2));
 //        ls.add(new StatisticUserExcl("2020/11/29",0,0.1,0.1,0.1,100.00,0.2));
 
-            ExportPoi.export(StatisticUserExcl.class, ls, statisticUserExcl.getQueryDateTime().replace('/','-')+".xls", "D:\\javaexcl", new String[]{"时间", "新增用户", "7日留存率", "15日留存率", "30日留存率", "人均观看数", "平均完播率"}, new String[]{"name", "id", "gender", "score"});
+            String systemType = System.getProperty("os.name");// 获取系统的类别, Window
+            String realPath = systemType.toLowerCase().contains("windows") ? WINDOW_CONFIG_UPLOAD_PATH: LINUX_CONFIG_UPLOAD_PATH;
+
+            System.out.println("系统环境为："+ systemType);
+            System.out.println("地址为："+ realPath);
+            ExportPoi.export(StatisticUserExcl.class, ls, statisticUserExcl.getQueryDateTime().replace('/','-')+".xls", realPath, new String[]{"时间", "新增用户", "7日留存率", "15日留存率", "30日留存率", "人均观看数", "平均完播率"}, new String[]{"name", "id", "gender", "score"});
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -227,11 +236,11 @@ public class StatisticsServiceImpl implements StatisticsService {
                 return 0.0;
             }
             List<StatisticsPlayRecordVO> lists = statisticsPlayRecordDao.selectDailyUsersByTimeList(list, usersRetentionQuery.getQueryDateTime());
-
-            if (CollectionUtils.isEmpty(lists)) {
+            ArrayList<StatisticsPlayRecordVO> collect = lists.stream().collect(collectingAndThen(toCollection(() -> new TreeSet<>(Comparator.comparing(StatisticsPlayRecord::getFkUserId))), ArrayList::new));
+            if (CollectionUtils.isEmpty(collect)) {
                 return 0.0;
             }
-            return (list.size() + 1.00 - 1) / lists.size();
+            return (list.size() + 1.00 - 1) / collect.size();
 
         } catch (ParseException e) {
             e.printStackTrace();

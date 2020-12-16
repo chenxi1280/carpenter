@@ -20,6 +20,13 @@ public interface StatisticsPlayRecordDao {
 
     int updateByPrimaryKey(StatisticsPlayRecord record);
 
+    /**
+     * @param: [usersRetentionQuery]
+     * @return: java.util.List<com.wxcz.carpenter.pojo.vo.StatisticsPlayRecordVO>
+     * @author: cxd
+     * @Date: 2020/12/16
+     * 描述 : 查询当日的 新增人数
+     */
     List<StatisticsPlayRecordVO> selectDailyUsers(UsersRetentionQuery usersRetentionQuery);
 
     List<StatisticsPlayRecordVO> getUsersRetention(UsersRetentionQuery usersRetentionQuery);
