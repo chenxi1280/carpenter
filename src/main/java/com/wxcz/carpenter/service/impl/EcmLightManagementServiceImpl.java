@@ -63,6 +63,7 @@ public class EcmLightManagementServiceImpl implements EcmLightManagementService 
 
         List<EcmUserLightRewardVO> list = ecmUserLightRewardDao.ajaxLightRewardList(ecmTemplateQuery);
         Integer count = ecmUserLightRewardDao.ajaxLightRewardListCount(ecmTemplateQuery);
+
         if (!CollectionUtils.isEmpty(list)) {
             List<EcmUserLightEventVO> lightEventVOS =  ecmUserLightEventDao.selectByEcmUserLightRewardVOList(list);
             List<EcmUserLightVipVO> lightVipVOS =  ecmUserLightVipDao.selectByEcmUserLightRewardVOList(list);
@@ -73,7 +74,7 @@ public class EcmLightManagementServiceImpl implements EcmLightManagementService 
                     }
                 });
                 lightVipVOS.forEach( ecmUserLightVipVO ->  {
-                    if (ecmUserLightRewardVO.getFkEcmUserLightEventId().equals(ecmUserLightVipVO.getEcmUserLightVipId())) {
+                    if (ecmUserLightRewardVO.getFkEcmUserLightVipId().equals(ecmUserLightVipVO.getEcmUserLightVipId())) {
                         ecmUserLightRewardVO.setEcmUserLightVipName(ecmUserLightVipVO.getEcmUserLightVipName());
                     }
                 });

@@ -110,4 +110,6 @@ public interface EcmArtworkDao {
      * 描述 : 更新 作品 审核失败  审核人清空
      */
     Integer updateByPrimaryKeyFail(EcmArtwork ecmArtwork);
+
+    int updateArtWorkPlayClient(EcmArtworkVO ecmArtworkVO);
 }

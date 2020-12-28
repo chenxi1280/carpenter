@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>万像成帧 管理后台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!--    <link rel="stylesheet" href="../layuiadmin/layui/css/layui.css" media="all">-->
+    <!--    <link rel="stylesheet" href="../layuiadmin/style/admin.css" media="all">-->
+
+    <!--    <script type="text/javascript" src="../layuiadmin/layui/layui.js"></script>-->
+
+    <link rel="stylesheet" href="../../ims/layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../ims/layuiadmin/style/admin.css" media="all">
+
+    <script type="text/javascript" src="../../ims/layuiadmin/layui/layui.js"></script>
+</head>
+<body>
+
+<div class="layui-inline"> <!-- 注意：这一层元素并不是必须的 -->
+    <div style="margin: 100px 200px">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">输入框</label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" id="test1" name="queryDateTime">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo" >立即提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    layui.use(['laydate','form'], function(){
+        var laydate = layui.laydate;
+        var form = layui.form;
+        var $ = layui.$;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#test1' //指定元素
+        });
+        form.on('submit(formDemo)', function (data) {
+            console.log(data.field)
+            // var msgdata = {pkTemplateId:data.field.pkTemplateId, ids:ids}
+            $.ajax({
+                type: 'post',// ajax请求的方式，post或get
+                url: '/ims/back/statistics/downloadFile',
+                // contentType: "application/json",// 默认就是表单数据(不写)，如果此时要传递的是json字符串，
+                // 那么此时就用application/json,如果此时要传递图片"multipart/form-data，还有数组，集合，还有对象，那么contentType必须指定为false
+                data: data.field,// 要上传的参数,把数组对象转换为JSON字符串
+                // dataType: 'json',// 服务器响应数据：json,text,html,xml
+                processData: true,//布尔值,一般都不用设置，规定通过请求发送的数据是否转换为查询字符串。默认是 true。如果此时上传的时候，有图片，这里必须设置false,
+                success: function (res) {// 请求成功，回调函数,data，指的就是服务器返回的数据
+
+                },
+            });
+
+        });
+    });
+
+
+</script>
+</body>
+</html>

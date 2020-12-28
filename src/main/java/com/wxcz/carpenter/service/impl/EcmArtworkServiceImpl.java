@@ -107,8 +107,17 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
             }
         }
 
-
         return ResponseDTO.get(ecmArtworkDao.updateByPrimaryKeySelective(ecmArtworkVO) == 1);
+    }
+
+    @Override
+    public ResponseDTO updateArtWorkPlayClient(EcmArtworkVO ecmArtworkVO) {
+        if (  ecmArtworkVO.getPlayClient() == null ) {
+            return ResponseDTO.get(ecmArtworkDao.updateArtWorkPlayClient(ecmArtworkVO) == 1);
+        }else {
+            return ResponseDTO.get(ecmArtworkDao.updateByPrimaryKeySelective(ecmArtworkVO) == 1);
+        }
+
     }
 
     @Override

@@ -37,6 +37,9 @@ public interface EcmArtworkService {
      */
     ResponseDTO chengArtWork(EcmArtworkVO ecmArtworkVO);
 
+
+    ResponseDTO updateArtWorkPlayClient(EcmArtworkVO ecmArtworkVO);
+
     /**
      * @param: [ecmArtworkQuery] 待审核 作品的 查询条件
      * @return: com.wxcz.carpenter.pojo.dto.PageDTO
@@ -126,4 +129,5 @@ public interface EcmArtworkService {
     ResponseDTO chArtWorkImg(EcmArtworkVO ecmArtworkQuery);
 
     ResponseDTO chengArtWorkReport(EcmArtworkVO ecmArtworkVO);
+
 }

@@ -91,7 +91,6 @@
             },
         });
         console.log(l)
-
         var n = e("#LAY-index-dataview").children("div"), r = function (e) {
             i[e] = a.init(n[e], layui.echartsTheme), i[e].setOption(l[e]), window.onresize = i[e].resize
         };

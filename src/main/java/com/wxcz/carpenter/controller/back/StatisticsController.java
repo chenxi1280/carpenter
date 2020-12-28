@@ -37,6 +37,8 @@ public class StatisticsController {
     @Autowired
     StatisticsService statisticsService;
 
+
+
     @RequestMapping("/getDailyUsers")
     @ResponseBody
     public ResponseDTO getDailyUsers(  UsersRetentionQuery usersRetentionQuery) {
@@ -122,7 +124,6 @@ public class StatisticsController {
             e.printStackTrace();
             getStatisticsUserExcl(usersRetentionQuery);
         }
-
 
         File downloadFile = new File(fullPath);
 

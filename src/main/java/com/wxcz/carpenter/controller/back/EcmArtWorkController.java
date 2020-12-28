@@ -141,6 +141,17 @@ public class EcmArtWorkController extends BaseController {
         return ecmArtworkService.chengArtWork(ecmArtworkVO);
     }
 
+    @RequestMapping("updateArtWorkPlayClient")
+    @ResponseBody
+    public ResponseDTO updateArtWork(EcmArtworkVO ecmArtworkVO) {
+
+        Subject subject = SecurityUtils.getSubject();
+        if (!subject.hasRole("admin")){
+            return ResponseDTO.fail("无权限");
+        }
+        return ecmArtworkService.updateArtWorkPlayClient(ecmArtworkVO);
+    }
+
     /**
      * @param: [ecmArtworkQuery] 待审核 作品的 查询条件
      * @return: com.wxcz.carpenter.pojo.dto.PageDTO

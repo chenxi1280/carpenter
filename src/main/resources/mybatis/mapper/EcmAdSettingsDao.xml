@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wxcz.carpenter.dao.EcmAdSettingsDao">
+  <resultMap id="BaseResultMap" type="com.wxcz.carpenter.pojo.entity.EcmAdSettings">
+    <id column="ecm_ad_settings_id" jdbcType="INTEGER" property="ecmAdSettingsId" />
+    <result column="ecm_ad_name" jdbcType="VARCHAR" property="ecmAdName" />
+    <result column="ecm_video_number" jdbcType="INTEGER" property="ecmVideoNumber" />
+    <result column="ecm_ad_number" jdbcType="INTEGER" property="ecmAdNumber" />
+    <result column="ecm_ad_state" jdbcType="INTEGER" property="ecmAdState" />
+    <result column="note" jdbcType="VARCHAR" property="note" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ecm_ad_settings_id, ecm_ad_name, ecm_video_number, ecm_ad_number, ecm_ad_state, note
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ecm_ad_settings
+    where ecm_ad_settings_id = #{ecmAdSettingsId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ecm_ad_settings
+    where ecm_ad_settings_id = #{ecmAdSettingsId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="ecm_ad_settings_id" keyProperty="ecmAdSettingsId" parameterType="com.wxcz.carpenter.pojo.entity.EcmAdSettings" useGeneratedKeys="true">
+    insert into ecm_ad_settings (ecm_ad_name, ecm_video_number, ecm_ad_number,
+      ecm_ad_state, note)
+    values (#{ecmAdName,jdbcType=VARCHAR}, #{ecmVideoNumber,jdbcType=INTEGER}, #{ecmAdNumber,jdbcType=INTEGER},
+      #{ecmAdState,jdbcType=INTEGER}, #{note,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="ecm_ad_settings_id" keyProperty="ecmAdSettingsId" parameterType="com.wxcz.carpenter.pojo.entity.EcmAdSettings" useGeneratedKeys="true">
+    insert into ecm_ad_settings
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ecmAdName != null">
+        ecm_ad_name,
+      </if>
+      <if test="ecmVideoNumber != null">
+        ecm_video_number,
+      </if>
+      <if test="ecmAdNumber != null">
+        ecm_ad_number,
+      </if>
+      <if test="ecmAdState != null">
+        ecm_ad_state,
+      </if>
+      <if test="note != null">
+        note,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ecmAdName != null">
+        #{ecmAdName,jdbcType=VARCHAR},
+      </if>
+      <if test="ecmVideoNumber != null">
+        #{ecmVideoNumber,jdbcType=INTEGER},
+      </if>
+      <if test="ecmAdNumber != null">
+        #{ecmAdNumber,jdbcType=INTEGER},
+      </if>
+      <if test="ecmAdState != null">
+        #{ecmAdState,jdbcType=INTEGER},
+      </if>
+      <if test="note != null">
+        #{note,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wxcz.carpenter.pojo.entity.EcmAdSettings">
+    update ecm_ad_settings
+    <set>
+      <if test="ecmAdName != null">
+        ecm_ad_name = #{ecmAdName,jdbcType=VARCHAR},
+      </if>
+      <if test="ecmVideoNumber != null">
+        ecm_video_number = #{ecmVideoNumber,jdbcType=INTEGER},
+      </if>
+      <if test="ecmAdNumber != null">
+        ecm_ad_number = #{ecmAdNumber,jdbcType=INTEGER},
+      </if>
+      <if test="ecmAdState != null">
+        ecm_ad_state = #{ecmAdState,jdbcType=INTEGER},
+      </if>
+      <if test="note != null">
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ecm_ad_settings_id = #{ecmAdSettingsId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wxcz.carpenter.pojo.entity.EcmAdSettings">
+    update ecm_ad_settings
+    set ecm_ad_name = #{ecmAdName,jdbcType=VARCHAR},
+      ecm_video_number = #{ecmVideoNumber,jdbcType=INTEGER},
+      ecm_ad_number = #{ecmAdNumber,jdbcType=INTEGER},
+      ecm_ad_state = #{ecmAdState,jdbcType=INTEGER},
+      note = #{note,jdbcType=VARCHAR}
+    where ecm_ad_settings_id = #{ecmAdSettingsId,jdbcType=INTEGER}
+  </update>
+<!--  sql-->
+
+  <select id="selectajaxList" resultType="com.wxcz.carpenter.pojo.vo.EcmAdSettingsVO">
+    select <include refid="Base_Column_List" />
+    from ecm_ad_settings
+  </select>
+  <select id="selectajaxListCount" resultType="java.lang.Integer">
+    select COUNT(*)
+    from ecm_ad_settings
+  </select>
+
+
+</mapper>

@@ -49,4 +49,16 @@ public class HomeController extends BaseController {
     public String console() {
         return "back/console";
     }
+
+    /**
+     * @param: []
+     * @return: java.lang.String
+     * @author: cxd
+     * @Date: 2020/8/7
+     * 描述 : 跳转页面接口
+     */
+    @RequestMapping("/statistics")
+    public String statistics() {
+        return "back/statistics";
+    }
 }

@@ -68,5 +68,10 @@ public class EcmArtwork implements Serializable {
      */
     private Integer isEndings;
 
+    /**
+     * 能播放的客户端  null 所有，1 微信，2 抖音
+     */
+    private Integer playClient;
+
     private static final long serialVersionUID = 1L;
 }
