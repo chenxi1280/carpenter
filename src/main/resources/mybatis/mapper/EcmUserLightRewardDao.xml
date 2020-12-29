@@ -123,5 +123,11 @@
     from ecm_user_light_reward
 
   </select>
+    <select id="selectByAll" resultType="com.wxcz.carpenter.pojo.vo.EcmUserLightRewardVO">
+      select <include refid="Base_Column_List" />
+      from ecm_user_light_reward
+      where reward_state != 1
+
+    </select>
 
 </mapper>

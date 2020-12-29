@@ -23,4 +23,5 @@ public interface EcmUserLightRewardDao {
 
     Integer ajaxLightRewardListCount(EcmLightManagementQuery ecmTemplateQuery);
 
+    List<EcmUserLightRewardVO> selectByAll();
 }

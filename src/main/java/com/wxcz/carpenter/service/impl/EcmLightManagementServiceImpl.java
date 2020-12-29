@@ -120,6 +120,15 @@ public class EcmLightManagementServiceImpl implements EcmLightManagementService 
     public ResponseDTO addLightReward(EcmUserLightRewardVO ecmUserLightRewardVO) {
         ecmUserLightRewardVO.setCreateTime(new Date());
         ecmUserLightRewardVO.setRewardState(0);
+        List<EcmUserLightRewardVO> list =  ecmUserLightRewardDao.selectByAll();
+        for (EcmUserLightRewardVO userLightRewardVO : list) {
+            if ( userLightRewardVO.getFkEcmUserLightVipId().equals(ecmUserLightRewardVO.getEcmUserLightRewardId()) &&
+                 userLightRewardVO.getFkEcmUserLightEventId().equals(ecmUserLightRewardVO.getEcmUserLightRewardId()) ){
+                return ResponseDTO.fail("该会员事件以存在");
+            }
+
+        }
+
         return ResponseDTO.get(1 == ecmUserLightRewardDao.insertSelective(ecmUserLightRewardVO));
     }
 
