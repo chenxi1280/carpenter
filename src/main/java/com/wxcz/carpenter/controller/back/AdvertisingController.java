@@ -27,17 +27,42 @@ public class AdvertisingController {
     @Resource
     AdvertisingService advertisingService;
 
+    /**
+     * @param: []
+     * @return: java.lang.String
+     * @author: cxd
+     * @Date: 2020/12/29
+     * 描述 : 广告配置页面跳转
+     */
     @RequestMapping("adSettingsPage")
     public String adSettingsPage() {
         return "back/advertising/adSettings";
     }
 
+    /**
+     * @param: [ecmAdSettingsQuery]
+     * @return: com.wxcz.carpenter.pojo.dto.PageDTO
+     * @author: cxd
+     * @Date: 2020/12/29
+     * 描述 : 获取当前广告配置list
+     *       成功: status 200  msg "success”   date:
+     *       失败: status 500  msg "error“
+     */
     @RequestMapping("ajaxList")
     @ResponseBody
     public PageDTO ajaxList(EcmAdSettingsQuery ecmAdSettingsQuery) {
         return advertisingService.ajaxList(ecmAdSettingsQuery);
     }
 
+    /**
+     * @param: [ecmAdSettingsVO]
+     * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO
+     * @author: cxd
+     * @Date: 2020/12/29
+     * 描述 : 更新广告设置
+     *       成功: status 200  msg "success”
+     *       失败: status 500  msg "error“
+     */
     @RequestMapping("updateAdSettings")
     @ResponseBody
     public ResponseDTO updateAdSettings(EcmAdSettingsVO ecmAdSettingsVO){

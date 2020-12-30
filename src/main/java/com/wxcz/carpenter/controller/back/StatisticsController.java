@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.activation.MailcapCommandMap;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +39,15 @@ public class StatisticsController {
     StatisticsService statisticsService;
 
 
-
+    /**
+     * @param: [usersRetentionQuery]
+     * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO
+     * @author: cxd
+     * @Date: 2020/12/29
+     * 描述 : 每日新增用户
+     *       成功: status 200  msg "success”   date:
+     *       失败: status 500  msg "error“
+     */
     @RequestMapping("/getDailyUsers")
     @ResponseBody
     public ResponseDTO getDailyUsers(  UsersRetentionQuery usersRetentionQuery) {
@@ -49,7 +58,15 @@ public class StatisticsController {
 
         return statisticsService.getDailyUsers( usersRetentionQuery);
     }
-
+    /**
+     * @param: [usersRetentionQuery]
+     * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO
+     * @author: cxd
+     * @Date: 2020/12/29
+     * 描述 : 每日新增用户
+     *       成功: status 200  msg "success”   date:
+     *       失败: status 500  msg "error“
+     */
     @RequestMapping("/getAddDailyUsers")
     @ResponseBody
     public ResponseDTO getAddDailyUsers(  UsersRetentionQuery usersRetentionQuery) {
@@ -60,6 +77,7 @@ public class StatisticsController {
 
         return statisticsService.getAddDailyUsers( usersRetentionQuery);
     }
+
     @RequestMapping("/getUsersRetention")
     @ResponseBody
     public ResponseDTO getUsersRetention( UsersRetentionQuery usersRetentionQuery) {
@@ -95,7 +113,15 @@ public class StatisticsController {
 
     }
 
-
+    /**
+     * @param: [usersRetentionQuery]
+     * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO
+     * @author: cxd
+     * @Date: 2020/12/29
+     * 描述 : 获取 传入时间得 excl
+     *       成功: status 200  msg "success”   date:
+     *       失败: status 500  msg "error“
+     */
     @RequestMapping("/getStatisticsUserExcl")
     @ResponseBody
     public ResponseDTO getStatisticsUserExcl(UsersRetentionQuery usersRetentionQuery) {
@@ -106,6 +132,15 @@ public class StatisticsController {
         return statisticsService.getStatisticsUserExcl(usersRetentionQuery);
 
     }
+    /**
+     * @param: [usersRetentionQuery, request, response]
+     * @return: void
+     * @author: cxd
+     * @Date: 2020/12/29
+     * 描述 : 下载 传入时间的 excl
+     *       成功: status 200  msg "success”   date:
+     *       失败: status 500  msg "error“
+     */
     @RequestMapping(value = "/downloadFile")
     @ResponseBody
     public void downloadFile(UsersRetentionQuery usersRetentionQuery, HttpServletRequest request, HttpServletResponse response)  {

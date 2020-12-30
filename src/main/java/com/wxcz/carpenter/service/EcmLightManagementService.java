@@ -3,8 +3,10 @@ package com.wxcz.carpenter.service;
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.query.EcmLightManagementQuery;
+import com.wxcz.carpenter.pojo.query.EcmUserLightQurey;
 import com.wxcz.carpenter.pojo.vo.EcmUserLightEventVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserLightRewardVO;
+import com.wxcz.carpenter.pojo.vo.EcmUserLightVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserLightVipVO;
 
 /**
@@ -37,4 +39,7 @@ public interface EcmLightManagementService {
 
     ResponseDTO delLightReward(EcmUserLightRewardVO ecmUserLightRewardVO);
 
+    PageDTO ajaxUserLightList(EcmUserLightQurey ecmUserLightQurey);
+
+    ResponseDTO updateLightVip(EcmUserLightVO ecmUserLightVO);
 }

@@ -1,5 +1,6 @@
 package com.wxcz.carpenter.service.impl;
 
+import com.wxcz.carpenter.dao.EcmUserLightDao;
 import com.wxcz.carpenter.dao.EcmUserLightEventDao;
 import com.wxcz.carpenter.dao.EcmUserLightRewardDao;
 import com.wxcz.carpenter.dao.EcmUserLightVipDao;
@@ -9,8 +10,10 @@ import com.wxcz.carpenter.pojo.entity.EcmUserLightEvent;
 import com.wxcz.carpenter.pojo.entity.EcmUserLightReward;
 import com.wxcz.carpenter.pojo.entity.EcmUserLightVip;
 import com.wxcz.carpenter.pojo.query.EcmLightManagementQuery;
+import com.wxcz.carpenter.pojo.query.EcmUserLightQurey;
 import com.wxcz.carpenter.pojo.vo.EcmUserLightEventVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserLightRewardVO;
+import com.wxcz.carpenter.pojo.vo.EcmUserLightVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserLightVipVO;
 import com.wxcz.carpenter.service.EcmLightManagementService;
 import org.springframework.stereotype.Service;
@@ -39,6 +42,9 @@ public class EcmLightManagementServiceImpl implements EcmLightManagementService 
 
     @Resource
     EcmUserLightVipDao ecmUserLightVipDao;
+
+    @Resource
+    EcmUserLightDao ecmUserLightDao;
 
 
     @Override
@@ -124,11 +130,10 @@ public class EcmLightManagementServiceImpl implements EcmLightManagementService 
         for (EcmUserLightRewardVO userLightRewardVO : list) {
             if ( userLightRewardVO.getFkEcmUserLightVipId().equals(ecmUserLightRewardVO.getEcmUserLightRewardId()) &&
                  userLightRewardVO.getFkEcmUserLightEventId().equals(ecmUserLightRewardVO.getEcmUserLightRewardId()) ){
-                return ResponseDTO.fail("该会员事件以存在");
+                return ResponseDTO.fail("该会员事件已经存在");
             }
 
         }
-
         return ResponseDTO.get(1 == ecmUserLightRewardDao.insertSelective(ecmUserLightRewardVO));
     }
 
@@ -143,6 +148,24 @@ public class EcmLightManagementServiceImpl implements EcmLightManagementService 
         ecmUserLightRewardVO.setUpdataTime(new Date());
         ecmUserLightRewardVO.setRewardState(1);
         return ResponseDTO.get(1 == ecmUserLightRewardDao.updateByPrimaryKeySelective(ecmUserLightRewardVO));
+    }
+
+    @Override
+    public PageDTO ajaxUserLightList(EcmUserLightQurey ecmUserLightQurey) {
+        List<EcmUserLightVO> lightVOS= ecmUserLightDao.selectAjaxUserLightList(ecmUserLightQurey);
+        Integer count = ecmUserLightDao.selectAjaxUserLightListCount(ecmUserLightQurey);
+        lightVOS.forEach( v -> {
+            if (v.getUsername() == null){
+                v.setUsername("临时用户");
+            }
+        });
+        return PageDTO.setPageData(count,lightVOS);
+    }
+
+    @Override
+    public ResponseDTO updateLightVip(EcmUserLightVO ecmUserLightVO) {
+        ecmUserLightVO.setUpdataTime(new Date());
+        return ResponseDTO.get(1 == ecmUserLightDao.updateByPrimaryKeySelective(ecmUserLightVO));
     }
 
 
