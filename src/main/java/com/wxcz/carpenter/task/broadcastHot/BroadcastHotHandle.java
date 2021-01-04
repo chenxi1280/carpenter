@@ -43,16 +43,16 @@ public class BroadcastHotHandle {
      *          获取 过去24 小时的全部 播放记录 ，进行计算 ，
      *          有数据不等 会用 之前的  播放记录数+ 昨天播放记录数
      */
-    @Scheduled(cron = "0 10 5 ? * *")
-//    @Scheduled(cron = "0/10 * * * * ?")
+//    @Scheduled(cron = "0 10 5 ? * *")
+    @Scheduled(cron = "0/10 * * * * ?")
     private void handleBroadcastHot()  {
         // 获取 所有 播放记录
-//        List<EcmArtworkBroadcastHistoryVO> ecmArtworkBroadcastHistoryVOS = ecmArtworkBroadcastHistoryDao.selectAll();
+        List<EcmArtworkBroadcastHistoryVO> ecmArtworkBroadcastHistoryVOS = ecmArtworkBroadcastHistoryDao.selectAll();
         // 获取过去一天的 播放视频的 视频 播放记录
         System.out.println("热度定时任务开始工作");
-        List<EcmArtworkBroadcastHistoryVO> ecmArtworkBroadcastHistoryVOS = ecmArtworkBroadcastHistoryDao.selectHotByOneDay();
+//        List<EcmArtworkBroadcastHistoryVO> ecmArtworkBroadcastHistoryVOS = ecmArtworkBroadcastHistoryDao.selectHotByOneDay();
 
-//        Map<Integer, List<EcmArtworkBroadcastHistoryVO>> collect = ecmArtworkBroadcastHistoryVOS.stream().collect( Collectors.groupingBy(EcmArtworkBroadcastHistory::getFkArtworkId));
+        Map<Integer, List<EcmArtworkBroadcastHistoryVO>> collect = ecmArtworkBroadcastHistoryVOS.stream().filter(ecmArtworkBroadcastHistoryVO -> ecmArtworkBroadcastHistoryVO.getFkArtworkId() != null).collect( Collectors.groupingBy(EcmArtworkBroadcastHistory::getFkArtworkId));
 
 //        Set<Integer> integers = collect.keySet();
 
@@ -60,34 +60,34 @@ public class BroadcastHotHandle {
             return;
         }
         List<EcmArtworkBroadcastHotVO> ecmArtworkBroadcastHotVOList = ecmArtworkBroadcastHotDao.selectByEcmArtworkBroadcastHistoryVOs(ecmArtworkBroadcastHistoryVOS);
-        ecmArtworkBroadcastHistoryVOS.forEach( v -> {
-            ecmArtworkBroadcastHotVOList.forEach( ecmArtworkBroadcastHotVO -> {
-                if (v.getFkArtworkId().equals(ecmArtworkBroadcastHotVO.getFkArkworkId())){
-                    if (ecmArtworkBroadcastHotVO.getBroadcastCount() != null){
-                        if (!ecmArtworkBroadcastHotVO.getBroadcastCount().equals(v.getArtworkCount() + ecmArtworkBroadcastHotVO.getWaitCount())){
-                            ecmArtworkBroadcastHotVO.setBroadcastCount(v.getArtworkCount() + ecmArtworkBroadcastHotVO.getWaitCount());
-                        }else {
-                           System.out.println("没有出现问题");
-                        }
-                        ecmArtworkBroadcastHotVO.setWaitCount( v.getArtworkCount() + ecmArtworkBroadcastHotVO.getWaitCount() );
-                    }else {
-                        ecmArtworkBroadcastHotVO.setBroadcastCount(v.getArtworkCount() + ecmArtworkBroadcastHotVO.getWaitCount());
-                    }
-                }
-
-            });
-        });
-
-        // 全部重新计算
-//        collect.forEach( (k,v) -> {
+//        ecmArtworkBroadcastHistoryVOS.forEach( v -> {
 //            ecmArtworkBroadcastHotVOList.forEach( ecmArtworkBroadcastHotVO -> {
-//                if (k.equals(ecmArtworkBroadcastHotVO.getFkArkworkId())){
-//                    if (!ecmArtworkBroadcastHotVO.getBroadcastCount().equals(v.size() )){
-//                        ecmArtworkBroadcastHotVO.setBroadcastCount(v.size() );
+//                if (v.getFkArtworkId().equals(ecmArtworkBroadcastHotVO.getFkArkworkId())){
+//                    if (ecmArtworkBroadcastHotVO.getBroadcastCount() != null){
+//                        if (!ecmArtworkBroadcastHotVO.getBroadcastCount().equals(v.getArtworkCount() + ecmArtworkBroadcastHotVO.getWaitCount())){
+//                            ecmArtworkBroadcastHotVO.setBroadcastCount(v.getArtworkCount() + ecmArtworkBroadcastHotVO.getWaitCount());
+//                        }else {
+//                           System.out.println("没有出现问题");
+//                        }
+//                        ecmArtworkBroadcastHotVO.setWaitCount( v.getArtworkCount() + ecmArtworkBroadcastHotVO.getWaitCount() );
+//                    }else {
+//                        ecmArtworkBroadcastHotVO.setBroadcastCount(v.getArtworkCount() + ecmArtworkBroadcastHotVO.getWaitCount());
 //                    }
 //                }
+//
 //            });
 //        });
+
+//         全部重新计算
+        collect.forEach( (k,v) -> {
+            ecmArtworkBroadcastHotVOList.forEach( ecmArtworkBroadcastHotVO -> {
+                if (k.equals(ecmArtworkBroadcastHotVO.getFkArkworkId())){
+                    if (!ecmArtworkBroadcastHotVO.getBroadcastCount().equals(v.size() )){
+                        ecmArtworkBroadcastHotVO.setBroadcastCount(v.size() );
+                    }
+                }
+            });
+        });
 
 
         if (!CollectionUtils.isEmpty(ecmArtworkBroadcastHotVOList)){

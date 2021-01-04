@@ -260,8 +260,6 @@
         and four_letter_tips like CONCAT('%',#{fourLetterTips},'%')
       </if>
 
-
-
     </where>
 
   </select>
