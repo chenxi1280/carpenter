@@ -21,9 +21,14 @@ public class EcmUserLightVip implements Serializable {
     private String ecmUserLightVipName;
 
     /**
-     * 会员对应的光上线
+     * 会员对应的光上限
      */
     private Integer ecmUserLightUpLimit;
+
+    /**
+     * 默认光数量
+     */
+    private Integer lightDefault;
 
     private static final long serialVersionUID = 1L;
 }

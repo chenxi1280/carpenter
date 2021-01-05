@@ -5,9 +5,10 @@
     <id column="ecm_user_light_vip_id" jdbcType="INTEGER" property="ecmUserLightVipId" />
     <result column="ecm_user_light_vip_name" jdbcType="VARCHAR" property="ecmUserLightVipName" />
     <result column="ecm_user_light_up_limit" jdbcType="INTEGER" property="ecmUserLightUpLimit" />
+    <result column="light_default" jdbcType="INTEGER" property="lightDefault" />
   </resultMap>
   <sql id="Base_Column_List">
-    ecm_user_light_vip_id, ecm_user_light_vip_name, ecm_user_light_up_limit
+    ecm_user_light_vip_id, ecm_user_light_vip_name, ecm_user_light_up_limit, light_default
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
@@ -20,10 +21,10 @@
     where ecm_user_light_vip_id = #{ecmUserLightVipId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" keyColumn="ecm_user_light_vip_id" keyProperty="ecmUserLightVipId" parameterType="com.wxcz.carpenter.pojo.entity.EcmUserLightVip" useGeneratedKeys="true">
-    insert into ecm_user_light_vip (ecm_user_light_vip_name, ecm_user_light_up_limit
-      )
-    values (#{ecmUserLightVipName,jdbcType=VARCHAR}, #{ecmUserLightUpLimit,jdbcType=INTEGER}
-      )
+    insert into ecm_user_light_vip (ecm_user_light_vip_name, ecm_user_light_up_limit,
+      light_default)
+    values (#{ecmUserLightVipName,jdbcType=VARCHAR}, #{ecmUserLightUpLimit,jdbcType=INTEGER},
+      #{lightDefault,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" keyColumn="ecm_user_light_vip_id" keyProperty="ecmUserLightVipId" parameterType="com.wxcz.carpenter.pojo.entity.EcmUserLightVip" useGeneratedKeys="true">
     insert into ecm_user_light_vip
@@ -34,6 +35,9 @@
       <if test="ecmUserLightUpLimit != null">
         ecm_user_light_up_limit,
       </if>
+      <if test="lightDefault != null">
+        light_default,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="ecmUserLightVipName != null">
@@ -41,6 +45,9 @@
       </if>
       <if test="ecmUserLightUpLimit != null">
         #{ecmUserLightUpLimit,jdbcType=INTEGER},
+      </if>
+      <if test="lightDefault != null">
+        #{lightDefault,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -53,16 +60,19 @@
       <if test="ecmUserLightUpLimit != null">
         ecm_user_light_up_limit = #{ecmUserLightUpLimit,jdbcType=INTEGER},
       </if>
+      <if test="lightDefault != null">
+        light_default = #{lightDefault,jdbcType=INTEGER},
+      </if>
     </set>
     where ecm_user_light_vip_id = #{ecmUserLightVipId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.wxcz.carpenter.pojo.entity.EcmUserLightVip">
     update ecm_user_light_vip
     set ecm_user_light_vip_name = #{ecmUserLightVipName,jdbcType=VARCHAR},
-      ecm_user_light_up_limit = #{ecmUserLightUpLimit,jdbcType=INTEGER}
+      ecm_user_light_up_limit = #{ecmUserLightUpLimit,jdbcType=INTEGER},
+      light_default = #{lightDefault,jdbcType=INTEGER}
     where ecm_user_light_vip_id = #{ecmUserLightVipId,jdbcType=INTEGER}
   </update>
-
 <!--  sql-->
 
   <select id="ajaxLightVipList" resultType="com.wxcz.carpenter.pojo.vo.EcmUserLightVipVO">

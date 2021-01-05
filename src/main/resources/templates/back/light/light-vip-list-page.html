@@ -63,8 +63,18 @@
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">会员光上限</label>
                 <div class="layui-input-block">
-                    <input type="text" name="ecmUserLightUpLimit" lay-verify="title"
+                    <input type="text" name="ecmUserLightUpLimit" lay-verify="number"
                            autocomplete="off" placeholder="请输入" class="layui-input" id="ecmUserLightUpLimit">
+                </div>
+            </div>
+
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">会员光默认值</label>
+                <div class="layui-input-block">
+                    <!--                    <input name="ecmUserLightUpLimit" placeholder="请输入内容" class="layui-textarea">-->
+                    <input type="text" name="lightDefault" lay-verify="number"
+                           autocomplete="off" placeholder="请输入" class="layui-input" id="lightDefault">
                 </div>
             </div>
 
@@ -112,6 +122,15 @@
             </div>
 
 
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">会员光默认值</label>
+                <div class="layui-input-block">
+                    <!--                    <input name="ecmUserLightUpLimit" placeholder="请输入内容" class="layui-textarea">-->
+                    <input type="text" name="lightDefault" lay-verify="number"
+                           autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" lay-submit onclick="return false;" lay-filter="addMsg">提交</button>
@@ -148,6 +167,7 @@
                 {field: 'ecmUserLightVipId', title: 'ID', width: 120}
                 , {field: 'ecmUserLightVipName', title: '用户光会员名称', width: 150}
                 , {field: 'ecmUserLightUpLimit', title: '光上线', width: 120}
+                ,{field: 'lightDefault', title: '光默认值', width: 120}
                 // , {field: 'createDate', title: '创建时间', width: 180}
                 // , {field: 'updateDate', title: '上次操作时间', width: 180}
                 , {
@@ -262,7 +282,7 @@
                     $("#ecmUserLightVipId").val(d.ecmUserLightVipId)
                     $('#ecmUserLightVipName').val(d.ecmUserLightVipName)
                     $('#ecmUserLightUpLimit').val(d.ecmUserLightUpLimit)
-
+                    $('#lightDefault').val(d.lightDefault)
 
                     form.render();
 
