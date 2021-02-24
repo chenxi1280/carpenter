@@ -125,7 +125,7 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
 
         list.forEach( ecmUserVO ->  {
             try {
-                ecmUserVO.setMobile(EncryptUtil.aesDecrypt(  ecmUserVO.getMobile(), SecretKeyConstants.secretKey));
+                ecmUserVO.setMobile(EncryptUtil.aesDecrypt(  ecmUserVO.getMobile(), SecretKeyConstants.SECRET_KEY));
             } catch (Exception e) {
                 e.printStackTrace();
             }

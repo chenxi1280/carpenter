@@ -60,7 +60,7 @@ public class UserRealm extends AuthorizingRealm {
         EcmUserQuery query = new EcmUserQuery();
         // 前端传递过来的// String.valueOf((char[]) credentials)
         String password = new String((char[]) credentials);
-        query.setPhone(EncryptUtil.aesEncrypt((String) principal, SecretKeyConstants.secretKey));
+        query.setPhone(EncryptUtil.aesEncrypt((String) principal, SecretKeyConstants.SECRET_KEY));
         query.setPassWord(MD5Utils.encrypt(password));
 
         // 拿到了数据库的用户

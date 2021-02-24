@@ -5,9 +5,11 @@ import com.wxcz.carpenter.pojo.query.EcmLightManagementQuery;
 import com.wxcz.carpenter.pojo.vo.EcmUserLightRewardVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserLightVipVO;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface EcmUserLightVipDao {
     int deleteByPrimaryKey(Integer ecmUserLightVipId);
 

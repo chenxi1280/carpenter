@@ -9,4 +9,5 @@ package com.wxcz.carpenter.common;
 public interface CommomConfig {
     String WINDOW_CONFIG_UPLOAD_PATH = "D:\\javaexcl";
     String LINUX_CONFIG_UPLOAD_PATH = "/appl/carpenter/download";
+    String H5_BASE_URL ="www.wxcz.com";
 }

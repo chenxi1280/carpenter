@@ -4,9 +4,11 @@ import com.wxcz.carpenter.pojo.entity.StatisticsPlayRecord;
 import com.wxcz.carpenter.pojo.query.UsersRetentionQuery;
 import com.wxcz.carpenter.pojo.vo.StatisticsPlayRecordVO;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface StatisticsPlayRecordDao {
     int deleteByPrimaryKey(Integer pkPlayRecordId);
 

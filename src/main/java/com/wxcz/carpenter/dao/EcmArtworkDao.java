@@ -5,6 +5,7 @@ import com.wxcz.carpenter.pojo.query.EcmArtworkQuery;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
 import com.wxcz.carpenter.pojo.vo.EcmReportHistroyVO;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * @author cxd
  * @data 2020/8/14
  */
+@Repository
 public interface EcmArtworkDao {
 
     int deleteByPrimaryKey(Integer pkArtworkId);

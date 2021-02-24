@@ -3,6 +3,7 @@ package com.wxcz.carpenter.dao;
 import com.wxcz.carpenter.pojo.entity.EcmArtworkNodes;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkNodesVo;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import java.util.List;
  * @author cxd
  * @Date: 2020/8/14
  */
+@Repository
 public interface EcmArtworkNodesDao {
     int deleteByPrimaryKey(Integer pkDetailId);
 

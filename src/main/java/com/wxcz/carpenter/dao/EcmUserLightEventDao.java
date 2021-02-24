@@ -5,9 +5,11 @@ import com.wxcz.carpenter.pojo.query.EcmLightManagementQuery;
 import com.wxcz.carpenter.pojo.vo.EcmUserLightEventVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserLightRewardVO;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface EcmUserLightEventDao {
     int deleteByPrimaryKey(Integer ecmUserLightEventId);
 

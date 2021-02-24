@@ -4,9 +4,11 @@ import com.wxcz.carpenter.pojo.entity.StatisticsStorylineNaturalshow;
 import com.wxcz.carpenter.pojo.query.UsersRetentionQuery;
 import com.wxcz.carpenter.pojo.vo.StatisticsPlayRecordVO;
 import com.wxcz.carpenter.pojo.vo.StatisticsStorylineNaturalshowVO;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface StatisticsStorylineNaturalshowDao {
     int deleteByPrimaryKey(Integer pkStorylineNaturalshowId);
 

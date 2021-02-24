@@ -4,6 +4,7 @@ import com.wxcz.carpenter.pojo.entity.EcmInnerMessage;
 import com.wxcz.carpenter.pojo.vo.EcmInnerMessageVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserVO;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * @author cxd
  * @Date: 2020/8/25
  */
+@Repository
 public interface EcmInnerMessageDao {
     int deleteByPrimaryKey(Integer pkMessageId);
 

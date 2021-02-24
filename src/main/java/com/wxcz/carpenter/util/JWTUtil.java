@@ -1,0 +1,132 @@
+package com.wxcz.carpenter.util;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.wxcz.carpenter.common.SecretKeyConstants;
+
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.wxcz.carpenter.common.SecretKeyConstants.JWT_SECRET_KEY;
+
+/**
+ * @author Administrator
+ */
+public class JWTUtil {
+
+	/** token 过期时间: 10天 */
+    public static final int CALENDAR_FIELD = Calendar.DATE;
+    public static final int CALENDAR_INTERVAL = 10;
+
+    /**
+     *
+     * 	方法名：verify
+     *	 描述： 校验token是否正确
+     * @author SJ
+     *	 创建时间：2019-9-10 10:35
+     * @param token
+     * @param username
+     * @param secret
+     * @return boolean
+     *
+     */
+    public static boolean verify(String token, String username, String secret) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            JWTVerifier verifier = JWT.require(algorithm)
+                    .withClaim("username", username)
+                    .build();
+            DecodedJWT jwt = verifier.verify(token);
+            return true;
+        } catch (Exception exception) {
+            return false;
+        }
+    }
+
+    /**
+     *
+     * 	方法名：getUsername
+     * 	描述：token中获取用户名
+     * @author SJ
+     * 	创建时间：2019-9-10 10:35
+     * @param token
+     * @return java.lang.String
+     *
+     */
+    public static String getUsername(String token) {
+        try {
+            DecodedJWT jwt = JWT.decode(token);
+            return jwt.getClaim("username").asString();
+        } catch (JWTDecodeException e) {
+            return null;
+        }
+    }
+
+    /**
+     *
+     * 	方法名：getUserId
+     *	 描述：token中获取UserId
+     * @author lianghonglei
+     * 	创建时间：2019-9-12 16:55
+     * @param token
+     * @return java.lang.String
+     *
+     */
+    public static String getUserId(String token) {
+        try {
+            DecodedJWT jwt = JWT.decode(token);
+            return jwt.getClaim("userId").asString();
+        } catch (JWTDecodeException e) {
+            return null;
+        }
+    }
+
+    /**
+     *
+     *	 方法名：sign
+     * 	描述：加密的token
+     * @author SJ
+     * 	创建时间：2019-9-10 10:34
+     * @param username
+     * @param secret
+     * @return java.lang.String
+     *
+     */
+    public static String sign(String userId,String username, String secret) {
+    	// header Map
+        Map<String, Object> map = new HashMap<>(4);
+        map.put("alg", "HS256");
+        map.put("typ", "JWT");
+
+        Date iatDate = new Date();
+        //expire time
+		Calendar nowTime = Calendar.getInstance();
+		nowTime.add(CALENDAR_FIELD, CALENDAR_INTERVAL);
+		Date expiresDate = nowTime.getTime();
+
+		Algorithm algorithm = Algorithm.HMAC256(MD5Utils.encrypt(secret));
+		// 附带username信息header
+		return JWT.create().withHeader(map)
+		        .withClaim("userId", userId)
+		        .withClaim("username", username)
+                // sign time
+		        .withIssuedAt(iatDate)
+		        .withExpiresAt(expiresDate)
+		        .sign(algorithm);
+    }
+
+    public static void main(String[] args) {
+		String token = JWTUtil.sign("1506", "codeWhy", JWT_SECRET_KEY);
+		System.out.println(token);
+		String userId = JWTUtil.getUserId(token);
+		System.out.println(userId);
+		String username = JWTUtil.getUsername(token);
+		System.out.println(username);
+	}
+}

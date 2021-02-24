@@ -3,12 +3,14 @@ package com.wxcz.carpenter.dao;
 import com.wxcz.carpenter.pojo.entity.EcmReportHistroy;
 import com.wxcz.carpenter.pojo.query.ReportArtWorkQuery;
 import com.wxcz.carpenter.pojo.vo.EcmReportHistroyVO;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 /**
  * @author cxd
  * @Date: 2020/8/25
  */
+@Repository
 public interface EcmReportHistroyDao {
     int deleteByPrimaryKey(Integer reportId);
 

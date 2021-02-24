@@ -4,9 +4,11 @@ import com.wxcz.carpenter.pojo.entity.EcmTemplate;
 import com.wxcz.carpenter.pojo.query.EcmTemplateQuery;
 import com.wxcz.carpenter.pojo.vo.EcmInnerMessageVO;
 import com.wxcz.carpenter.pojo.vo.EcmTemplateVo;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface EcmTemplateDao {
     int deleteByPrimaryKey(Integer pkTemplateId);
 

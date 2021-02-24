@@ -3,9 +3,11 @@ package com.wxcz.carpenter.dao;
 import com.wxcz.carpenter.pojo.entity.EcmAdSettings;
 import com.wxcz.carpenter.pojo.query.EcmAdSettingsQuery;
 import com.wxcz.carpenter.pojo.vo.EcmAdSettingsVO;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface EcmAdSettingsDao {
     int deleteByPrimaryKey(Integer ecmAdSettingsId);
 

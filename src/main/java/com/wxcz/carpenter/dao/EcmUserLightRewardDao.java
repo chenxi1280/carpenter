@@ -3,9 +3,11 @@ package com.wxcz.carpenter.dao;
 import com.wxcz.carpenter.pojo.entity.EcmUserLightReward;
 import com.wxcz.carpenter.pojo.query.EcmLightManagementQuery;
 import com.wxcz.carpenter.pojo.vo.EcmUserLightRewardVO;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface EcmUserLightRewardDao {
     int deleteByPrimaryKey(Integer ecmUserLightRewardId);
 

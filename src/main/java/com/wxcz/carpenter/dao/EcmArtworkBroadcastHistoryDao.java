@@ -2,9 +2,11 @@ package com.wxcz.carpenter.dao;
 
 import com.wxcz.carpenter.pojo.entity.EcmArtworkBroadcastHistory;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkBroadcastHistoryVO;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface EcmArtworkBroadcastHistoryDao {
     int deleteByPrimaryKey(Integer pkBroadcastId);
 
