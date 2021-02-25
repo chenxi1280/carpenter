@@ -32,16 +32,19 @@ import static com.wxcz.carpenter.common.CommomConfig.H5_BASE_URL;
 @Service
 public class MerchantServiceImpl implements MerchantService {
 
-    private EcmMerchantDao ecmMerchantDao;
+//    /**
+//     * 构造函数的依赖注入
+//     */
+//    private EcmMerchantDao ecmMerchantDao;
+//
+//    @Autowired
+//    public MerchantServiceImpl (EcmMerchantDao ecmMerchantDao ) {
+//        this.ecmMerchantDao = ecmMerchantDao;
+//    }
 
-    @Autowired
-    public MerchantServiceImpl (EcmMerchantDao ecmMerchantDao ) {
-        this.ecmMerchantDao = ecmMerchantDao;
-    }
 
-
-//    @Resource
-//    EcmMerchantDao ecmMerchantDao;
+    @Resource
+    EcmMerchantDao ecmMerchantDao;
 
     @Resource
     EcmUserDao ecmUserDao;
