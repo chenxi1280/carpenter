@@ -35,7 +35,9 @@
         $('#img').attr("src",thisObj.attr('reportImgUrl'))
         $('#comtemt').text(thisObj.attr('reportContent'))
         $('#reState').text(thisObj.attr('reStateText'))
-
+        $('#popUrl').text(thisObj.attr('popUrl'))
+        $('#popImg').attr("src",thisObj.attr('popImg'))
+        $('#popName').text(thisObj.attr('popName'))
         nodeId = $(obj).attr("id")
 
     }
@@ -86,6 +88,10 @@
                         <P id="comtemt"></P>
 
                         <img  id="img" src="">
+
+                        <h2 id="popName" ></h2>
+                        <img  id="popImg" src="">
+                        <p id="popUrl" ></p>
                     </div>
 
                 </div>
@@ -177,7 +183,9 @@
                 console.log(artWorkVo)
                 artWorkVo.forEach( v => {
                     let reStateText = ""
-
+                    let popName = ''
+                    let popUrl = ''
+                    let popImg = ''
                     if (v.isReport) {
                         if (v.reState == 1) {
                             reStateText = "投诉理由：侵权"
@@ -200,7 +208,15 @@
                             $('#img').css("height","480px")
                         }
                     }
-                    addTree(v.pkDetailId, v.videoUrl, v.videoText, v.fkEndingId ,v.alevel,v.reportImgUrl,v.content,reStateText,v.isReport)
+
+                    if (v.ecmArtworkNodePopupSettings != null) {
+                        addPopupSettings(v.ecmArtworkNodePopupSettings)
+                        popName ='弹窗信息:   弹窗名称: ' + v.ecmArtworkNodePopupSettings.popupName
+                        popImg = v.ecmArtworkNodePopupSettings.popupContext
+                        popUrl = '弹窗地址: ' +  v.ecmArtworkNodePopupSettings.popupSkip
+                    }
+                    addTree(v.pkDetailId, v.videoUrl, v.videoText, v.fkEndingId ,v.alevel,v.reportImgUrl,v.content,reStateText,v.isReport,popName,popImg,popUrl )
+
                 })
 
             }
@@ -208,7 +224,7 @@
         }
 
         // 修改
-        function addTree(id, videoUrl, itemsText, fkEndingId,islink,reportImgUrl,reportContent,reStateText,isReport) {
+        function addTree(id, videoUrl, itemsText, fkEndingId,islink,reportImgUrl,reportContent,reStateText,isReport,popName,popImg,popUrl) {
 
             // let parseJSON = itemsText;
             // console.log(parseJSON)
@@ -242,7 +258,7 @@
                 if ( islink )  itemsText   = itemsText.substring(0,7)  + '（跳转）'
             }
             let s = '<li  data-name="home" class="layui-nav-item layui-nav-itemed " > <a  onclick="mya(this)" id="' + id + '" sr="' + videoUrl + '" itemsText="' + chooseText + '" ' +
-                ' reportImgUrl = "'+reportImgUrl+'" reportContent = "'+reportContent+'" reStateText = "'+reStateText+'"   >  <i class="layui-icon ' + item + '"></i>     <cite>'  +itemsText+ '</cite>  </a></li>'
+                ' reportImgUrl = "'+reportImgUrl+'" reportContent = "'+reportContent+'" reStateText = "'+reStateText+'"  popName="'+ popName+'" popImg="'+ popImg+'" popUrl="'+ popUrl+'"  >  <i class="layui-icon ' + item + '"></i>     <cite>'  +itemsText+ '</cite>  </a></li>'
             $('#LAY-system-side-menu').append(s)
 
         }

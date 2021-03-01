@@ -127,7 +127,7 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
             try {
                 ecmUserVO.setMobile(EncryptUtil.aesDecrypt(  ecmUserVO.getMobile(), SecretKeyConstants.SECRET_KEY));
             } catch (Exception e) {
-                e.printStackTrace();
+//                e.printStackTrace();
             }
             ecmUserFlowVOS.forEach( flow -> {
                if (flow.getUserId().equals(ecmUserVO.getPkUserId())){

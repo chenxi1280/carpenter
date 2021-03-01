@@ -48,6 +48,9 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
     @Resource
     EcmArtworkEndingsDao ecmArtworkEndingsDao;
 
+    @Resource
+    EcmArtworkNodePopupSettingsDao  ecmArtworkNodePopupSettingsDao;
+
 
 
     @Override
@@ -129,13 +132,12 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
             return ResponseDTO.fail("查询id为空");
         }
         List<EcmArtworkNodesVo> list = ecmArtworkNodesDao.selectByArtWorkId(ecmArtworkVO.getPkArtworkId());
-//        List<EcmArtworkNodesVo> y = list.stream().filter(ecmArtworkNodesVo -> {
-//            if (ecmArtworkNodesVo.getIsDeleted() != null){
-//                return !ecmArtworkNodesVo.getIsDeleted().equals("Y");
-//            }
-//            return true;
-//        }).collect(Collectors.toList());
+
         List<EcmArtworkNodesVo> y = list.stream().filter(ecmArtworkNodesVo -> !"Y".equals(ecmArtworkNodesVo.getIsDeleted())).collect(Collectors.toList());
+
+        // 查找到 所有的  弹窗设置信息
+        List<EcmArtworkNodePopupSettingsVO> ecmArtworkNodePopupSettingsVOList = ecmArtworkNodePopupSettingsDao.selectByArtworkNodeList(y);
+
 
         List<EcmReportHistroyVO> ecmReportHistroyVOList = ecmReportHistroyDao.selectByArtWorkId(ecmArtworkVO.getPkArtworkId());
         // 优化到chair举报
@@ -157,26 +159,22 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
                 });
             });
         }
+        if(!CollectionUtils.isEmpty(ecmArtworkNodePopupSettingsVOList)) {
+             y.forEach( v -> {
+                 ecmArtworkNodePopupSettingsVOList.forEach( ecmArtworkNodePopupSettingsVO -> {
+                     if (ecmArtworkNodePopupSettingsVO.getFkNodeId().equals( v.getPkDetailId())) {
+                         v.setEcmArtworkNodePopupSettings(ecmArtworkNodePopupSettingsVO);
+                     }
+                 });
+             });
+        }
 
         EcmReportHistroy ecmReportHistroy = ecmReportHistroyDao.selectByPrimaryKey(ecmArtworkVO.getReportId());
         // 更新 节点 表 中  节点的投诉举报数据
         if (!CollectionUtils.isEmpty(ecmArtworkNodesVos)) {
             ecmArtworkNodesDao.updateByAtrworkNodes(ecmArtworkNodesVos);
         }
-        //是否为多结局 作品
-//        if (ecmArtwork.getIsEndings()!=null) {
-//            if (ecmArtwork.getIsEndings().equals(1)){
-//                List<EcmArtworkEndingsVO> ecmArtworkEndingsVOList = ecmArtworkEndingsDao.selectByArtwId(ecmArtwork.getPkArtworkId());
-//                if (!CollectionUtils.isEmpty(ecmReportHistroyVOList)){
-//                    ecmArtworkEndingsVOList.forEach( v -> {
-//                        EcmArtworkNodesVo ecmArtworkNodesVo = new EcmArtworkNodesVo();
-////                        ecmArtworkNodesVo.set
-//
-//
-//                    });
-//                }
-//            }
-//        }
+
 
         Map map = new HashMap(2);
         map.put("artWork",y);
