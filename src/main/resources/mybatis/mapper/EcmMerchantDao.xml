@@ -219,8 +219,11 @@
 
 <!--  sql-->
   <select id="selectByMerchantQuery" resultType="com.wxcz.carpenter.pojo.vo.EcmMerchantVO">
-    select <include refid="Base_Column_List" />
+    select  pk_merchant_id, fk_user_id, merchant_name, mobile_phone, merchant_detail, ecm_merchant.email,
+    open_state, approval_status, voucher_img, business_type, contact_name, contact_phone,
+    contact_vx, h5_url,ecm_merchant.create_time, ecm_merchant.update_time,username
     from ecm_merchant
+    inner join ecm_user on fk_user_id = pk_user_id
     <where>
         <if test=" pkMerchantId != null">
          and  pk_merchant_id = #{pkMerchantId}

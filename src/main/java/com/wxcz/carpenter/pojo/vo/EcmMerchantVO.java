@@ -11,4 +11,5 @@ import lombok.Data;
  */
 @Data
 public class EcmMerchantVO  extends EcmMerchant {
+    private String username;
 }

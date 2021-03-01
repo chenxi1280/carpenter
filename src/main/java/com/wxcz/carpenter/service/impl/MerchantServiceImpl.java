@@ -59,8 +59,8 @@ public class MerchantServiceImpl implements MerchantService {
 
         if (!CollectionUtils.isEmpty(list)) {
             list.forEach( ecmMerchantVO -> {
-                ecmMerchantVO.setH5Url(H5_BASE_URL + "?token=" + JWTUtil.sign(String.valueOf(ecmMerchantVO.getFkUserId()),
-                        ecmMerchantVO.getMerchantName(), SecretKeyConstants.JWT_SECRET_KEY));
+                ecmMerchantVO.setH5Url(ecmMerchantVO.getH5Url() + "?token=" + JWTUtil.sign(String.valueOf(ecmMerchantVO.getFkUserId()),
+                        ecmMerchantVO.getUsername(), SecretKeyConstants.JWT_SECRET_KEY) );
             });
         }
 
@@ -82,8 +82,7 @@ public class MerchantServiceImpl implements MerchantService {
         try{
             ecmUserDao.insertSelective(ecmUser);
             ecmMerchantVO.setFkUserId(ecmUser.getPkUserId());
-            ecmMerchantVO.setH5Url(H5_BASE_URL + "?token=" + JWTUtil.sign(String.valueOf(ecmMerchantVO.getFkUserId()),
-                    ecmMerchantVO.getMerchantName(), SecretKeyConstants.JWT_SECRET_KEY));
+            ecmMerchantVO.setH5Url(H5_BASE_URL);
             ecmMerchantDao.insertSelective(ecmMerchantVO);
         }catch (Exception e){
             e.printStackTrace();
