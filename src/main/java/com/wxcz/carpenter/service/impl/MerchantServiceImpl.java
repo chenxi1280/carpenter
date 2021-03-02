@@ -59,7 +59,7 @@ public class MerchantServiceImpl implements MerchantService {
 
         if (!CollectionUtils.isEmpty(list)) {
             list.forEach( ecmMerchantVO -> {
-                ecmMerchantVO.setH5Url(ecmMerchantVO.getH5Url() + "?token=" + JWTUtil.sign(String.valueOf(ecmMerchantVO.getFkUserId()),
+                ecmMerchantVO.setH5Url(ecmMerchantVO.getH5Url() + "?token=" + JWTUtil.sign(String.valueOf(ecmMerchantVO.getPkMerchantId()),
                         ecmMerchantVO.getUsername(), SecretKeyConstants.JWT_SECRET_KEY) );
             });
         }

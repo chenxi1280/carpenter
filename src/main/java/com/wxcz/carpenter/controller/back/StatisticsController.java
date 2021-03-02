@@ -148,7 +148,8 @@ public class StatisticsController {
         if(StringUtils.isEmpty(queryDateTime)){
             return;
         }
-        String systemType = System.getProperty("os.name");// 获取系统的类别, Window
+        // 获取系统的类别, Window
+        String systemType = System.getProperty("os.name");
         String realPath = systemType.toLowerCase().contains("windows") ? WINDOW_CONFIG_UPLOAD_PATH: LINUX_CONFIG_UPLOAD_PATH;
 
 
