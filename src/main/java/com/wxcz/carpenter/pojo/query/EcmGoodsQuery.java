@@ -40,5 +40,5 @@ public class EcmGoodsQuery extends PageQuery{
     /**
      * 商品类别名称
      */
-    private Integer categoryName;
+    private String categoryName;
 }

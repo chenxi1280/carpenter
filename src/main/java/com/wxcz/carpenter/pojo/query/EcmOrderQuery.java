@@ -34,7 +34,7 @@ public class EcmOrderQuery extends PageQuery{
     private BigDecimal orderPrice;
 
     /**
-     * 订单状态
+     * 订单状态 0支付 1支付成功
      */
     private Integer orderState;
 
@@ -61,5 +61,11 @@ public class EcmOrderQuery extends PageQuery{
     /**
      * 商品类别名称
      */
-    private Integer categoryName;
+    private String categoryName;
+
+
+    /**
+     * 商品名称
+     */
+    private String goodsName;
 }

@@ -16,33 +16,69 @@
 <div style="padding: 10px;" class="layui-card">
     <div style="display: flex">
         <form id="queryForm" class="layui-form" method="post"
-              style="display: flex;align-items: center;padding-left: 50px">
+              style="display: flex;align-items: center;padding-left: 5px">
             <div class="layui-hide-xs" style="display: flex;align-items: center">
-                <span style="width: fit-content">商户 id：</span>
-                <input class="layui-input" name="pkMerchantId" id="pkMerchantId"
+                <span style="width: fit-content">订单 id：</span>
+                <input class="layui-input" name="pkOrderId"
                        style="width: 120px;"/>
             </div>
-            <div class="layui-hide-xs" style="display: flex;align-items: center;margin-left: 20px">
-                <label style="width:  fit-content">用户 id：</label>
-                <input class="layui-input" name="fkUserId" id="fkUserId"
+            <div style="display: flex;align-items: center;margin-left: 20px">
+                <label style="width:  fit-content">商品：</label>
+                <input class="layui-input" name="goodsName"
                        style="width: 120px"/>
             </div>
             <div style="display: flex;align-items: center;margin-left: 20px">
-                <label style="width:  fit-content">手机号：</label>
-                <input class="layui-input" name="merchantName" id="merchantName"
+                <label style="width:  fit-content">用户：</label>
+                <input class="layui-input" name="username"
                        style="width: 120px"/>
             </div>
             <div style="display: flex;align-items: center;margin-left: 20px">
-                <label style="width:  fit-content">手机号：</label>
-                <input class="layui-input" name="mobilePhone" id="mobilePhone"
+                <label style="width:  fit-content">商品类别：</label>
+                <input class="layui-input" name="categoryName"
                        style="width: 120px"/>
+            </div>
+
+            <div style="display: flex;align-items: center;margin-left: 20px">
+                <label style="width:  fit-content">商品id：</label>
+                <input class="layui-input" name="fkGoodsId"
+                       style="width: 120px"/>
+            </div>
+
+            <div style="display: flex;align-items: center;margin-left: 20px">
+                <label style="width:  fit-content">用户id：</label>
+                <input class="layui-input" name="fkUserId"
+                       style="width: 120px"/>
+            </div>
+
+            <div style="display: flex;align-items: center;padding-left: 5px">
+                <label style="width:  fit-content">订单类型：</label>
+                <div  style="width: 100px">
+                    <select name="orderType"  style="width: 50px">
+                        <option value="">请选择</option>
+                        <option value="0">微信</option>
+                        <option value="1">支付宝</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: flex;align-items: center;padding-left: 5px">
+                <label style="width:  fit-content">订单状态：</label>
+                <div  style="width: 100px">
+                    <select name="orderState">
+                        <option value="">请选择</option>
+                        <option value="0">未支付</option>
+                        <option value="1">已支付</option>
+                        <option value="2">完成</option>
+                    </select>
+                </div>
+
             </div>
 
             <div style="display: flex;align-items: center;margin-left: 20px">
                 <button type="button" class="layui-btn" id="queryBtn" lay-submit lay-filter="queryForm">查询</button>
             </div>
         </form>
-        <div style="padding-left: 5%"></div>
+<!--        <div style="padding-left: 5%"></div>-->
     </div>
     <table id="tTable" lay-filter="tTableFilter" style="padding-top: 10px"></table>
     <!--        <div th:include="plugins/splitBar::splitBar"></div>-->
@@ -50,91 +86,7 @@
 </div>
 
 
-<script type="text/html" id="showeditDiv">
-    <div style="padding: 20px">
 
-        <form class="layui-form">
-
-            <input type="text" style="display: none" name="pkTemplateId" id="pkTemplateId">
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">消息名字</label>
-                <div class="layui-input-block">
-                    <input type="text" name="templateName" lay-verify="title"
-                           autocomplete="off" placeholder="请输入" class="layui-input" id="msgname">
-                </div>
-            </div>
-
-
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">消息内容</label>
-                <div class="layui-input-block">
-                    <textarea name="content" placeholder="请输入内容" class="layui-textarea" id="msgcontext"></textarea>
-                </div>
-            </div>
-
-            <!--            <div style="text-align: center">-->
-            <!--                <input type="submit" class="layui-btn layui-btn-danger" lay-submit onclick="return false;"-->
-            <!--                       lay-filter="sureDispatch">-->
-            <!--            </div>-->
-
-            <!--            <div class="layui-form-item">-->
-            <!--                <div class="layui-input-block">-->
-            <button class="layui-btn layui-btn-fluid" lay-submit onclick="return false;" lay-filter="sureDispatch">提交
-            </button>
-
-            <!--                </div>-->
-            <!--            </div>-->
-
-        </form>
-
-    </div>
-
-</script>
-
-<script type="text/html" id="addMsgDiv">
-    <div style="padding: 20px">
-
-        <form class="layui-form">
-
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">商铺名称</label>
-                <div class="layui-input-block">
-                    <input type="text" name="merchantName" lay-verify="required|title"
-                           autocomplete="off" placeholder="请输入" class="layui-input">
-                </div>
-            </div>
-
-
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">电话号码</label>
-                <div class="layui-input-block">
-                    <input name="mobilePhone" lay-verify="required|phone|number" placeholder="请输入" class="layui-input">
-                </div>
-            </div>
-
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">商家简介</label>
-                <div class="layui-input-block">
-                    <textarea name="merchantDetail" lay-verify="required|title" placeholder="请输入内容" class="layui-textarea" id="msgcontext"></textarea>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit onclick="return false;" lay-filter="addMsg">提交</button>
-
-                </div>
-            </div>
-
-        </form>
-
-
-    </div>
-
-</script>
 <!--// 加上th:inline='javascript' 否则可能会因为小于或者大于符号导致 thymeleaf模板引擎解析错误。-->
 <script th:inline="javascript" type="text/javascript">
 

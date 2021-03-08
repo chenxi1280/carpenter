@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author by cxd
@@ -57,6 +58,7 @@ public class EcmGoodsServiceImpl implements EcmGoodsService {
     @Override
     public ResponseDTO addGoodsCategory(EcmGoodsCategoryVO ecmGoodsCategoryVO) {
         ecmGoodsCategoryVO.setCreateTime(new Date());
+        ecmGoodsCategoryVO.setCategoryState(0);
         return ResponseDTO.get(1 ==  ecmGoodsCategoryDao.insertSelective(ecmGoodsCategoryVO));
     }
 

@@ -18,7 +18,7 @@ public class EcmOrderVO extends EcmOrder {
     /**
      * 商品类别名称
      */
-    private Integer categoryName;
+    private String categoryName;
 
 
     /**
