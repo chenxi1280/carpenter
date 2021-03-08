@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wxcz.carpenter.dao.EcmGoodsDao">
+  <resultMap id="BaseResultMap" type="com.wxcz.carpenter.pojo.entity.EcmGoods">
+    <id column="pk_goods_id" jdbcType="INTEGER" property="pkGoodsId" />
+    <result column="fk_goods_category_id" jdbcType="INTEGER" property="fkGoodsCategoryId" />
+    <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+    <result column="goods_price" jdbcType="DECIMAL" property="goodsPrice" />
+    <result column="goods_state" jdbcType="INTEGER" property="goodsState" />
+    <result column="good_context" jdbcType="VARCHAR" property="goodContext" />
+    <result column="good_flow" jdbcType="INTEGER" property="goodFlow" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    pk_goods_id, fk_goods_category_id, goods_name, goods_price, goods_state, good_context,
+    good_flow, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ecm_goods
+    where pk_goods_id = #{pkGoodsId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ecm_goods
+    where pk_goods_id = #{pkGoodsId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="pk_goods_id" keyProperty="pkGoodsId" parameterType="com.wxcz.carpenter.pojo.entity.EcmGoods" useGeneratedKeys="true">
+    insert into ecm_goods (fk_goods_category_id, goods_name, goods_price,
+      goods_state, good_context, good_flow,
+      create_time, update_time)
+    values (#{fkGoodsCategoryId,jdbcType=INTEGER}, #{goodsName,jdbcType=VARCHAR}, #{goodsPrice,jdbcType=DECIMAL},
+      #{goodsState,jdbcType=INTEGER}, #{goodContext,jdbcType=VARCHAR}, #{goodFlow,jdbcType=INTEGER},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="pk_goods_id" keyProperty="pkGoodsId" parameterType="com.wxcz.carpenter.pojo.entity.EcmGoods" useGeneratedKeys="true">
+    insert into ecm_goods
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="fkGoodsCategoryId != null">
+        fk_goods_category_id,
+      </if>
+      <if test="goodsName != null">
+        goods_name,
+      </if>
+      <if test="goodsPrice != null">
+        goods_price,
+      </if>
+      <if test="goodsState != null">
+        goods_state,
+      </if>
+      <if test="goodContext != null">
+        good_context,
+      </if>
+      <if test="goodFlow != null">
+        good_flow,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="fkGoodsCategoryId != null">
+        #{fkGoodsCategoryId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsName != null">
+        #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsPrice != null">
+        #{goodsPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsState != null">
+        #{goodsState,jdbcType=INTEGER},
+      </if>
+      <if test="goodContext != null">
+        #{goodContext,jdbcType=VARCHAR},
+      </if>
+      <if test="goodFlow != null">
+        #{goodFlow,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wxcz.carpenter.pojo.entity.EcmGoods">
+    update ecm_goods
+    <set>
+      <if test="fkGoodsCategoryId != null">
+        fk_goods_category_id = #{fkGoodsCategoryId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsName != null">
+        goods_name = #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsPrice != null">
+        goods_price = #{goodsPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsState != null">
+        goods_state = #{goodsState,jdbcType=INTEGER},
+      </if>
+      <if test="goodContext != null">
+        good_context = #{goodContext,jdbcType=VARCHAR},
+      </if>
+      <if test="goodFlow != null">
+        good_flow = #{goodFlow,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where pk_goods_id = #{pkGoodsId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wxcz.carpenter.pojo.entity.EcmGoods">
+    update ecm_goods
+    set fk_goods_category_id = #{fkGoodsCategoryId,jdbcType=INTEGER},
+      goods_name = #{goodsName,jdbcType=VARCHAR},
+      goods_price = #{goodsPrice,jdbcType=DECIMAL},
+      goods_state = #{goodsState,jdbcType=INTEGER},
+      good_context = #{goodContext,jdbcType=VARCHAR},
+      good_flow = #{goodFlow,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where pk_goods_id = #{pkGoodsId,jdbcType=INTEGER}
+  </update>
+
+<!--  sql-->
+  <select id="selectListByEcmGoodsQuery" resultType="com.wxcz.carpenter.pojo.vo.EcmGoodsVO">
+    select  pk_goods_id, fk_goods_category_id, goods_name, goods_price, goods_state, good_context,
+    good_flow, ecm_goods.create_time, ecm_goods.update_time, pk_category_id, category_name
+    from ecm_goods
+    inner join ecm_goods_category on fk_goods_category_id = pk_category_id
+    <where>
+
+      <if test="categoryName != null and categoryName != '' "  >
+        and category_name like CONCAT('%',#{categoryName},'%')
+      </if>
+
+      <if test="goodsName != null and goodsName != '' "  >
+        and goods_name like CONCAT('%',#{goodsName},'%')
+      </if>
+
+      <if test="fkGoodsCategoryId != null  "  >
+        and fk_goods_category_id = #{fkGoodsCategoryId}
+      </if>
+
+      <if test="goodsState != null  "  >
+        and goods_state = #{goodsState}
+      </if>
+
+      <if test="pkGoodsId != null  "  >
+        and pk_goods_id = #{pkGoodsId}
+      </if>
+    </where>
+    limit #{start},#{limit}
+
+  </select>
+  <select id="selectCountByEcmGoodsQuery" resultType="java.lang.Integer">
+    select  count(*)
+    from ecm_goods
+    inner join ecm_goods_category on fk_goods_category_id = pk_category_id
+    <where>
+      <if test="goodsName != null and goodsName != '' "  >
+        and goods_name like CONCAT('%',#{goodsName},'%')
+      </if>
+
+      <if test="goodsState != null and goodsState != '' "  >
+        and goods_state like CONCAT('%',#{goodsState},'%')
+      </if>
+
+      <if test="fkGoodsCategoryId != null  "  >
+        and fk_goods_category_id = #{fkGoodsCategoryId}
+      </if>
+
+      <if test="goodsState != null  "  >
+        and goods_state = #{goodsState}
+      </if>
+
+      <if test="pkGoodsId != null  "  >
+        and pk_goods_id = #{pkGoodsId}
+      </if>
+    </where>
+
+  </select>
+
+</mapper>
