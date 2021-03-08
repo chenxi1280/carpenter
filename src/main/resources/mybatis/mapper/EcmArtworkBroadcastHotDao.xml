@@ -51,6 +51,7 @@
       </if>
     </trim>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.wxcz.carpenter.pojo.entity.EcmArtworkBroadcastHot">
     update ecm_artwork_broadcast_hot
     <set>
@@ -97,6 +98,10 @@
     #{item.fkArtworkId}
   </foreach>
   </select>
+  <select id="selectAll" resultType="com.wxcz.carpenter.pojo.vo.EcmArtworkBroadcastHotVO">
+    select <include refid="Base_Column_List" />
+    from ecm_artwork_broadcast_hot
+  </select>
 
   <update id="updateByNewBroadcastHot">
     update ecm_artwork_broadcast_hot
@@ -129,5 +134,4 @@
     </foreach>
 
   </update>
-
 </mapper>

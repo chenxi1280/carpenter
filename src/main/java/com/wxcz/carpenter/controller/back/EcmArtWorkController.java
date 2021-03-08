@@ -14,6 +14,7 @@ import com.wxcz.carpenter.service.EcmReportHistroyService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,6 +40,13 @@ public class EcmArtWorkController extends BaseController {
 
     @Resource
     EcmReportHistroyService ecmReportHistroyService;
+
+
+    @RequestMapping("addEcmArtworkHot")
+    @ResponseBody
+    public ResponseDTO addEcmArtworkHot() {
+        return ecmArtworkService.addEcmArtworkHot();
+    }
 
     /**
      * @param: []

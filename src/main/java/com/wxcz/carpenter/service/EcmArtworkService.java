@@ -14,6 +14,8 @@ import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
  * @Date 2020/8/7 10:53
  */
 public interface EcmArtworkService {
+
+
     /**
      * @param: [ecmArtworkQuery] 查询条件类
      * @return: com.wxcz.carpenter.pojo.dto.PageDTO
@@ -129,5 +131,8 @@ public interface EcmArtworkService {
     ResponseDTO chArtWorkImg(EcmArtworkVO ecmArtworkQuery);
 
     ResponseDTO chengArtWorkReport(EcmArtworkVO ecmArtworkVO);
+
+
+    ResponseDTO addEcmArtworkHot();
 
 }

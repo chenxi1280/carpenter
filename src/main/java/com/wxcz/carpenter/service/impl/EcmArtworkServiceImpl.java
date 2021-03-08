@@ -6,6 +6,7 @@ import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.entity.EcmArtwork;
 import com.wxcz.carpenter.pojo.entity.EcmArtworkNodes;
 import com.wxcz.carpenter.pojo.entity.EcmReportHistroy;
+import com.wxcz.carpenter.pojo.entity.EcmUser;
 import com.wxcz.carpenter.pojo.query.EcmArtworkQuery;
 import com.wxcz.carpenter.pojo.vo.*;
 import com.wxcz.carpenter.service.BaseService;
@@ -48,6 +49,31 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
 
     @Resource
     EcmArtworkBroadcastHotDao ecmArtworkBroadcastHotDao;
+
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseDTO addEcmArtworkHot() {
+       List<EcmArtworkBroadcastHotVO>  list = ecmArtworkBroadcastHotDao.selectAll();
+       for (EcmArtworkBroadcastHotVO ecmArtworkBroadcastHotVO : list) {
+            if ( ecmArtworkBroadcastHotVO != null  ){
+                if (ecmArtworkBroadcastHotVO.getBroadcastCount().equals(0)) {
+                    ecmArtworkBroadcastHotVO.setBroadcastCount(12);
+                }
+                int count = ecmArtworkBroadcastHotVO.getBroadcastCount() * 7  +  new Random().nextInt(100);
+                ecmArtworkBroadcastHotVO.setBroadcastCount(count);
+                ecmArtworkBroadcastHotVO.setWaitCount(count);
+            }
+       }
+       try{
+           ecmArtworkBroadcastHotDao.updateByNewBroadcastHot(list);
+       }catch (Exception e){
+           e.printStackTrace();
+           return ResponseDTO.fail();
+       }
+
+        return ResponseDTO.ok();
+    }
 
     @Override
     public PageDTO ajaxList(EcmArtworkQuery ecmArtworkQuery) {
@@ -398,6 +424,8 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
 
         return ResponseDTO.get(ecmReportHistroyDao.updateStateSuccessByArtWorkId(ecmArtworkVO.getPkArtworkId()) == 1);
     }
+
+
 
 
     @Override

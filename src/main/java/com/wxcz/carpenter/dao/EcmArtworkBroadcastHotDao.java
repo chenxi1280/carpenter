@@ -31,4 +31,7 @@ public interface EcmArtworkBroadcastHotDao {
     EcmArtworkBroadcastHotVO selectByArtworkId(Integer pkArtworkId);
 
     List<EcmArtworkBroadcastHotVO> selectByEcmArtworkBroadcastHistoryVOs(@Param("list")  List<EcmArtworkBroadcastHistoryVO> ecmArtworkBroadcastHistoryVOS);
+
+    List<EcmArtworkBroadcastHotVO> selectAll();
+
 }
