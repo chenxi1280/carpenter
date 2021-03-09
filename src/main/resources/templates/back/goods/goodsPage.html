@@ -38,6 +38,7 @@
                        style="width: 120px"/>
             </div>
 
+
             <div style="display: flex;align-items: center;margin-left: 20px">
                 <label style="width:  fit-content">商品状态：</label>
                 <select name="goodsState">
@@ -45,6 +46,16 @@
                     <option value="0">出售中</option>
                     <option value="1">已下架</option>
                 </select>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品类目</label>
+                <div class="layui-input-block">
+                    <select name="fkGoodsCategoryId" lay-verify="required" id="selectGoodsCategoryQuery"
+                            lay-filter="selectGoodsCategoryAll">
+                        <option value=""></option>
+                    </select>
+                </div>
             </div>
 
             <div style="display: flex;align-items: center;margin-left: 20px">
@@ -84,6 +95,12 @@
                 </div>
             </div>
 
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">商品排序</label>
+                <div class="layui-input-block">
+                    <input name="goodsSort" lay-verify="required|number" placeholder="请输入"  id="goodsSort" class="layui-input">
+                </div>
+            </div>
 
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">商品价格</label>
@@ -95,7 +112,14 @@
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">流量包大小 KB(会员套餐时不填)</label>
                 <div class="layui-input-block">
-                    <input name="goodFlow" lay-verify="required|number" placeholder="请输入"  id="goodFlow"  class="layui-input">
+                    <input name="goodsFlow" lay-verify="required|number" placeholder="请输入"  id="goodsFlow"  class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">说明内容</label>
+                <div class="layui-input-block">
+                    <textarea  name="goodsContext" placeholder="请输入内容" class="layui-textarea"  id="goodsContext" disabled></textarea>
                 </div>
             </div>
 
@@ -135,6 +159,12 @@
                 </div>
             </div>
 
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">商品排序</label>
+                <div class="layui-input-block">
+                    <input name="goodsSort" lay-verify="required|number" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
 
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">商品价格</label>
@@ -146,9 +176,17 @@
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">流量包大小 KB(会员套餐时不填)</label>
                 <div class="layui-input-block">
-                    <input name="goodFlow" lay-verify="required|number" placeholder="请输入" class="layui-input">
+                    <input name="goodsFlow" lay-verify="required|number" placeholder="请输入" class="layui-input">
                 </div>
             </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">说明内容</label>
+                <div class="layui-input-block">
+                    <textarea  name="goodsContext" placeholder="请输入内容" class="layui-textarea"   disabled></textarea>
+                </div>
+            </div>
+
 
             <div class="layui-form-item">
                 <label class="layui-form-label">状态</label>
@@ -183,10 +221,36 @@
         var laydate = layui.laydate;
         var form = layui.form;
         var $ = layui.$;
+
         laydate.render({
             elem: '#creteDateRange' //指定元素
             , range: '至'
         });
+
+        $.ajax({
+            type: 'post',// ajax请求的方式，post或get
+            url: '/ims/back/goods/ajaxGoodsCategoryList',
+            // contentType: "application/json",// 默认就是表单数据(不写)，如果此时要传递的是json字符串，
+            // 那么此时就用application/json,如果此时要传递图片"multipart/form-data，还有数组，集合，还有对象，那么contentType必须指定为false
+            data: {
+                page: 1,
+                limit: 10000
+            },// 要上传的参数,把数组对象转换为JSON字符串
+            dataType: 'json',// 服务器响应数据：json,text,html,xml
+            processData: true,//布尔值,一般都不用设置，规定通过请求发送的数据是否转换为查询字符串。默认是 true。如果此时上传的时候，有图片，这里必须设置false,
+            success: function (res) {// 请求成功，回调函数,data，指的就是服务器返回的数据
+                console.log(res)
+                res.data.forEach(msg => {
+
+                    $('#selectGoodsCategoryQuery').append("<option   value='" + msg.pkCategoryId + " '>" + msg.categoryName + "</option>")
+                })
+                form.render();
+
+                // layer.msg(res.msg);
+            },
+        });
+
+        form.render();
 
         var tTable = table.render({
             elem: '#tTable'
@@ -210,8 +274,8 @@
                         }
                     }
                 }
-                , {field: 'goodFlow', title: '流量包(KB)', width: 120}
-
+                , {field: 'goodsFlow', title: '流量包(KB)', width: 120}
+                , {field: 'goodsSort', title: '排序', width: 120}
                 , {
                     field: '', title: '操作', width: 240, templet: function (d) {
                         return '<div >' +
@@ -267,9 +331,9 @@
                     $("#pkGoodsId").val(d.pkGoodsId)
                     $('#goodsName').val(d.goodsName)
                     $('#goodsPrice').val(d.goodsPrice)
-                    $('#goodFlow').val(d.goodFlow)
-
-
+                    $('#goodsFlow').val(d.goodsFlow)
+                    $('#goodsContext').val(d.goodsContext)
+                    $('#goodsSort').val(d.goodsSort)
 
                     $.ajax({
                         type: 'post',// ajax请求的方式，post或get
@@ -294,14 +358,7 @@
                         },
                     });
 
-
-
-
-
-
-
                     form.render();
-
 
                     //提交 调整
                     form.on('submit(sureDispatch)', function (data) {

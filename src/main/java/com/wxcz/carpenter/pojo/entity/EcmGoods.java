@@ -40,12 +40,17 @@ public class EcmGoods implements Serializable {
     /**
      * 说明
      */
-    private String goodContext;
+    private String goodsContext;
 
     /**
      * 流量包
      */
-    private Integer goodFlow;
+    private Integer goodsFlow;
+
+    /**
+     * 排序
+     */
+    private Integer goodsSort;
 
     private Date createTime;
 
