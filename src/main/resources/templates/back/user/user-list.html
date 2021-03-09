@@ -44,46 +44,46 @@
                 </div>
             </div>
 
-        <div class="layui-form-item" style="align-items: center" >
-            <label class="layui-form-label">头像状态</label>
-            <div class="layui-input-block">
-                <select name="userLogoStatus">
-                    <option value="">请选择</option>
-                    <option value="0">未审核</option>
-                    <option value="1">通过</option>
-                    <option value="2">不通过</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="layui-form-item" >
-            <label class="layui-form-label">用户状态</label>
-            <div class="layui-input-block">
-                <select name="isValid">
-                    <option value="">请选择</option>
-                    <option value="Y">正常</option>
-                    <option value="N">封禁</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <div class="layui-form-item">
-                <label class="layui-form-label">选择权限</label>
+            <div class="layui-form-item" style="align-items: center" >
+                <label class="layui-form-label">头像状态</label>
                 <div class="layui-input-block">
-                    <select name="roles">
+                    <select name="userLogoStatus">
                         <option value="">请选择</option>
-                        <option value="1">普通用户</option>
-                        <option value="1,3">普通管理员</option>
-                        <option value="2,3">超级管理员</option>
+                        <option value="0">未审核</option>
+                        <option value="1">通过</option>
+                        <option value="2">不通过</option>
                     </select>
                 </div>
             </div>
-        </div>
 
-        <div style="display: flex; margin-left: 20px">
-            <button type="button" class="layui-btn" id="queryBtn" lay-submit lay-filter="queryForm">查询</button>
-        </div>
+            <div class="layui-form-item" >
+                <label class="layui-form-label">用户状态</label>
+                <div class="layui-input-block">
+                    <select name="isValid">
+                        <option value="">请选择</option>
+                        <option value="Y">正常</option>
+                        <option value="N">封禁</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">选择权限</label>
+                    <div class="layui-input-block">
+                        <select name="roles">
+                            <option value="">请选择</option>
+                            <option value="1">普通用户</option>
+                            <option value="1,3">普通管理员</option>
+                            <option value="2,3">超级管理员</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; margin-left: 20px">
+                <button type="button" class="layui-btn" id="queryBtn" lay-submit lay-filter="queryForm">查询</button>
+            </div>
         </div>
     </form>
 
@@ -161,8 +161,10 @@
                 , {field: 'mobile', title: '手机号', width: 120}
 
                 , {field: 'userLogoUrl', title: '', width: 120 , templet: function (d) {
+                        var imageUrl = d.userLogoUrl+'/ims'
+                        console.log("**************imageUrl: ",imageUrl)
                         return '<div>' +
-                            '<img  showBig style="width: 50px;height: 50px;border-radius: 5px" src="'+d.userLogoUrl+'">'
+                            '<img  showBig style="width: 50px;height: 50px;border-radius: 5px" src="'+imageUrl+'">'
                         '</div>'
                     }}
                 , {
