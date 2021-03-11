@@ -109,10 +109,21 @@
                 </div>
             </div>
 
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">流量包大小 KB(会员套餐时不填)</label>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
                 <div class="layui-input-block">
-                    <input name="goodsFlow" lay-verify="required|number" placeholder="请输入"  id="goodsFlow"  class="layui-input">
+                    <select name="goodsType" id="goodsType">
+>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">商品对应的数量（流量 kb，会员 月）</label>
+                <div class="layui-input-block">
+                    <input name="goodsActionNumber" lay-verify="required|number" placeholder="请输入"  id="goodsActionNumber"  class="layui-input">
                 </div>
             </div>
 
@@ -173,10 +184,21 @@
                 </div>
             </div>
 
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">流量包大小 KB(会员套餐时不填)</label>
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
                 <div class="layui-input-block">
-                    <input name="goodsFlow" lay-verify="required|number" placeholder="请输入" class="layui-input">
+                    <select name="goodsType">
+                        <option value="UpdateUploadFlow">流量</option>
+                        <option value="UpdateVipDate">会员</option>
+                        <option value="UpdateSuperVipDate">超级会员</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">商品对应的数量（流量 kb，会员 月）</label>
+                <div class="layui-input-block">
+                    <input name="goodsActionNumber" lay-verify="required|number" placeholder="请输入" class="layui-input">
                 </div>
             </div>
 
@@ -260,6 +282,7 @@
                 {field: 'pkGoodsId', title: 'ID', width: 120}
                 , {field: 'goodsName', title: '商品名称', width: 120}
                 , {field: 'categoryName', title: '商品类目', width: 120}
+                , {field: 'goodsType', title: '商品类型', width: 120}
                 , {field: 'goodsPrice', title: '商品价格', width: 120}
                 , {
                     field: 'goodsState', title: '商品状态', width: 120, templet: function (d) {
@@ -274,7 +297,7 @@
                         }
                     }
                 }
-                , {field: 'goodsFlow', title: '流量包(KB)', width: 120}
+                , {field: 'goodsActionNumber', title: '对应类型数量', width: 120}
                 , {field: 'goodsSort', title: '排序', width: 120}
                 , {
                     field: '', title: '操作', width: 240, templet: function (d) {
@@ -321,6 +344,7 @@
             switch (obj.event) {
 
                 case 'update-goods':
+                    console.log(d)
 
                     let editmes = layer.open({
                         type: 1,
@@ -331,9 +355,17 @@
                     $("#pkGoodsId").val(d.pkGoodsId)
                     $('#goodsName').val(d.goodsName)
                     $('#goodsPrice').val(d.goodsPrice)
-                    $('#goodsFlow').val(d.goodsFlow)
+                    $('#goodsActionNumber').val(d.goodsActionNumber)
                     $('#goodsContext').val(d.goodsContext)
                     $('#goodsSort').val(d.goodsSort)
+
+                    let  ch = d.goodsType == 'UpdateUploadFlow' ? 'selected' : ''
+                    $('#goodsType').append("<option "+ ch +" value='UpdateUploadFlo'>流量</option>")
+                    ch = d.goodsType == 'UpdateVipDate' ? 'selected' : ''
+                    $('#goodsType').append("<option "+ ch +" value='UpdateVipDate'>会员</option>")
+                    ch = d.goodsType == 'UpdateSuperVipDate' ? 'selected' : ''
+                    $('#goodsType').append("<option "+ ch +" value='UpdateSuperVipDate'>超级会员</option>")
+
 
                     $.ajax({
                         type: 'post',// ajax请求的方式，post或get
@@ -412,10 +444,7 @@
 
 
                     })
-
-
                     break;
-
                 case 'down-goods':
                     layer.prompt({
                         formType: 2,
@@ -450,8 +479,6 @@
                                         page: page,
                                         size: limit,
                                     });
-
-
                                 },
                             });
                             layer.close(index);
@@ -462,7 +489,6 @@
                     // 在这之前还需要render(渲染)一把
                     break;
                 case 'up-goods':
-
                     layer.prompt({
                         formType: 2,
                         value: '',
@@ -485,19 +511,13 @@
                                 processData: true,//布尔值,一般都不用设置，规定通过请求发送的数据是否转换为查询字符串。默认是 true。如果此时上传的时候，有图片，这里必须设置false,
                                 success: function (res) {// 请求成功，回调函数,data，指的就是服务器返回的数据
                                     layer.msg(res.msg);
-
-
                                     // layer.close(seePage); //再执行关闭
-
                                     let page = $('.layui-laypage-skip .layui-input').val();
                                     let limit = $('.layui-laypage-limits').find('option:selected').val();
-
                                     tTable.reload({
                                         page: page,
                                         size: limit,
                                     });
-
-
                                 },
                             });
                             layer.close(index);

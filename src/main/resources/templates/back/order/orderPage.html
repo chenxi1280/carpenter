@@ -107,9 +107,47 @@
             , url: '/ims/back/order/ajaxOrderList' //数据接口
             , cols: [[ //表头
                 {field: 'pkOrderId', title: 'ID', width: 120}
-                , {field: 'orderType', title: '订单类型', width: 120}
+                , {
+                    field: 'orderType', title: '订单类型', width: 120, templet: function (d) {
+                        // 0 未支付 1 支付完成并未做完业务  2 完成     5过期
+                        if (d.orderType == "0") {
+                            return '<div >' +
+                                '<button class="layui-btn layui-btn-normal  layui-btn-xs" >微信支付</button>' +
+                                '</div>'
+                        } else if (d.orderType == "1") {
+                            return '<div >' +
+                                '<button class="layui-btn layui-btn-warm  layui-btn-xs" >支付宝支付</button>' +
+                                '</div>'
+                        }
+                    }
+                }
                 , {field: 'orderPrice', title: '订单金额', width: 120}
-                , {field: 'orderState', title: '订单状态', width: 120}
+                , {
+                    field: 'orderState', title: '订单状态', width: 120, templet: function (d) {
+                        // 0 未支付 1 支付完成并未做完业务  2 完成     5过期
+                        if (d.orderState == "0") {
+                            return '<div >' +
+                                '<button class="layui-btn layui-btn-normal  layui-btn-xs" >未支付</button>' +
+                                '</div>'
+                        } else if (d.orderState == "1") {
+                            return '<div >' +
+                                '<button class="layui-btn layui-btn-warm  layui-btn-xs" >支付完成</button>' +
+                                '</div>'
+                        }else if (d.orderState == "2") {
+                            return '<div >' +
+                                '<button class="layui-btn layui-btn-warm  layui-btn-xs" >订单完成</button>' +
+                                '</div>'
+                        }else if (d.orderState == "5") {
+                            return '<div >' +
+                                '<button class="layui-btn layui-btn-warm  layui-btn-xs" >过期</button>' +
+                                '</div>'
+                        }else  {
+                            return '<div >' +
+                                '<button class="layui-btn layui-btn-warm  layui-btn-xs" >异常</button>' +
+                                '</div>'
+                        }
+                    }
+                }
                 , {field: 'goodsName', title: '商品名称', width: 120}
                 , {field: 'username', title: '用户名', width: 120}
                 , {field: 'categoryName', title: '商品类别名称', width: 120}
