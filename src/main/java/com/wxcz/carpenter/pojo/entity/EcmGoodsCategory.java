@@ -22,14 +22,11 @@ public class EcmGoodsCategory implements Serializable {
     private String categoryName;
 
     /**
-     * 状态 0 可用 1不可用
+     * 状态
      */
     private Integer categoryState;
 
-    /**
-     * 类型
-     */
-    private Integer categoryType;
+    private String categoryType;
 
     /**
      * 备注

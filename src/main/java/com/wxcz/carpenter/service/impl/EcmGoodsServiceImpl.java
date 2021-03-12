@@ -64,13 +64,23 @@ public class EcmGoodsServiceImpl implements EcmGoodsService {
 
     @Override
     public ResponseDTO addGoods(EcmGoodsVO ecmGoodsVO) {
+        if (ecmGoodsVO.getFkGoodsCategoryId() == null ){
+            return ResponseDTO.fail("请选择商品类别");
+        }
+        EcmGoodsCategory ecmGoodsCategory = ecmGoodsCategoryDao.selectByPrimaryKey(ecmGoodsVO.getFkGoodsCategoryId());
+        ecmGoodsVO.setGoodsType(ecmGoodsCategory.getCategoryType());
         ecmGoodsVO.setCreateTime( new Date());
         return ResponseDTO.get(1 == ecmGoodsDao.insertSelective(ecmGoodsVO));
     }
 
     @Override
     public ResponseDTO updateGoods(EcmGoodsVO ecmGoodsVO) {
-        ecmGoodsVO.setUpdateTime(new Date());
+        if (ecmGoodsVO.getFkGoodsCategoryId() != null ){
+            EcmGoodsCategory ecmGoodsCategory = ecmGoodsCategoryDao.selectByPrimaryKey(ecmGoodsVO.getFkGoodsCategoryId());
+            ecmGoodsVO.setGoodsType(ecmGoodsCategory.getCategoryType());
+            ecmGoodsVO.setUpdateTime(new Date());
+        }
+
         return  ResponseDTO.get(1 == ecmGoodsDao.updateByPrimaryKeySelective(ecmGoodsVO));
     }
 

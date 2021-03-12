@@ -110,14 +110,13 @@
             </div>
 
 
-            <div class="layui-form-item">
-                <label class="layui-form-label">状态</label>
-                <div class="layui-input-block">
-                    <select name="goodsType" id="goodsType">
->
-                    </select>
-                </div>
-            </div>
+<!--            <div class="layui-form-item">-->
+<!--                <label class="layui-form-label">状态</label>-->
+<!--                <div class="layui-input-block">-->
+<!--                    <select name="goodsType" id="goodsType">-->
+<!--                    </select>-->
+<!--                </div>-->
+<!--            </div>-->
 
 
             <div class="layui-form-item layui-form-text">
@@ -184,16 +183,16 @@
                 </div>
             </div>
 
-            <div class="layui-form-item">
-                <label class="layui-form-label">状态</label>
-                <div class="layui-input-block">
-                    <select name="goodsType">
-                        <option value="UpdateUploadFlow">流量</option>
-                        <option value="UpdateVipDate">会员</option>
-                        <option value="UpdateSuperVipDate">超级会员</option>
-                    </select>
-                </div>
-            </div>
+<!--            <div class="layui-form-item">-->
+<!--                <label class="layui-form-label">状态</label>-->
+<!--                <div class="layui-input-block">-->
+<!--                    <select name="goodsType">-->
+<!--                        <option value="UpdateUploadFlow">流量</option>-->
+<!--                        <option value="UpdateVipDate">会员</option>-->
+<!--                        <option value="UpdateSuperVipDate">超级会员</option>-->
+<!--                    </select>-->
+<!--                </div>-->
+<!--            </div>-->
 
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">商品对应的数量（流量 kb，会员 月）</label>
@@ -359,12 +358,12 @@
                     $('#goodsContext').val(d.goodsContext)
                     $('#goodsSort').val(d.goodsSort)
 
-                    let  ch = d.goodsType == 'UpdateUploadFlow' ? 'selected' : ''
-                    $('#goodsType').append("<option "+ ch +" value='UpdateUploadFlo'>流量</option>")
-                    ch = d.goodsType == 'UpdateVipDate' ? 'selected' : ''
-                    $('#goodsType').append("<option "+ ch +" value='UpdateVipDate'>会员</option>")
-                    ch = d.goodsType == 'UpdateSuperVipDate' ? 'selected' : ''
-                    $('#goodsType').append("<option "+ ch +" value='UpdateSuperVipDate'>超级会员</option>")
+                    // let  ch = d.goodsType == 'UpdateUploadFlow' ? 'selected' : ''
+                    // $('#goodsType').append("<option "+ ch +" value='UpdateUploadFlo'>流量</option>")
+                    // ch = d.goodsType == 'UpdateVipDate' ? 'selected' : ''
+                    // $('#goodsType').append("<option "+ ch +" value='UpdateVipDate'>会员</option>")
+                    // ch = d.goodsType == 'UpdateSuperVipDate' ? 'selected' : ''
+                    // $('#goodsType').append("<option "+ ch +" value='UpdateSuperVipDate'>超级会员</option>")
 
 
                     $.ajax({
