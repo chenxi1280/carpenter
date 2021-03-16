@@ -66,12 +66,11 @@ public class UserFlowhandle {
         for (Map.Entry<Integer, List<EcmUserHistoryFlowVO>> entry : collect.entrySet()) {
             Integer key = entry.getKey();
             List<EcmUserHistoryFlowVO> value = entry.getValue();
-// 今日 使用 流量集合
+            // 今日 使用 流量集合
             Integer count = 0;
             for (EcmUserHistoryFlowVO ecmUserHistoryFlowVO : value) {
                 count = ecmUserHistoryFlowVO.getVideoFlow() + count;
             }
-
             for (EcmUserFlow ecmUserFlow : userFlowList) {
                 if (ecmUserFlow.getUserId().equals(key)) {
                     //3种情况下的 核算
