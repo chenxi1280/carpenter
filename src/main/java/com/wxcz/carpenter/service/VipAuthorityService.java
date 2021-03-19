@@ -1,7 +1,9 @@
 package com.wxcz.carpenter.service;
 
 import com.wxcz.carpenter.pojo.dto.PageDTO;
+import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.query.EcmOrderQuery;
+import com.wxcz.carpenter.pojo.query.EcmVipRoleAuthorityQuery;
 
 /**
  * @author by SJ
@@ -10,5 +12,8 @@ import com.wxcz.carpenter.pojo.query.EcmOrderQuery;
  * @Date 2021/03/16 17:30
  */
 public interface VipAuthorityService {
-    PageDTO ajaxVipAuthorityList(EcmOrderQuery ecmOrderQuery);
+
+    PageDTO ajaxVipAuthorityList(EcmVipRoleAuthorityQuery ecmVipRoleAuthorityQuery);
+
+    ResponseDTO addVipRoleAuthority(EcmVipRoleAuthorityQuery ecmVipRoleAuthorityQuery);
 }

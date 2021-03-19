@@ -109,4 +109,66 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where pk_id = #{pkId,jdbcType=INTEGER}
   </update>
+
+  <select id="selectListByEcmVipAuthorityQuery" parameterType="com.wxcz.carpenter.pojo.query.EcmVipRoleAuthorityQuery" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ecm_vip_role_authority
+    <where>
+      <if test="pkId != null">
+        and pk_id = #{pkId,jdbcType=INTEGER}
+      </if>
+      <if test="fkVipRoleId != null">
+        and fk_vip_role_id = #{fkVipRoleId,jdbcType=INTEGER}
+      </if>
+      <if test="fkVipAuthorityId != null">
+        and fk_vip_authority_id = #{fkVipAuthorityId,jdbcType=INTEGER}
+      </if>
+      <if test="vipRoleDescribe != null and vipRoleDescribe != ''">
+        and vip_role_describe = #{vipRoleDescribe,jdbcType=VARCHAR}
+      </if>
+      <if test="vipAuthorityDescribe != null and vipAuthorityDescribe != ''">
+        and vip_authority_describe = #{vipAuthorityDescribe,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null">
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateTime != null">
+        and update_time = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+    </where>
+
+    limit #{start},#{limit}
+
+  </select>
+
+  <select id="selectCountByEcmVipAuthorityQuery"  resultType="java.lang.Integer">
+    select count(*)
+    from ecm_vip_role_authority
+    <where>
+      <if test="pkId != null">
+        and pk_id = #{pkId,jdbcType=INTEGER}
+      </if>
+      <if test="fkVipRoleId != null">
+        and fk_vip_role_id = #{fkVipRoleId,jdbcType=INTEGER}
+      </if>
+      <if test="fkVipAuthorityId != null">
+        and fk_vip_authority_id = #{fkVipAuthorityId,jdbcType=INTEGER}
+      </if>
+      <if test="vipRoleDescribe != null and vipRoleDescribe != ''">
+        and vip_role_describe = #{vipRoleDescribe,jdbcType=VARCHAR}
+      </if>
+      <if test="vipAuthorityDescribe != null and vipAuthorityDescribe != ''">
+        and vip_authority_describe = #{vipAuthorityDescribe,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null">
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateTime != null">
+        and update_time = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+    </where>
+
+  </select>
+
 </mapper>

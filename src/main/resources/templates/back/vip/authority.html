@@ -18,60 +18,14 @@
         <form id="queryForm" class="layui-form" method="post"
               style="display: flex;align-items: center;padding-left: 5px">
             <div class="layui-hide-xs" style="display: flex;align-items: center">
-                <span style="width: fit-content">订单 id：</span>
-                <input class="layui-input" name="pkOrderId"
+                <span style="width: fit-content">ID：</span>
+                <input class="layui-input" name="pkAuthorityId"
                        style="width: 120px;"/>
             </div>
             <div style="display: flex;align-items: center;margin-left: 20px">
-                <label style="width:  fit-content">商品：</label>
-                <input class="layui-input" name="goodsName"
+                <label style="width:  fit-content">会员权限描述：</label>
+                <input class="layui-input" name="vipAuthorityDescribe"
                        style="width: 120px"/>
-            </div>
-            <div style="display: flex;align-items: center;margin-left: 20px">
-                <label style="width:  fit-content">用户：</label>
-                <input class="layui-input" name="username"
-                       style="width: 120px"/>
-            </div>
-            <div style="display: flex;align-items: center;margin-left: 20px">
-                <label style="width:  fit-content">商品类别：</label>
-                <input class="layui-input" name="categoryName"
-                       style="width: 120px"/>
-            </div>
-
-            <div style="display: flex;align-items: center;margin-left: 20px">
-                <label style="width:  fit-content">商品id：</label>
-                <input class="layui-input" name="fkGoodsId"
-                       style="width: 120px"/>
-            </div>
-
-            <div style="display: flex;align-items: center;margin-left: 20px">
-                <label style="width:  fit-content">用户id：</label>
-                <input class="layui-input" name="fkUserId"
-                       style="width: 120px"/>
-            </div>
-
-            <div style="display: flex;align-items: center;padding-left: 5px">
-                <label style="width:  fit-content">订单类型：</label>
-                <div  style="width: 100px">
-                    <select name="orderType"  style="width: 50px">
-                        <option value="">请选择</option>
-                        <option value="0">微信</option>
-                        <option value="1">支付宝</option>
-                    </select>
-                </div>
-            </div>
-
-            <div style="display: flex;align-items: center;padding-left: 5px">
-                <label style="width:  fit-content">订单状态：</label>
-                <div  style="width: 100px">
-                    <select name="orderState">
-                        <option value="">请选择</option>
-                        <option value="0">未支付</option>
-                        <option value="1">已支付</option>
-                        <option value="2">完成</option>
-                    </select>
-                </div>
-
             </div>
 
             <div style="display: flex;align-items: center;margin-left: 20px">
@@ -106,14 +60,9 @@
             , page: true
             , url: '/ims/back/vip/ajaxAuthorityList' //数据接口
             , cols: [[ //表头
-                {field: 'pkOrderId', title: 'ID', width: 120}
-                , {field: 'orderType', title: '订单类型', width: 120}
-                , {field: 'orderPrice', title: '订单金额', width: 120}
-                , {field: 'orderState', title: '订单状态', width: 120}
-                , {field: 'goodsName', title: '商品名称', width: 120}
-                , {field: 'username', title: '用户名', width: 120}
-                , {field: 'categoryName', title: '商品类别名称', width: 120}
-                , {field: 'orderGoodsNumber', title: '商品数量', width: 120}
+                {field: 'pkAuthorityId', title: 'ID', width: 120}
+                , {field: 'vipAuthorityDescribe', title: '会员权限描述', width: 120}
+                , {field: 'updateTime', title: '更新时间', width: 120}
                 , {field: 'createTime', title: '创建时间', width: 120}
             ]]
             , toolbar: 'default'
@@ -160,7 +109,7 @@
 
 
                 var d = data.field
-                if (d.merchantName == null || d.merchantName == '') {
+                /*if (d.merchantName == null || d.merchantName == '') {
                     layer.msg("商家名称不能为空")
                     return false;
                 }
@@ -172,7 +121,7 @@
                 if (d.mobilePhone == null || d.mobilePhone == '') {
                     layer.msg("电话号码不能为空")
                     return false;
-                }
+                }*/
 
                 $.ajax({
                     type: 'post',// ajax请求的方式，post或get
