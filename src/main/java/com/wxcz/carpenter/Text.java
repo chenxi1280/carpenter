@@ -7,6 +7,8 @@ import org.jsoup.Connection;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * @author by cxd
@@ -26,6 +28,7 @@ public class Text {
      */
     public static void main(String[] args) {
 
+        System.out.println( UUID.randomUUID().toString().replace("-","") );
     }
 
 }
