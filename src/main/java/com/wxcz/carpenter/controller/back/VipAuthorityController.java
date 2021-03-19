@@ -66,10 +66,22 @@ public class VipAuthorityController {
         return vipAuthorityService.ajaxVipAuthorityList(ecmVipRoleAuthorityQuery);
     }
 
+    @RequestMapping("addAuthority")
+    @ResponseBody
+    public ResponseDTO addAuthority(EcmVipAuthorityQuery ecmVipAuthorityQuery) {
+        return authorityService.addAuthority(ecmVipAuthorityQuery);
+    }
+
     @RequestMapping("addVipRoleAuthority")
     @ResponseBody
     public ResponseDTO addVipRoleAuthority(EcmVipRoleAuthorityQuery ecmVipRoleAuthorityQuery) {
         return vipAuthorityService.addVipRoleAuthority(ecmVipRoleAuthorityQuery);
+    }
+
+    @RequestMapping("updateVipRoleAuthority")
+    @ResponseBody
+    public ResponseDTO updateVipRoleAuthority(EcmVipRoleAuthorityQuery ecmVipRoleAuthorityQuery) {
+        return vipAuthorityService.updateVipRoleAuthority(ecmVipRoleAuthorityQuery);
     }
 
 }

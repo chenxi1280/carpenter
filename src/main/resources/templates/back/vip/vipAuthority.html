@@ -70,33 +70,34 @@
 
         <form class="layui-form">
 
+            <input type="text" style="display: none" name="pkId" id="pkId">
 
             <div class="layui-form-item">
                 <label class="layui-form-label">用户角色 id：</label>
                 <div class="layui-input-block">
                     <input type="text" name="fkVipRoleId" lay-verify="required|title"
-                           autocomplete="off" placeholder="请输入" class="layui-input">
+                           autocomplete="off" placeholder="请输入" class="layui-input" id="fkVipRoleId">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">角色权限 id：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="fkVipAuthorityId" lay-verify="required|title"
-                           autocomplete="off" placeholder="请输入" class="layui-input">
+                    <input type="text" name="fkVipAuthorityId" lay-verify="required|title" id="fkVipAuthorityId"
+                           autocomplete="off" placeholder="请输入" class="layui-input" >
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">角色描述：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="vipRoleDescribe" lay-verify="required|title"
-                           autocomplete="off" placeholder="请输入" class="layui-input">
+                    <input type="text" name="vipRoleDescribe" lay-verify="required|title" id="vipRoleDescribe"
+                           autocomplete="off" placeholder="请输入" class="layui-input" >
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">角色权限描述：</label>
                 <div class="layui-input-block">
-                    <input type="text" name="vipAuthorityDescribe" lay-verify="required|title"
-                           autocomplete="off" placeholder="请输入" class="layui-input">
+                    <input type="text" name="vipAuthorityDescribe" lay-verify="required|title" id="vipAuthorityDescribe"
+                           autocomplete="off" placeholder="请输入" class="layui-input" >
                 </div>
             </div>
 
@@ -140,6 +141,12 @@
                 , {field: 'vipAuthorityDescribe', title: '角色权限描述', width: 120}
                 , {field: 'updateTime', title: '更新时间', width: 120}
                 , {field: 'createTime', title: '创建时间', width: 120}
+                , {field: '', title: '操作', width: 120, templet: function (d) {
+                        return '<div >' +
+                            '<button class="layui-btn  layui-btn-danger layui-btn-xs" lay-event="update-vipRoleAuthority">修改</button>' +
+                            '</div>'
+                    }
+                }
             ]]
             , toolbar: 'default'
 
@@ -239,42 +246,50 @@
 
             switch (obj.event) {
 
-                case 'editmes':
+                case 'update-vipRoleAuthority':
 
                     let editmes = layer.open({
                         type: 1,
                         area: ['50%', '50%'],
-                        title: '编辑消息',
-                        content: $('#showeditDiv').html() //这里content是一个普通的String
+                        title: '编辑信息',
+                        content: $('#addVipAuthorityDiv').html() //这里content是一个普通的String
                     });
 
-
-                    $("#pkTemplateId").val(d.pkTemplateId)
-                    $('#msgname').val(d.templateName)
-                    $('#msgcontext').val(d.content)
-
+                    $("#pkId").val(d.pkId)
+                    $("#fkVipRoleId").val(d.fkVipRoleId)
+                    $('#fkVipAuthorityId').val(d.fkVipAuthorityId)
+                    $('#vipRoleDescribe').val(d.vipRoleDescribe)
+                    $('#vipAuthorityDescribe').val(d.vipAuthorityDescribe)
 
                     form.render();
 
 
                     //提交 调整
-                    form.on('submit(sureDispatch)', function (data) {
+                    form.on('submit(addVipAuthority)', function (data) {
 
 
                         var d = data.field
-                        if (d.templateName == null || d.templateName == '') {
-                            layer.msg("标题不能为空")
+                        if (d.fkVipRoleId == null || d.fkVipRoleId == '') {
+                            layer.msg("用户角色ID内容不能为空")
                             return false;
                         }
 
-                        if (d.content == null || d.content == '') {
-                            layer.msg("内容不能为空")
+                        if (d.fkVipAuthorityId == null || d.fkVipAuthorityId == '') {
+                            layer.msg("角色权限ID内容不能为空")
+                            return false;
+                        }
+                        if (d.vipRoleDescribe == null || d.vipRoleDescribe == '') {
+                            layer.msg("角色描述内容不能为空")
+                            return false;
+                        }
+                        if (d.vipAuthorityDescribe == null || d.vipAuthorityDescribe == '') {
+                            layer.msg("角色权限描述内容不能为空")
                             return false;
                         }
 
                         $.ajax({
                             type: 'post',// ajax请求的方式，post或get
-                            url: '/ims/back/message/updataMsgTemplate',
+                            url: '/ims/back/vip/updateVipRoleAuthority',
                             // contentType: "application/json",// 默认就是表单数据(不写)，如果此时要传递的是json字符串，
                             // 那么此时就用application/json,如果此时要传递图片"multipart/form-data，还有数组，集合，还有对象，那么contentType必须指定为false
                             data: data.field,// 要上传的参数,把数组对象转换为JSON字符串
@@ -308,32 +323,7 @@
 
                     break;
 
-                case 'delmes':
 
-                    layer.confirm('确定删除?', function (index) {
-                        //do something
-
-                        $.ajax({
-                            type: 'post',// ajax请求的方式，post或get
-                            url: '/ims/back/message/delMsgTemplate',
-                            // contentType: "application/json",// 默认就是表单数据(不写)，如果此时要传递的是json字符串，
-                            // 那么此时就用application/json,如果此时要传递图片"multipart/form-data，还有数组，集合，还有对象，那么contentType必须指定为false
-                            data: {
-                                pkTemplateId: d.pkTemplateId
-                            },// 要上传的参数,把数组对象转换为JSON字符串
-                            dataType: 'json',// 服务器响应数据：json,text,html,xml
-                            processData: true,//布尔值,一般都不用设置，规定通过请求发送的数据是否转换为查询字符串。默认是 true。如果此时上传的时候，有图片，这里必须设置false,
-                            success: function (res) {// 请求成功，回调函数,data，指的就是服务器返回的数据
-                                layer.msg(res.msg);
-                            },
-                        });
-
-
-                    });
-
-
-                    // 在这之前还需要render(渲染)一把
-                    break;
             }
         });
 

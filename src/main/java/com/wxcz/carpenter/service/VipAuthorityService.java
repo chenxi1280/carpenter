@@ -16,4 +16,6 @@ public interface VipAuthorityService {
     PageDTO ajaxVipAuthorityList(EcmVipRoleAuthorityQuery ecmVipRoleAuthorityQuery);
 
     ResponseDTO addVipRoleAuthority(EcmVipRoleAuthorityQuery ecmVipRoleAuthorityQuery);
+
+    ResponseDTO updateVipRoleAuthority(EcmVipRoleAuthorityQuery ecmVipRoleAuthorityQuery);
 }
