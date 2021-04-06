@@ -43,4 +43,16 @@ public class VipAuthorityServiceImpl implements VipAuthorityService {
         return ResponseDTO.get(1 ==  ecmVipRoleAuthorityDao.insertSelective(ecmVipRoleAuthority));
     }
 
+    @Override
+    public ResponseDTO updateVipRoleAuthority(EcmVipRoleAuthorityQuery ecmVipRoleAuthorityQuery) {
+        EcmVipRoleAuthority ecmVipRoleAuthority = new EcmVipRoleAuthority();
+        ecmVipRoleAuthority.setPkId(ecmVipRoleAuthorityQuery.getPkId());
+        ecmVipRoleAuthority.setFkVipRoleId(ecmVipRoleAuthorityQuery.getFkVipRoleId());
+        ecmVipRoleAuthority.setFkVipAuthorityId(ecmVipRoleAuthorityQuery.getFkVipAuthorityId());
+        ecmVipRoleAuthority.setVipAuthorityDescribe(ecmVipRoleAuthorityQuery.getVipAuthorityDescribe());
+        ecmVipRoleAuthority.setVipRoleDescribe(ecmVipRoleAuthorityQuery.getVipRoleDescribe());
+        ecmVipRoleAuthority.setUpdateTime(new Date());
+        return ResponseDTO.get(1 ==  ecmVipRoleAuthorityDao.updateByPrimaryKeySelective(ecmVipRoleAuthority));
+    }
+
 }

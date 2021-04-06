@@ -35,9 +35,15 @@
         $('#img').attr("src",thisObj.attr('reportImgUrl'))
         $('#comtemt').text(thisObj.attr('reportContent'))
         $('#reState').text(thisObj.attr('reStateText'))
+
         $('#popUrl').text(thisObj.attr('popUrl'))
         $('#popImg').attr("src",thisObj.attr('popImg'))
         $('#popName').text(thisObj.attr('popName'))
+
+        $('#buoyPopImg').attr("src",thisObj.attr('buoyPopImg'))
+        $('#buoyPopUrl').text(thisObj.attr('buoyPopUrl'))
+        $('#buoyPopAPPId').text(thisObj.attr('buoyPopAPPId'))
+
         nodeId = $(obj).attr("id")
 
     }
@@ -86,12 +92,24 @@
                         <h1 id="reState"></h1>
 
                         <P id="comtemt"></P>
+                        <img  id="img" alt="无图片"  src="">
 
-                        <img  id="img" src="">
 
-                        <h2 id="popName" ></h2>
-                        <img  id="popImg" src="">
-                        <p id="popUrl" ></p>
+                        <div style="width: 300px">
+                            <h3 id="popName" ></h3>
+                            <h5 id="popUrl" ></h5>
+                        </div>
+
+                        <img  id="popImg" alt="无图片"  src="">
+
+                        <div style="width: 300px">
+
+                            <h2 id="buoyPopUrl" ></h2>
+                            <p id="buoyPopAPPId" ></p>
+                        </div>
+
+                        <img  id="buoyPopImg" alt="无图片"  src="">
+
                     </div>
 
                 </div>
@@ -185,7 +203,10 @@
                     let reStateText = ""
                     let popName = ''
                     let popUrl = ''
-                    let popImg = ''
+                    let popImg
+                    let buoyPopImg
+                    let buoyPopUrl = ''
+                    let buoyPopAPPId = ''
                     if (v.isReport) {
                         if (v.reState == 1) {
                             reStateText = "投诉理由：侵权"
@@ -215,7 +236,22 @@
                         popImg = v.ecmArtworkNodePopupSettings.popupContext
                         popUrl = '弹窗地址: ' +  v.ecmArtworkNodePopupSettings.popupSkip
                     }
-                    addTree(v.pkDetailId, v.videoUrl, v.videoText, v.fkEndingId ,v.alevel,v.reportImgUrl,v.content,reStateText,v.isReport,popName,popImg,popUrl )
+                    if (v.ecmArtworkNodeBuoy != null) {
+                        if (v.ecmArtworkNodeBuoy.buoyPopType == 2) {
+                            buoyPopImg = v.ecmArtworkNodeBuoy.buoyPopContext
+                            buoyPopUrl = '浮标弹窗图片'
+                        }else if (v.ecmArtworkNodeBuoy.buoyPopType == 1){
+                            buoyPopUrl = '浮标弹窗文字: ' +  v.ecmArtworkNodeBuoy.buoyPopContext
+
+                        }else if (v.ecmArtworkNodeBuoy.buoyPopType == 0){
+                            buoyPopUrl = '浮标弹窗地址: ' +  v.ecmArtworkNodeBuoy.buoyPopContext
+                            buoyPopAPPId= '浮标弹窗APPId: ' +  v.ecmArtworkNodeBuoy.buoyPopAppId
+
+                        }
+                    }
+                    console.log("buoyPopImg,buoyPopUrl,buoyPopAPPId",buoyPopImg,buoyPopUrl,buoyPopAPPId)
+                    let reportContent = v.content == null ? "" : v.content
+                    addTree(v.pkDetailId, v.videoUrl, v.videoText, v.fkEndingId ,v.alevel,v.reportImgUrl,reportContent,reStateText,v.isReport,popName,popImg,popUrl,buoyPopImg,buoyPopUrl,buoyPopAPPId )
 
                 })
 
@@ -224,7 +260,7 @@
         }
 
         // 修改
-        function addTree(id, videoUrl, itemsText, fkEndingId,islink,reportImgUrl,reportContent,reStateText,isReport,popName,popImg,popUrl) {
+        function addTree(id, videoUrl, itemsText, fkEndingId,islink,reportImgUrl,reportContent,reStateText,isReport,popName,popImg,popUrl,buoyPopImg,buoyPopUrl,buoyPopAPPId) {
 
             // let parseJSON = itemsText;
             // console.log(parseJSON)
@@ -258,7 +294,10 @@
                 if ( islink )  itemsText   = itemsText.substring(0,7)  + '（跳转）'
             }
             let s = '<li  data-name="home" class="layui-nav-item layui-nav-itemed " > <a  onclick="mya(this)" id="' + id + '" sr="' + videoUrl + '" itemsText="' + chooseText + '" ' +
-                ' reportImgUrl = "'+reportImgUrl+'" reportContent = "'+reportContent+'" reStateText = "'+reStateText+'"  popName="'+ popName+'" popImg="'+ popImg+'" popUrl="'+ popUrl+'"  >  <i class="layui-icon ' + item + '"></i>     <cite>'  +itemsText+ '</cite>  </a></li>'
+                ' reportImgUrl = "'+reportImgUrl+'" reportContent = "'+reportContent+'" reStateText = "'+reStateText+'"  ' +
+                'popName="'+ popName+'" popImg="'+ popImg+'" popUrl="'+ popUrl+'"  buoyPopImg="'+ buoyPopImg+'"  buoyPopUrl="'+ buoyPopUrl+'"  buoyPopAPPId="'+ buoyPopAPPId+'" >  ' +
+                '<i class="layui-icon ' + item + '">' +
+                '</i>     <cite>'  +itemsText+ '</cite>  </a></li>'
             $('#LAY-system-side-menu').append(s)
 
         }

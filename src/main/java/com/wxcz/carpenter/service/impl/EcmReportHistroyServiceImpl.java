@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.wxcz.carpenter.dao.*;
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
-import com.wxcz.carpenter.pojo.entity.EcmArtwork;
-import com.wxcz.carpenter.pojo.entity.EcmArtworkNodes;
-import com.wxcz.carpenter.pojo.entity.EcmReportHistroy;
-import com.wxcz.carpenter.pojo.entity.EcmUser;
+import com.wxcz.carpenter.pojo.entity.*;
 import com.wxcz.carpenter.pojo.query.EcmArtworkQuery;
 import com.wxcz.carpenter.pojo.query.ReportArtWorkQuery;
 import com.wxcz.carpenter.pojo.vo.*;
@@ -46,7 +43,7 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
     EcmUserDao ecmUserDao;
 
     @Resource
-    EcmArtworkEndingsDao ecmArtworkEndingsDao;
+    EcmArtworkNodeBuoyDao ecmArtworkNodeBuoyDao;
 
     @Resource
     EcmArtworkNodePopupSettingsDao  ecmArtworkNodePopupSettingsDao;
@@ -138,6 +135,9 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
         // 查找到 所有的  弹窗设置信息
         List<EcmArtworkNodePopupSettingsVO> ecmArtworkNodePopupSettingsVOList = ecmArtworkNodePopupSettingsDao.selectByArtworkNodeList(y);
 
+        List<EcmArtworkNodeBuoy> ecmArtworkNodeBuoyList = ecmArtworkNodeBuoyDao.selectByEcmArtworkId(ecmArtwork.getPkArtworkId());
+
+
 
         List<EcmReportHistroyVO> ecmReportHistroyVOList = ecmReportHistroyDao.selectByArtWorkId(ecmArtworkVO.getPkArtworkId());
         // 优化到chair举报
@@ -169,6 +169,16 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
              });
         }
 
+        if (!CollectionUtils.isEmpty(ecmArtworkNodeBuoyList)) {
+            y.forEach( v -> {
+                ecmArtworkNodeBuoyList.forEach( ecmArtworkNodeBuoy -> {
+                    if (ecmArtworkNodeBuoy.getFkNodeId().equals( v.getPkDetailId())) {
+                            v.setEcmArtworkNodeBuoy(ecmArtworkNodeBuoy);
+                    }
+                });
+            });
+        }
+
         EcmReportHistroy ecmReportHistroy = ecmReportHistroyDao.selectByPrimaryKey(ecmArtworkVO.getReportId());
         // 更新 节点 表 中  节点的投诉举报数据
         if (!CollectionUtils.isEmpty(ecmArtworkNodesVos)) {
@@ -179,6 +189,7 @@ public class EcmReportHistroyServiceImpl implements EcmReportHistroyService {
         Map map = new HashMap(2);
         map.put("artWork",y);
         map.put("reportHistroy",ecmReportHistroy);
+
         return ResponseDTO.ok("success", map);
 
     }

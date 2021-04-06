@@ -1,5 +1,6 @@
 package com.wxcz.carpenter.pojo.vo;
 
+import com.wxcz.carpenter.pojo.entity.EcmArtworkNodeBuoy;
 import com.wxcz.carpenter.pojo.entity.EcmArtworkNodePopupSettings;
 import com.wxcz.carpenter.pojo.entity.EcmArtworkNodes;
 import lombok.Data;
@@ -42,6 +43,9 @@ public class EcmArtworkNodesVo extends EcmArtworkNodes {
 
 
     private EcmArtworkNodePopupSettings ecmArtworkNodePopupSettings;
+
+
+    private EcmArtworkNodeBuoy ecmArtworkNodeBuoy;
 
 
 }
