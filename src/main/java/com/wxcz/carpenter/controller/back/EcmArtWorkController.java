@@ -5,25 +5,25 @@ import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.entity.EcmArtwork;
 import com.wxcz.carpenter.pojo.entity.EcmArtworkNodes;
-import com.wxcz.carpenter.pojo.entity.EcmReportHistroy;
+import com.wxcz.carpenter.pojo.entity.EcmArtworkVersionInfo;
 import com.wxcz.carpenter.pojo.query.EcmArtworkQuery;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
+import com.wxcz.carpenter.pojo.query.EcmArtworkVersionInfoQuery;
+import com.wxcz.carpenter.pojo.vo.EcmArtworkVersionInfoVO;
 import com.wxcz.carpenter.pojo.vo.EcmReportHistroyVO;
 import com.wxcz.carpenter.service.EcmArtworkService;
 import com.wxcz.carpenter.service.EcmReportHistroyService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -269,6 +269,44 @@ public class EcmArtWorkController extends BaseController {
         }
 
         return ecmArtworkService.chengArtWorkReport(ecmArtworkVO);
+    }
+
+
+    @RequestMapping("artworkVersionPage")
+    public String artworkVersionPage() {
+        return "back/artWork/artwork-version-list";
+    }
+
+    @RequestMapping("artWorkVersionSettingList")
+    public String artWorkVersionSettingList(String versionId,Model model) {
+        model.addAttribute("versionId", versionId);
+        return "back/artWork/artWork-version-setting-list";
+    }
+
+    @RequestMapping("ajaxArtworkVersionList")
+    @ResponseBody
+    public PageDTO ajaxArtworkVersionList(EcmArtworkVersionInfoQuery ecmArtworkVersionInfoQuery) {
+        return ecmArtworkService.ajaxArtworkVersionList(ecmArtworkVersionInfoQuery);
+    }
+
+    @RequestMapping("addArtWorkVersion")
+    @ResponseBody
+    public ResponseDTO addArtWorkVersion(EcmArtworkVersionInfoVO ecmArtworkVersionInfoVO) {
+        return ecmArtworkService.addArtWorkVersion(ecmArtworkVersionInfoVO);
+    }
+
+
+    @RequestMapping("ajaxVersionList")
+    @ResponseBody
+    public PageDTO ajaxVersionList(EcmArtworkQuery ecmArtworkQuery) {
+        ecmArtworkQuery.setArtworkStatus((short) 4);
+        return ecmArtworkService.ajaxVersionList(ecmArtworkQuery);
+    }
+
+    @RequestMapping("addArtWorkVersionList")
+    @ResponseBody
+    public ResponseDTO addArtWorkVersionList(@RequestBody EcmArtworkVersionInfoVO ecmArtworkVersionInfoVO) {
+        return ecmArtworkService.addArtWorkVersionList(ecmArtworkVersionInfoVO);
     }
 
 }

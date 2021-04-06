@@ -41,4 +41,15 @@ public class EcmArtworkQuery extends PageQuery {
      * 四字标签
      */
     private String fourLetterTips;
+
+    /**
+     * 能播放的客户端  null 所有，1 微信，2 抖音 ,3 H5
+     */
+    private Integer playClient;
+
+    /**
+     * 版本名称
+     */
+    private String versionId;
+
 }

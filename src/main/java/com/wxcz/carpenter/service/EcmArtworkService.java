@@ -6,6 +6,8 @@ import com.wxcz.carpenter.pojo.entity.EcmArtwork;
 import com.wxcz.carpenter.pojo.entity.EcmArtworkNodes;
 import com.wxcz.carpenter.pojo.query.EcmArtworkQuery;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
+import com.wxcz.carpenter.pojo.query.EcmArtworkVersionInfoQuery;
+import com.wxcz.carpenter.pojo.vo.EcmArtworkVersionInfoVO;
 
 /**
  * @author by cxd
@@ -135,4 +137,11 @@ public interface EcmArtworkService {
 
     ResponseDTO addEcmArtworkHot();
 
+    PageDTO ajaxArtworkVersionList(EcmArtworkVersionInfoQuery ecmArtworkVersionInfoQuery);
+
+    ResponseDTO addArtWorkVersion(EcmArtworkVersionInfoVO ecmArtworkVersionInfoVO);
+
+    PageDTO ajaxVersionList(EcmArtworkQuery ecmArtworkQuery);
+
+    ResponseDTO addArtWorkVersionList(EcmArtworkVersionInfoVO ecmArtworkVersionInfoVO);
 }

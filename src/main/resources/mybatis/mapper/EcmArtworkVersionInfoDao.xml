@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wxcz.carpenter.dao.EcmArtworkVersionInfoDao">
+  <resultMap id="BaseResultMap" type="com.wxcz.carpenter.pojo.entity.EcmArtworkVersionInfo">
+    <id column="pk_id" jdbcType="INTEGER" property="pkId" />
+    <result column="fk_artwork_id" jdbcType="INTEGER" property="fkArtworkId" />
+    <result column="version_id" jdbcType="VARCHAR" property="versionId" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="play_client" jdbcType="INTEGER" property="playClient" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    pk_id, fk_artwork_id, version_id, remarks, play_client, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ecm_artwork_version_info
+    where pk_id = #{pkId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ecm_artwork_version_info
+    where pk_id = #{pkId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="pk_id" keyProperty="pkId" parameterType="com.wxcz.carpenter.pojo.entity.EcmArtworkVersionInfo" useGeneratedKeys="true">
+    insert into ecm_artwork_version_info (fk_artwork_id, version_id, remarks,
+      play_client, create_time, update_time
+      )
+    values (#{fkArtworkId,jdbcType=INTEGER}, #{versionId,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR},
+      #{playClient,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="pk_id" keyProperty="pkId" parameterType="com.wxcz.carpenter.pojo.entity.EcmArtworkVersionInfo" useGeneratedKeys="true">
+    insert into ecm_artwork_version_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="fkArtworkId != null">
+        fk_artwork_id,
+      </if>
+      <if test="versionId != null">
+        version_id,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+      <if test="playClient != null">
+        play_client,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="fkArtworkId != null">
+        #{fkArtworkId,jdbcType=INTEGER},
+      </if>
+      <if test="versionId != null">
+        #{versionId,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="playClient != null">
+        #{playClient,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wxcz.carpenter.pojo.entity.EcmArtworkVersionInfo">
+    update ecm_artwork_version_info
+    <set>
+      <if test="fkArtworkId != null">
+        fk_artwork_id = #{fkArtworkId,jdbcType=INTEGER},
+      </if>
+      <if test="versionId != null">
+        version_id = #{versionId,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="playClient != null">
+        play_client = #{playClient,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where pk_id = #{pkId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wxcz.carpenter.pojo.entity.EcmArtworkVersionInfo">
+    update ecm_artwork_version_info
+    set fk_artwork_id = #{fkArtworkId,jdbcType=INTEGER},
+      version_id = #{versionId,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      play_client = #{playClient,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where pk_id = #{pkId,jdbcType=INTEGER}
+  </update>
+
+
+
+
+<!--  sql-->
+  <select id="selectListByEcmArtworkVersionInfoQuery" resultType="com.wxcz.carpenter.pojo.vo.EcmArtworkVersionInfoVO">
+    select <include refid="Base_Column_List" />
+    from ecm_artwork_version_info
+    <where>
+      <if test="versionId != null and artworkVersionName!=''">
+        and version_id like CONCAT('%',#{versionId},'%')
+      </if>
+
+      <if test="remarks != null and remarks!=''">
+        and remarks like CONCAT('%',#{remarks},'%')
+      </if>
+
+      <if test="playClient != null ">
+        and play_client = #{playClient}
+      </if>
+    </where>
+
+  </select>
+  <select id="selectListCountByEcmArtworkVersionInfoQuery" resultType="java.lang.Integer">
+    select COUNT(*)
+    from ecm_artwork_version_info
+    <where>
+      <if test="versionId != null and artworkVersionName!=''">
+        and version_id like CONCAT('%',#{versionId},'%')
+      </if>
+
+      <if test="remarks != null and remarks!=''">
+        and remarks like CONCAT('%',#{remarks},'%')
+      </if>
+
+      <if test="playClient != null ">
+        and play_client = #{playClient}
+      </if>
+    </where>
+    group by version_id
+  </select>
+  <select id="selectListByEcmArtworkVersionId" resultType="com.wxcz.carpenter.pojo.vo.EcmArtworkVersionInfoVO">
+    select <include refid="Base_Column_List" />
+    from ecm_artwork_version_info
+    where version_id = #{versionId} and fk_artwork_id is not null
+
+  </select>
+  <select id="selectOneByVersionId" resultType="com.wxcz.carpenter.pojo.entity.EcmArtworkVersionInfo">
+    select <include refid="Base_Column_List" />
+    from ecm_artwork_version_info
+    where version_id = #{versionId} and fk_artwork_id is null
+  </select>
+
+  <insert id="insertArtWorkVersionList">
+     insert into ecm_artwork_version_info (fk_artwork_id, version_id, remarks,
+      play_client, create_time, update_time
+      )
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (
+        #{item},
+        #{ecmArtworkVersionInfo.versionId},
+        #{ecmArtworkVersionInfo.remarks},
+        #{ecmArtworkVersionInfo.playClient},
+        #{ecmArtworkVersionInfo.createTime},
+        #{ecmArtworkVersionInfo.updateTime}
+      )
+    </foreach>
+
+  </insert>
+
+
+</mapper>
+

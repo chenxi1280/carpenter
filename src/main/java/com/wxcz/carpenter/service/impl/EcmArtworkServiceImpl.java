@@ -1,18 +1,19 @@
 package com.wxcz.carpenter.service.impl;
 
 import com.wxcz.carpenter.dao.*;
+import com.wxcz.carpenter.pojo.dto.EcmArtworkVersionInfoDTO;
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
-import com.wxcz.carpenter.pojo.entity.EcmArtwork;
-import com.wxcz.carpenter.pojo.entity.EcmArtworkNodes;
-import com.wxcz.carpenter.pojo.entity.EcmReportHistroy;
-import com.wxcz.carpenter.pojo.entity.EcmUser;
+import com.wxcz.carpenter.pojo.entity.*;
 import com.wxcz.carpenter.pojo.query.EcmArtworkQuery;
+import com.wxcz.carpenter.pojo.query.EcmArtworkVersionInfoQuery;
 import com.wxcz.carpenter.pojo.vo.*;
 import com.wxcz.carpenter.service.BaseService;
 import com.wxcz.carpenter.service.EcmArtworkService;
 import com.wxcz.carpenter.service.EcmMessageService;
+import com.wxcz.carpenter.util.PageUtil;
 import com.wxcz.carpenter.util.TreeUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -49,6 +50,9 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
 
     @Resource
     EcmArtworkBroadcastHotDao ecmArtworkBroadcastHotDao;
+
+    @Resource
+    EcmArtworkVersionInfoDao ecmArtworkVersionInfoDao;
 
 
     @Override
@@ -448,6 +452,55 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
             return upDataArtWork(ecmArtwork);
         }
         return ResponseDTO.fail("error");
+    }
+
+    @Override
+    public PageDTO ajaxArtworkVersionList(EcmArtworkVersionInfoQuery ecmArtworkVersionInfoQuery) {
+        List<EcmArtworkVersionInfoVO> list = ecmArtworkVersionInfoDao.selectListByEcmArtworkVersionInfoQuery(ecmArtworkVersionInfoQuery);
+        Map<String, List<EcmArtworkVersionInfoVO>> collect = list.stream().collect(Collectors.groupingBy(EcmArtworkVersionInfoVO::getVersionId));
+        List<EcmArtworkVersionInfoDTO> ecmArtworkVersionInfoDTOArrayList = new ArrayList<>();
+        collect.forEach( (k,v) -> {
+            EcmArtworkVersionInfoDTO ecmArtworkVersionInfoDTO = new EcmArtworkVersionInfoDTO();
+            BeanUtils.copyProperties(v.get(0),ecmArtworkVersionInfoDTO);
+            ecmArtworkVersionInfoDTOArrayList.add(ecmArtworkVersionInfoDTO);
+        });
+        Integer count = ecmArtworkVersionInfoDao.selectListCountByEcmArtworkVersionInfoQuery(ecmArtworkVersionInfoQuery);
+
+        return PageDTO.setPageData(count,PageUtil.startPage(ecmArtworkVersionInfoDTOArrayList, ecmArtworkVersionInfoQuery.getPage(), ecmArtworkVersionInfoQuery.getLimit()));
+    }
+
+    @Override
+    public ResponseDTO addArtWorkVersion(EcmArtworkVersionInfoVO ecmArtworkVersionInfoVO) {
+        ecmArtworkVersionInfoVO.setCreateTime(new Date());
+        return ResponseDTO.get( 1 == ecmArtworkVersionInfoDao.insertSelective(ecmArtworkVersionInfoVO));
+    }
+
+    @Override
+    public PageDTO ajaxVersionList(EcmArtworkQuery ecmArtworkQuery) {
+        List<EcmArtworkVO> list = ecmArtworkDao.selectajaxListByQuery(ecmArtworkQuery);
+        Integer count = ecmArtworkDao.selectCountByQuery(ecmArtworkQuery);
+        List<EcmArtworkVersionInfoVO> ecmArtworkVersionInfoList = ecmArtworkVersionInfoDao.selectListByEcmArtworkVersionId(ecmArtworkQuery.getVersionId());
+        list.forEach( ecmArtworkVO ->  {
+            if (!CollectionUtils.isEmpty(ecmArtworkVersionInfoList)){
+                ecmArtworkVersionInfoList.forEach( ecmArtworkVersionInfoVO ->  {
+                    if (ecmArtworkVO.getPkArtworkId().equals(ecmArtworkVersionInfoVO.getFkArtworkId())){
+                        ecmArtworkVO.setChecked(true);
+                    }
+                });
+            }
+//            ecmArtworkVO.setVersionId(ecmArtworkQuery.getVersionId());
+        });
+
+        return PageDTO.setPageData(count, list);
+    }
+
+    @Override
+    public ResponseDTO addArtWorkVersionList(EcmArtworkVersionInfoVO ecmArtworkVersionInfoVO) {
+
+
+        EcmArtworkVersionInfo ecmArtworkVersionInfo = ecmArtworkVersionInfoDao.selectOneByVersionId(ecmArtworkVersionInfoVO.getVersionId());
+        ecmArtworkVersionInfoDao.insertArtWorkVersionList(ecmArtworkVersionInfo,ecmArtworkVersionInfoVO.getFkArtworkIdList());
+        return ResponseDTO.ok("success");
     }
 
 

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+
+<script type="text/javascript" src="../../layuiadmin/layui/layui.js"></script>
+
+<style>
+    /*修改layui表格的高度*/
+    .layui-table-cell {
+        height: auto;
+    }
+</style>
+<body class="layui-card-body layui-card">
+<div style="padding: 10px;" class="layui-card">
+    <form id="queryForm" class="layui-form" method="post"
+          style="display: flex;align-items: center;padding-left: 50px">
+        <div class="layui-hide-xs" style="display: flex;align-items: center">
+            <span style="width: fit-content">id：</span>
+            <input class="layui-input" name="pkArtworkId" id="nickName"
+                   style="width: 120px;"/>
+        </div>
+        <div class="layui-hide-xs" style="display: flex;align-items: center;margin-left: 20px">
+            <label style="width:  fit-content">作者id：</label><input class="layui-input" name="fkUserid" id="realName"
+                                                                 style="width: 120px"/>
+        </div>
+        <div style="display: flex;align-items: center;margin-left: 20px">
+            <label style="width:  fit-content">作品名字：</label><input class="layui-input" name="artworkName" id="phone" style="width: 120px"/>
+        </div>
+
+        <div style="display: flex;align-items: center;margin-left: 20px">
+            <select name="playClient">
+                <option value="" >所有</option>
+                <option value="1">微信</option>
+                <option value="2">抖音</option>
+                <option value="3">H5</option>
+            </select>
+        </div>
+
+        <div style="display: flex;align-items: center;margin-left: 20px">
+            <button type="button" class="layui-btn" id="queryBtn" lay-submit lay-filter="queryForm">查询</button>
+        </div>
+<!--        <button style="margin: 30px" type="button" class="layui-btn" id="submitBtn"  lay-filter="submitBtn">确定</button>-->
+
+    </form>
+
+
+    <table id="artWorkTable" lay-filter="artWorkTableFilter" style="padding-top: 10px"></table>
+    <!--        <div th:include="plugins/splitBar::splitBar"></div>-->
+
+</div>
+
+
+<script type="text/html" id="showBigImgDiv">
+    <div>
+        <img id="showBigImg" src="" style="width: 100%;height: 100%"/>
+    </div>
+</script>
+
+<!--查看这个角色的角色的弹框-->
+
+
+
+
+<!--// 加上th:inline='javascript' 否则可能会因为小于或者大于符号导致 thymeleaf模板引擎解析错误。-->
+<script th:inline="javascript" type="text/javascript">
+
+    layui.use(['table', 'layer', 'laydate', 'form'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var laydate = layui.laydate;
+        var form = layui.form;
+        var $ = layui.$;
+        let versionName = [[${versionId}]]
+        table =  $.extend(table, {config: {checkName: 'checked'}});
+
+        laydate.render({
+            elem: '#creteDateRange' //指定元素
+            , range: '至'
+        });
+
+        var artWorkTable = table.render({
+            elem: '#artWorkTable'
+            , page: true
+            , url: '/ims/back/artWork/ajaxVersionList' //数据接口
+            ,where: {
+                versionId:versionName
+            }
+            , cols: [[ //表头
+                { type: "checkbox",width: 40}
+                , {field: 'pkArtworkId', title: '作品ID', width: 120}
+                , {field: 'fkUserid', title: '作者ID', width: 120}
+                , {field: 'username', title: '作者', width: 120}
+                , {field: 'artworkName', title: '作品名字', width: 120}
+                , {field: 'fourLetterTips', title: '分类', width: 140}
+                , {field: 'lastCreateDate', title: '创建时间', width: 150}
+                , {field: 'lastModifyDate', title: '修改时间', width: 150}
+                , {field: 'logoPath', title: '封面', width: 120 , templet: function (d) {
+                        return '<div>' +
+                            '<img  showBig style="width: 50px;height: 50px;border-radius: 5px" src="'+d.logoPath+'">'
+                        '</div>'
+                    }}
+                , {field: 'playClient', title: '播放端', width: 80 ,  templet: function (d) {
+                        if (d.playClient == "0") {
+                            return '<div >' +
+                                '<button class="layui-btn layui-btn-normal  layui-btn-xs" lay-event="lock">所有</button>' +
+                                '</div>'
+                        }else if (d.playClient == "1"){
+                            return '<div >' +
+                                '<button class="layui-btn layui-btn-warm  layui-btn-xs" lay-event="lock">微信</button>' +
+                                '</div>'
+                        }else if (d.playClient == "2"){
+                            return '<div >' +
+                                '<button class="layui-btn  layui-btn-xs" lay-event="lock">抖音</button>' +
+                                '</div>'
+                        }else if (d.playClient == "3"){
+                            return '<div >' +
+                                '<button class="layui-btn  layui-btn-xs" lay-event="lock">H5</button>' +
+                                '</div>'
+                        }else {
+                            return '<div >' +
+                                '<button class="layui-btn layui-btn-normal  layui-btn-xs" lay-event="lock">所有</button>' +
+                                '</div>'
+                        }
+                    }
+                }
+
+            ]]
+            , done() {// 表格渲染完成之后，也就是图片都被渲染好了
+                showBigImg();// 渲染大图查看，给这些图片绑定点击事件
+            }
+
+        });
+
+        //监听头部工具栏的事件
+        table.on('toolbar(artWorkTableFilter)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'add':
+                    layer.msg('添加');
+                    break;
+                case 'delete':
+                    layer.msg('删除');
+                    break;
+                case 'update':
+                    layer.msg('编辑');
+                    break;
+            }
+
+        });
+
+
+
+        //监听行中工具栏事件
+        table.on('tool(artWorkTableFilter)', function (obj) {
+
+            var d = obj.data;
+
+            switch (obj.event) {
+
+
+            }
+        });
+        //条件查询
+        form.on('submit(queryForm)', function (data) {
+            artWorkTable.reload({
+                where: data.field,
+                page: {curr: 1}
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+
+        var ids = [];
+        // table.on('checkbox(artWorkTableFilter)', function (obj) {
+        //     // console.log(obj.checked); //当前是否选中状态
+        //     // console.log(obj.data); //选中行的相关数据
+        //     // console.log(obj.type); //如果触发的是全选，则为：all，如果触发的是单选，则为：one
+        //     // ids.push(obj.data.pkArtworkId)
+        //     // versionId = obj.data.versionId
+        //     // console.log(obj.data);
+        // });
+
+
+
+        $('#submitBtn').click(function f() {
+            console.log(ids)
+
+            var checkStatus = table.checkStatus('artWorkTable'); //idTest 即为基础参数 id 对应的值
+
+            console.log(checkStatus.data) //获取选中行的数据
+            console.log(checkStatus.data.length) //获取选中行数量，可作为是否有选中行的条件
+            console.log(checkStatus.isAll ) //表格是否全选
+
+            if (checkStatus.data.length == 0 ){
+                layer.msg("请选择一行！")
+                return false
+            }
+            checkStatus.data.forEach( v => {
+                ids.push( v.pkArtworkId)
+            })
+            console.log(ids)
+            return
+
+            $.ajax({
+                type: 'post',// ajax请求的方式，post或get
+                url: '/ims/back/artWork/addArtWorkVersionList',
+                contentType: "application/json",// 默认就是表单数据(不写)，如果此时要传递的是json字符串，
+                // 那么此时就用application/json,如果此时要传递图片"multipart/form-data，还有数组，集合，还有对象，那么contentType必须指定为false
+                data: JSON.stringify({versionId: versionName, fkArtworkIdList:ids}),// 要上传的参数,把数组对象转换为JSON字符串
+                dataType: 'json',// 服务器响应数据：json,text,html,xml
+                processData: true,//布尔值,一般都不用设置，规定通过请求发送的数据是否转换为查询字符串。默认是 true。如果此时上传的时候，有图片，这里必须设置false,
+                success: function (res) {// 请求成功，回调函数,data，指的就是服务器返回的数据
+                    layer.msg(res.msg);
+                    ids = []
+                    let page = $('.layui-laypage-skip .layui-input').val();
+                    let limit = $('.layui-laypage-limits').find('option:selected').val();
+                    // layer.close(editmes); //再执行关闭
+                    artWorkTable.reload({
+                        page: page,
+                        size: limit,
+                    });
+                },
+            });
+
+
+        })
+
+        function showBigImg() {// 渲染大图查看
+            $("img[showBig]").unbind("click").click(function () {// 先解除绑定，再绑定，绑定图片点击事件，否则会出现绑定两次点击事件
+
+                let bigImg = layer.open({// 弹框之后，如遇到select标签，radio,checkbox之类，需要使用表单渲染
+                    type: 1,
+                    offset: '10px',
+                    area: ['385px', '720px'],
+                    title: "大图展示",
+                    shadeClose: true,
+                    content: $("#showBigImgDiv").html()
+                });
+                $("#showBigImg")[0].src = this.src;
+            });
+        }
+
+    })
+
+</script>
+
+
+</body>
+
+
+</html>

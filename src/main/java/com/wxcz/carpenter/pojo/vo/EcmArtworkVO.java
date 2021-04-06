@@ -17,4 +17,10 @@ public class EcmArtworkVO extends EcmArtwork {
     private String username;
 
     private String fkAuditName;
+
+    // 后台 版本管理 是否选中
+    private Boolean checked;
+
+    private String versionId;
+
 }

@@ -223,6 +223,10 @@
         and four_letter_tips like CONCAT('%',#{fourLetterTips},'%')
       </if>
 
+      <if test="playClient != null and playClient!=''">
+        and play_client is null  or play_client = #{playClient}
+      </if>
+
     </where>
     order by last_create_date desc
     limit #{start},#{limit}
@@ -258,6 +262,10 @@
 
       <if test="fourLetterTips != null and fourLetterTips!=''">
         and four_letter_tips like CONCAT('%',#{fourLetterTips},'%')
+      </if>
+
+      <if test="playClient != null and playClient!=''">
+        and play_client is null  or play_client = #{playClient}
       </if>
 
     </where>
@@ -349,6 +357,11 @@
       <if test="fourLetterTips != null and fourLetterTips!=''">
         and four_letter_tips like CONCAT('%',#{fourLetterTips},'%')
       </if>
+
+      <if test="playClient != null and playClient!=''">
+        and play_client is null  or play_client = #{playClient}
+      </if>
+
     </where>
     order by last_create_date desc
     limit #{start},#{limit}
