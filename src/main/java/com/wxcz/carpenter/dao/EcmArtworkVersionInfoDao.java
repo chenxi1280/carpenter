@@ -32,7 +32,7 @@ public interface EcmArtworkVersionInfoDao {
 
     EcmArtworkVersionInfo selectOneByVersionId(String versionId);
 
-    List<EcmArtworkVersionInfoVO> selectListByEcmArtworkIdList(@Param("list") List<Integer> unFkArtworkIdList);
+    List<EcmArtworkVersionInfoVO> selectListByEcmArtworkIdList(@Param("versionId")String versionId ,@Param("list") List<Integer> unFkArtworkIdList);
 
     Integer deleteByEcmArtworkVersionList(@Param("versionId")String versionId , @Param("list") List<Integer>  unFkArtworkIdList);
 }

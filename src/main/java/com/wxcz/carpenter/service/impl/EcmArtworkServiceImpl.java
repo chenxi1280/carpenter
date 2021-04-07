@@ -504,7 +504,7 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
             ecmArtworkVersionInfoDao.deleteByEcmArtworkVersionList( ecmArtworkVersionInfoVO.getVersionId(), ecmArtworkVersionInfoVO.getUnFkArtworkIdList());
         }
         if (!CollectionUtils.isEmpty(ecmArtworkVersionInfoVO.getFkArtworkIdList())){
-            List<EcmArtworkVersionInfoVO> artworkVersionInfoVOList = ecmArtworkVersionInfoDao.selectListByEcmArtworkIdList(ecmArtworkVersionInfoVO.getFkArtworkIdList());
+            List<EcmArtworkVersionInfoVO> artworkVersionInfoVOList = ecmArtworkVersionInfoDao.selectListByEcmArtworkIdList(ecmArtworkVersionInfoVO.getVersionId(),ecmArtworkVersionInfoVO.getFkArtworkIdList());
             if (!CollectionUtils.isEmpty(artworkVersionInfoVOList)) {
                 List<Integer> fkArtworkIdList = ecmArtworkVersionInfoVO.getFkArtworkIdList();
                 Iterator<Integer> iterator = fkArtworkIdList.iterator();

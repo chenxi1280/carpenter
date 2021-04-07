@@ -163,7 +163,7 @@
     <select id="selectListByEcmArtworkIdList" resultType="com.wxcz.carpenter.pojo.vo.EcmArtworkVersionInfoVO">
       select <include refid="Base_Column_List" />
       from ecm_artwork_version_info
-      where fk_artwork_id
+      where version_id = #{versionId}  and fk_artwork_id
       in <foreach collection="list" separator="," item="item" close=")" open="(">
       #{item}
       </foreach>
