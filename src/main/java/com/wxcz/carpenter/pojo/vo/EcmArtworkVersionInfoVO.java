@@ -14,5 +14,5 @@ import java.util.List;
 @Data
 public class EcmArtworkVersionInfoVO extends EcmArtworkVersionInfo {
     private List<Integer> fkArtworkIdList;
-
+    private List<Integer> unFkArtworkIdList;
 }

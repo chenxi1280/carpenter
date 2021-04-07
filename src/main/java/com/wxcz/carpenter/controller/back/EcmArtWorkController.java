@@ -303,7 +303,7 @@ public class EcmArtWorkController extends BaseController {
         return ecmArtworkService.ajaxVersionList(ecmArtworkQuery);
     }
 
-    @RequestMapping("addArtWorkVersionList")
+    @RequestMapping("saveArtWorkVersionList")
     @ResponseBody
     public ResponseDTO addArtWorkVersionList(@RequestBody EcmArtworkVersionInfoVO ecmArtworkVersionInfoVO) {
         return ecmArtworkService.addArtWorkVersionList(ecmArtworkVersionInfoVO);

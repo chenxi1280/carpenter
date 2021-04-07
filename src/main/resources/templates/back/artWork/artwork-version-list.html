@@ -314,8 +314,30 @@
                         content: "/ims/back/artWork/artWorkVersionSettingList?versionId="+d.versionId,
                         maxmin:true,
                         resize:true,
-                        moveOut:true
+                        moveOut:true,
+                        cancel: function(index, layero){
+                            // if(confirm('确定点击确定了？')){ //只有当点击confirm框的确定时，该层才会关闭
+                            //     layer.close(index)
+                            // }
+                            layer.confirm('确定点击确定了？', {
+                                btn: ['确定','取消']
+                            }, function(i){
+                                layer.close(index);
+                                layer.close(i);
+                            }, function(){
+                            })
+
+                            return false;
+                        }
                     });
+
+                    // cancel: function(index, layero){
+                    //     if(confirm('确定要关闭么')){ //只有当点击confirm框的确定时，该层才会关闭
+                    //         layer.close(index)
+                    //     }
+                    //     return false;
+                    // }
+
                     form.render();
                     // openVersionSettingList(d.pkId)
 

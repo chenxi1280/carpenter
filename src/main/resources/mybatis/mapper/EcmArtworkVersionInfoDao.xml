@@ -160,8 +160,16 @@
     from ecm_artwork_version_info
     where version_id = #{versionId} and fk_artwork_id is null
   </select>
+    <select id="selectListByEcmArtworkIdList" resultType="com.wxcz.carpenter.pojo.vo.EcmArtworkVersionInfoVO">
+      select <include refid="Base_Column_List" />
+      from ecm_artwork_version_info
+      where fk_artwork_id
+      in <foreach collection="list" separator="," item="item" close=")" open="(">
+      #{item}
+      </foreach>
+    </select>
 
-  <insert id="insertArtWorkVersionList">
+    <insert id="insertArtWorkVersionList">
      insert into ecm_artwork_version_info (fk_artwork_id, version_id, remarks,
       play_client, create_time, update_time
       )
@@ -178,7 +186,14 @@
     </foreach>
 
   </insert>
+  <delete id="deleteByEcmArtworkVersionList">
+    delete from ecm_artwork_version_info
+    where version_id = #{versionId} and  fk_artwork_id
+    in <foreach collection="list" open="(" close=")" item="item" separator=",">
+    #{item}
+    </foreach>
 
+  </delete>
 
 </mapper>
 

@@ -464,7 +464,7 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
             BeanUtils.copyProperties(v.get(0),ecmArtworkVersionInfoDTO);
             ecmArtworkVersionInfoDTOArrayList.add(ecmArtworkVersionInfoDTO);
         });
-        Integer count = ecmArtworkVersionInfoDao.selectListCountByEcmArtworkVersionInfoQuery(ecmArtworkVersionInfoQuery);
+        Integer count = collect.size();
 
         return PageDTO.setPageData(count,PageUtil.startPage(ecmArtworkVersionInfoDTOArrayList, ecmArtworkVersionInfoQuery.getPage(), ecmArtworkVersionInfoQuery.getLimit()));
     }
@@ -485,10 +485,10 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
                 ecmArtworkVersionInfoList.forEach( ecmArtworkVersionInfoVO ->  {
                     if (ecmArtworkVO.getPkArtworkId().equals(ecmArtworkVersionInfoVO.getFkArtworkId())){
                         ecmArtworkVO.setChecked(true);
+                        ecmArtworkVO.setIsChecked(true);
                     }
                 });
             }
-//            ecmArtworkVO.setVersionId(ecmArtworkQuery.getVersionId());
         });
 
         return PageDTO.setPageData(count, list);
@@ -499,7 +499,33 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
 
 
         EcmArtworkVersionInfo ecmArtworkVersionInfo = ecmArtworkVersionInfoDao.selectOneByVersionId(ecmArtworkVersionInfoVO.getVersionId());
-        ecmArtworkVersionInfoDao.insertArtWorkVersionList(ecmArtworkVersionInfo,ecmArtworkVersionInfoVO.getFkArtworkIdList());
+        ecmArtworkVersionInfo.setUpdateTime(new Date());
+        if (!CollectionUtils.isEmpty(ecmArtworkVersionInfoVO.getUnFkArtworkIdList())){
+            ecmArtworkVersionInfoDao.deleteByEcmArtworkVersionList( ecmArtworkVersionInfoVO.getVersionId(), ecmArtworkVersionInfoVO.getUnFkArtworkIdList());
+        }
+        if (!CollectionUtils.isEmpty(ecmArtworkVersionInfoVO.getFkArtworkIdList())){
+            List<EcmArtworkVersionInfoVO> artworkVersionInfoVOList = ecmArtworkVersionInfoDao.selectListByEcmArtworkIdList(ecmArtworkVersionInfoVO.getFkArtworkIdList());
+            if (!CollectionUtils.isEmpty(artworkVersionInfoVOList)) {
+                List<Integer> fkArtworkIdList = ecmArtworkVersionInfoVO.getFkArtworkIdList();
+                Iterator<Integer> iterator = fkArtworkIdList.iterator();
+                while (iterator.hasNext()) {
+                    Integer next = iterator.next();
+                    artworkVersionInfoVOList.forEach(  e -> {
+                        if (next.equals(e.getFkArtworkId())) {
+                            iterator.remove();
+                        }
+                    });
+                }
+                if (!CollectionUtils.isEmpty(fkArtworkIdList)){
+                    ecmArtworkVersionInfoDao.insertArtWorkVersionList(ecmArtworkVersionInfo,fkArtworkIdList);
+
+                }
+            }else {
+                ecmArtworkVersionInfoDao.insertArtWorkVersionList(ecmArtworkVersionInfo,ecmArtworkVersionInfoVO.getFkArtworkIdList());
+            }
+
+        }
+
         return ResponseDTO.ok("success");
     }
 
