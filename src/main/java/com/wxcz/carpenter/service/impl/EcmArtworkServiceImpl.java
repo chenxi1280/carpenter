@@ -457,21 +457,21 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
     @Override
     public PageDTO ajaxArtworkVersionList(EcmArtworkVersionInfoQuery ecmArtworkVersionInfoQuery) {
         List<EcmArtworkVersionInfoVO> list = ecmArtworkVersionInfoDao.selectListByEcmArtworkVersionInfoQuery(ecmArtworkVersionInfoQuery);
-        Map<String, List<EcmArtworkVersionInfoVO>> collect = list.stream().collect(Collectors.groupingBy(EcmArtworkVersionInfoVO::getVersionId));
+        Map<String, List<EcmArtworkVersionInfoVO>> collect = list.stream().sorted(Comparator.comparingInt(EcmArtworkVersionInfo::getPkId)).collect(Collectors.groupingBy(EcmArtworkVersionInfoVO::getVersionId));
         List<EcmArtworkVersionInfoDTO> ecmArtworkVersionInfoDTOArrayList = new ArrayList<>();
         collect.forEach( (k,v) -> {
             EcmArtworkVersionInfoDTO ecmArtworkVersionInfoDTO = new EcmArtworkVersionInfoDTO();
-            BeanUtils.copyProperties(v.get(0),ecmArtworkVersionInfoDTO);
+            BeanUtils.copyProperties(v.get(v.size() - 1 ),ecmArtworkVersionInfoDTO);
             ecmArtworkVersionInfoDTOArrayList.add(ecmArtworkVersionInfoDTO);
         });
         Integer count = collect.size();
-
-        return PageDTO.setPageData(count,PageUtil.startPage(ecmArtworkVersionInfoDTOArrayList, ecmArtworkVersionInfoQuery.getPage(), ecmArtworkVersionInfoQuery.getLimit()));
+        return PageDTO.setPageData(count, PageUtil.startPage(ecmArtworkVersionInfoDTOArrayList, ecmArtworkVersionInfoQuery.getPage(), ecmArtworkVersionInfoQuery.getLimit()).stream().sorted(Comparator.comparingInt(EcmArtworkVersionInfoDTO::getPkId)).collect(Collectors.toList()));
     }
 
     @Override
     public ResponseDTO addArtWorkVersion(EcmArtworkVersionInfoVO ecmArtworkVersionInfoVO) {
         ecmArtworkVersionInfoVO.setCreateTime(new Date());
+        ecmArtworkVersionInfoVO.setFkArtworkId(1);
         return ResponseDTO.get( 1 == ecmArtworkVersionInfoDao.insertSelective(ecmArtworkVersionInfoVO));
     }
 
