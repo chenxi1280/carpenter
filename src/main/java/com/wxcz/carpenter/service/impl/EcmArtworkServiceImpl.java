@@ -6,6 +6,7 @@ import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.entity.*;
 import com.wxcz.carpenter.pojo.query.EcmArtworkQuery;
+import com.wxcz.carpenter.pojo.query.EcmArtworkFreeAdQuery;
 import com.wxcz.carpenter.pojo.query.EcmArtworkVersionInfoQuery;
 import com.wxcz.carpenter.pojo.vo.*;
 import com.wxcz.carpenter.service.BaseService;
@@ -53,6 +54,9 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
 
     @Resource
     EcmArtworkVersionInfoDao ecmArtworkVersionInfoDao;
+
+    @Resource
+    EcmArtworkFreeAdDao ecmArtworkFreeAdDao;
 
 
     @Override
@@ -527,6 +531,68 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
         }
 
         return ResponseDTO.ok("success");
+    }
+
+    @Override
+    public PageDTO ajaxArtworkFreeAdList(EcmArtworkFreeAdQuery ecmArtworkFreeAdQuery) {
+        // 作品ID 作者ID 作者 作品名字 作者剩余流量 已使用流量 作品播放次数
+         List<EcmArtworkVO> list= ecmArtworkFreeAdDao.selectListByEcmArtworkFreeAdQuery(ecmArtworkFreeAdQuery);
+         Integer count =  ecmArtworkFreeAdDao.selectCountByEcmArtworkFreeAdQuery(ecmArtworkFreeAdQuery);
+
+        return PageDTO.setPageData(count, list);
+    }
+
+    @Override
+    public PageDTO ajaxFreeAdList(EcmArtworkQuery ecmArtworkQuery) {
+
+        List<EcmArtworkVO> list = ecmArtworkDao.selectajaxListByQuery(ecmArtworkQuery);
+        Integer count = ecmArtworkDao.selectCountByQuery(ecmArtworkQuery);
+        List<EcmArtworkFreeAd> ecmArtworkFreeAdList = ecmArtworkFreeAdDao.selectList();
+        list.forEach( ecmArtworkVO ->  {
+            if (!CollectionUtils.isEmpty(ecmArtworkFreeAdList)){
+                ecmArtworkFreeAdList.forEach( ecmArtworkFreeAd ->  {
+                    if (ecmArtworkVO.getPkArtworkId().equals(ecmArtworkFreeAd.getFkArtworkId())){
+                        ecmArtworkVO.setChecked(true);
+                        ecmArtworkVO.setIsChecked(true);
+                    }
+                });
+            }
+        });
+
+        return PageDTO.setPageData(count, list);
+    }
+
+    @Override
+    public ResponseDTO saveArtWorkFreeAdSettingList(EcmArtworkFreeAdVO ecmArtworkFreeAdVO) {
+
+        if (!CollectionUtils.isEmpty(ecmArtworkFreeAdVO.getUnFkArtworkIdList())){
+            ecmArtworkFreeAdDao.deleteByEcmArtworkIdList(  ecmArtworkFreeAdVO.getUnFkArtworkIdList());
+        }
+        if (!CollectionUtils.isEmpty(ecmArtworkFreeAdVO.getFkArtworkIdList())){
+            List<EcmArtworkFreeAd> ecmArtworkFreeAdList =  ecmArtworkFreeAdDao.selectListByEcmArtworkIdList(ecmArtworkFreeAdVO.getFkArtworkIdList());
+            if (!CollectionUtils.isEmpty(ecmArtworkFreeAdList)) {
+                List<Integer> fkArtworkIdList = ecmArtworkFreeAdVO.getFkArtworkIdList();
+                Iterator<Integer> iterator = fkArtworkIdList.iterator();
+                while (iterator.hasNext()) {
+                    Integer next = iterator.next();
+                    ecmArtworkFreeAdList.forEach(  e -> {
+                        if (next.equals(e.getFkArtworkId())) {
+                            iterator.remove();
+                        }
+                    });
+                }
+                if (!CollectionUtils.isEmpty(fkArtworkIdList)){
+                    ecmArtworkFreeAdDao.insertArtWorkFreeAdList(fkArtworkIdList);
+
+                }
+            }else {
+                ecmArtworkFreeAdDao.insertArtWorkFreeAdList(ecmArtworkFreeAdVO.getFkArtworkIdList());
+            }
+
+        }
+
+        return ResponseDTO.ok("success");
+
     }
 
 

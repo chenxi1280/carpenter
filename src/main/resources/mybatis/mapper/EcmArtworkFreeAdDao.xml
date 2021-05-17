@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wxcz.carpenter.dao.EcmArtworkFreeAdDao">
+  <resultMap id="BaseResultMap" type="com.wxcz.carpenter.pojo.entity.EcmArtworkFreeAd">
+    <id column="pk_ecm_artwork_free_ad_id" jdbcType="INTEGER" property="pkEcmArtworkFreeAdId" />
+    <result column="fk_artwork_id" jdbcType="INTEGER" property="fkArtworkId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    pk_ecm_artwork_free_ad_id, fk_artwork_id, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ecm_artwork_free_ad
+    where pk_ecm_artwork_free_ad_id = #{pkEcmArtworkFreeAdId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ecm_artwork_free_ad
+    where pk_ecm_artwork_free_ad_id = #{pkEcmArtworkFreeAdId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="pk_ecm_artwork_free_ad_id" keyProperty="pkEcmArtworkFreeAdId" parameterType="com.wxcz.carpenter.pojo.entity.EcmArtworkFreeAd" useGeneratedKeys="true">
+    insert into ecm_artwork_free_ad (fk_artwork_id, create_time)
+    values (#{fkArtworkId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="pk_ecm_artwork_free_ad_id" keyProperty="pkEcmArtworkFreeAdId" parameterType="com.wxcz.carpenter.pojo.entity.EcmArtworkFreeAd" useGeneratedKeys="true">
+    insert into ecm_artwork_free_ad
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="fkArtworkId != null">
+        fk_artwork_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="fkArtworkId != null">
+        #{fkArtworkId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wxcz.carpenter.pojo.entity.EcmArtworkFreeAd">
+    update ecm_artwork_free_ad
+    <set>
+      <if test="fkArtworkId != null">
+        fk_artwork_id = #{fkArtworkId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where pk_ecm_artwork_free_ad_id = #{pkEcmArtworkFreeAdId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wxcz.carpenter.pojo.entity.EcmArtworkFreeAd">
+    update ecm_artwork_free_ad
+    set fk_artwork_id = #{fkArtworkId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where pk_ecm_artwork_free_ad_id = #{pkEcmArtworkFreeAdId,jdbcType=INTEGER}
+  </update>
+
+
+
+<!--  sql-->
+  <select id="selectListByEcmArtworkFreeAdQuery" resultType="com.wxcz.carpenter.pojo.vo.EcmArtworkVO">
+    select pk_artwork_id, fk_userId, artwork_name,  artwork_status, logo_path, username ,last_create_date
+    from ecm_artwork
+    inner  join ecm_user  on pk_user_id = fk_userId
+    inner join ecm_artwork_free_ad on pk_artwork_id = fk_artwork_id
+    <where>
+      <if test="pkArtworkId != null and pkArtworkId!=''">
+        and pk_artwork_id like CONCAT('%',#{pkArtworkId},'%')
+      </if>
+
+      <if test="fkUserid != null and fkUserid!=''">
+        and fk_userId like CONCAT('%',#{fkUserid},'%')
+      </if>
+
+      <if test="artworkName != null and artworkName!=''">
+        and artwork_name like CONCAT('%',#{artworkName},'%')
+      </if>
+
+      <if test="fkArtworkId != null and fkArtworkId!=''">
+        and fk_userId like CONCAT('%',#{pkArtworkId},'%')
+      </if>
+
+    </where>
+    order by last_create_date desc
+    limit #{start},#{limit}
+  </select>
+  <select id="selectCountByEcmArtworkFreeAdQuery" resultType="java.lang.Integer">
+    select COUNT(*)
+    from ecm_artwork
+    inner  join ecm_user  on pk_user_id = fk_userId
+    inner join ecm_artwork_free_ad on pk_artwork_id = fk_artwork_id
+    <where>
+      <if test="pkArtworkId != null and pkArtworkId!=''">
+        and pk_artwork_id like CONCAT('%',#{pkArtworkId},'%')
+      </if>
+
+      <if test="fkUserid != null and fkUserid!=''">
+        and fk_userId like CONCAT('%',#{fkUserid},'%')
+      </if>
+
+      <if test="artworkName != null and artworkName!=''">
+        and artwork_name like CONCAT('%',#{artworkName},'%')
+      </if>
+
+      <if test="fkArtworkId != null and fkArtworkId!=''">
+        and fk_userId like CONCAT('%',#{pkArtworkId},'%')
+      </if>
+
+    </where>
+  </select>
+  <select id="selectList" resultType="com.wxcz.carpenter.pojo.entity.EcmArtworkFreeAd">
+    select <include refid="Base_Column_List" /> from ecm_artwork_free_ad
+  </select>
+  <select id="selectListByEcmArtworkIdList" resultType="com.wxcz.carpenter.pojo.entity.EcmArtworkFreeAd">
+    select <include refid="Base_Column_List" />
+    from ecm_artwork_free_ad
+    where  fk_artwork_id
+    in <foreach collection="list" separator="," item="item" close=")" open="(">
+    #{item}
+    </foreach>
+
+  </select>
+  <delete id="deleteByEcmArtworkIdList">
+    delete from ecm_artwork_free_ad
+    where fk_artwork_id
+    in <foreach collection="list" open="(" close=")" item="item" separator=",">
+    #{item}
+    </foreach>
+
+  </delete>
+
+
+  <insert id="insertArtWorkFreeAdList">
+    insert into ecm_artwork_free_ad (fk_artwork_id,  create_time )
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (
+        #{item}, now()
+      )
+    </foreach>
+
+
+  </insert>
+
+
+</mapper>

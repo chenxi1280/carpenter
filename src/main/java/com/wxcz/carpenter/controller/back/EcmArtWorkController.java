@@ -5,8 +5,9 @@ import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.entity.EcmArtwork;
 import com.wxcz.carpenter.pojo.entity.EcmArtworkNodes;
-import com.wxcz.carpenter.pojo.entity.EcmArtworkVersionInfo;
 import com.wxcz.carpenter.pojo.query.EcmArtworkQuery;
+import com.wxcz.carpenter.pojo.query.EcmArtworkFreeAdQuery;
+import com.wxcz.carpenter.pojo.vo.EcmArtworkFreeAdVO;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
 import com.wxcz.carpenter.pojo.query.EcmArtworkVersionInfoQuery;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkVersionInfoVO;
@@ -272,6 +273,7 @@ public class EcmArtWorkController extends BaseController {
     }
 
 
+    // 版本管理接口 （未注释）
     @RequestMapping("artworkVersionPage")
     public String artworkVersionPage() {
         return "back/artWork/artwork-version-list";
@@ -307,6 +309,38 @@ public class EcmArtWorkController extends BaseController {
     @ResponseBody
     public ResponseDTO addArtWorkVersionList(@RequestBody EcmArtworkVersionInfoVO ecmArtworkVersionInfoVO) {
         return ecmArtworkService.addArtWorkVersionList(ecmArtworkVersionInfoVO);
+    }
+
+
+
+    // 免广告管理接口 （未注释）
+    @RequestMapping("artworkFreeAdPage")
+    public String artworkUnAdPage() {
+        return "back/artWork/artwork-free-ad-list";
+    }
+
+    @RequestMapping("artWorkFreeAdSettingListPage")
+    public String artWorkFreeAdSettingList() {
+        return "back/artWork/artWork-free-ad-setting-list";
+    }
+
+    @RequestMapping("ajaxArtworkFreeAdList")
+    @ResponseBody
+    public PageDTO ajaxArtworkFreeAdList(EcmArtworkFreeAdQuery ecmArtworkFreeAdQuery) {
+        return ecmArtworkService.ajaxArtworkFreeAdList(ecmArtworkFreeAdQuery);
+    }
+
+    @RequestMapping("ajaxFreeAdList")
+    @ResponseBody
+    public PageDTO ajaxFreeAdList(EcmArtworkQuery ecmArtworkQuery) {
+        ecmArtworkQuery.setArtworkStatus((short) 4);
+        return ecmArtworkService.ajaxFreeAdList(ecmArtworkQuery);
+    }
+
+    @RequestMapping("saveArtWorkFreeAdSettingList")
+    @ResponseBody
+    public ResponseDTO saveArtWorkFreeAdSettingList(@RequestBody EcmArtworkFreeAdVO ecmArtworkFreeAdVO) {
+        return ecmArtworkService.saveArtWorkFreeAdSettingList(ecmArtworkFreeAdVO);
     }
 
 }
