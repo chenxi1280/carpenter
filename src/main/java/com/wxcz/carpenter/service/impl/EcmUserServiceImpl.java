@@ -113,7 +113,7 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
     public PageDTO ajaxList(EcmUserQuery ecmUserQuery) {
 
         if (StringUtils.isEmpty(ecmUserQuery.getPhone())){
-            ecmUserQuery.setPhone("");
+            ecmUserQuery.setPhone("1");
         }
 
         List<EcmUserVO> list = ecmUserDao.selectListByQuery(ecmUserQuery);
@@ -124,10 +124,15 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
 //        list.stream().filter( ecmUserVO ->  ecmUserVO.getRoles())
 
         list.forEach( ecmUserVO ->  {
+            if (ecmUserVO.getSubTotalFlow() != null && ecmUserVO.getSubUsedFlow() != null) {
+                ecmUserVO.setSurplusFlow(ecmUserVO.getSubTotalFlow() - ecmUserVO.getSubUsedFlow());
+            }
+
             try {
                 ecmUserVO.setMobile(EncryptUtil.aesDecrypt(  ecmUserVO.getMobile(), SecretKeyConstants.SECRET_KEY));
             } catch (Exception e) {
 //                e.printStackTrace();
+                System.out.println("手机号码转码错误！");
             }
             ecmUserFlowVOS.forEach( flow -> {
                if (flow.getUserId().equals(ecmUserVO.getPkUserId())){
@@ -264,6 +269,37 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
         ecmUserDao.updataUserLogoStatus(ecmUserVO);
 
         return ResponseDTO.ok(msg);
+    }
+
+    @Override
+    public PageDTO ajaxUserDownFlowList(EcmUserQuery ecmUserQuery) {
+        if (StringUtils.isEmpty(ecmUserQuery.getPhone())){
+            ecmUserQuery.setPhone("1");
+        }
+
+        List<EcmUserVO> list = ecmUserDao.selectUserDownFlowListByQuery(ecmUserQuery);
+
+
+
+//        list.stream().filter( ecmUserVO ->  ecmUserVO.getRoles())
+
+        list.forEach( ecmUserVO ->  {
+            if (ecmUserVO.getSubTotalFlow() != null && ecmUserVO.getSubUsedFlow() != null) {
+                ecmUserVO.setSurplusFlow(ecmUserVO.getSubTotalFlow() - ecmUserVO.getSubUsedFlow());
+            }
+
+            try {
+                ecmUserVO.setMobile(EncryptUtil.aesDecrypt(  ecmUserVO.getMobile(), SecretKeyConstants.SECRET_KEY));
+            } catch (Exception e) {
+//                e.printStackTrace();
+                System.out.println("手机号码转码错误！");
+            }
+
+        });
+
+
+        Integer count = ecmUserDao.selectUserDownFlowCountByQuery(ecmUserQuery);
+        return PageDTO.setPageData(count,list);
     }
 
 

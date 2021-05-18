@@ -99,4 +99,7 @@ public interface EcmUserService {
     ResponseDTO setPassWord(EcmUserVO ecmUserVO);
 
     ResponseDTO updataUserLogoStatus(EcmUserVO ecmUserVO);
+
+    PageDTO ajaxUserDownFlowList(EcmUserQuery ecmUserQuery);
+
 }

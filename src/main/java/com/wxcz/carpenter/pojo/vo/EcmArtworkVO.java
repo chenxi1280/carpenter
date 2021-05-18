@@ -26,4 +26,36 @@ public class EcmArtworkVO extends EcmArtwork {
     private String versionId;
 
     private Boolean isChecked;
+
+
+    /**
+     * 用户下行总流量（单位KB）
+     */
+    private Integer subTotalFlow;
+
+    /**
+     * 用户下行已使用流量（单位KB）
+     */
+    private Integer subUsedFlow;
+
+    /**
+     * 用户下行剩余流量（单位KB）
+     */
+    private Integer surplusFlow;
+
+    /**
+     * 播放次数
+     */
+    private Integer playCount;
+
+    /**
+     * 是否 有存储桶用户
+     */
+    private Boolean isDownLinkUser;
+
+    /**
+     * 是否 有存储桶用户
+     */
+    private Integer pkDownFowNumber;
+
 }

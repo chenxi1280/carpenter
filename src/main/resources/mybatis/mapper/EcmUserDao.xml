@@ -233,9 +233,10 @@
 
     </select>
     <select id="selectListByQuery" resultType="com.wxcz.carpenter.pojo.vo.EcmUserVO">
-        select
-        <include refid="Base_Column_List"/>
-        from ecm_user
+        select  pk_user_id, `password`, email_uuid, is_valid, username, mobile, email,
+        `count`, last_login_time, card_code, last_check_mail, roles, user_logo_url, user_logo_status ,
+        sub_total_flow ,  sub_used_flow ,sub_app_id
+        from ecm_user left join  ecm_downlink_flow on fk_user_id = pk_user_id
         <where>
 
             <if test="userId != null and userId!=''">
@@ -258,7 +259,9 @@
             <if test="roles != null and roles!=''">
                 and roles like CONCAT('%',#{roles},'%')
             </if>
-
+            <if test="subTotalFlow != null ">
+                and sub_total_flow > #{subTotalFlow}
+            </if>
 
         </where>
         limit #{start},#{limit}
@@ -266,7 +269,6 @@
 
     </select>
     <select id="selectCountByQuery" resultType="java.lang.Integer">
-
 
         select count(*)
         from ecm_user
@@ -335,6 +337,47 @@
         #{id}
         </foreach>
 
+    </select>
+    <select id="selectUserDownFlowListByQuery" resultType="com.wxcz.carpenter.pojo.vo.EcmUserVO">
+        select  pk_user_id, `password`, email_uuid, is_valid, username, mobile, email,
+        `count`, last_login_time, card_code, last_check_mail, roles, user_logo_url, user_logo_status ,
+        sub_total_flow ,  sub_used_flow ,sub_app_id
+        from ecm_user inner join  ecm_downlink_flow on fk_user_id = pk_user_id
+        <where>
+
+            <if test="userId != null and userId!=''">
+                and pk_user_id like CONCAT('%',#{userId},'%')
+            </if>
+            <if test="userName != null and userName!=''">
+                and username like CONCAT('%',#{userName},'%')
+            </if>
+            <if test="phone != null ">
+                and mobile like CONCAT('%',#{phone},'%')
+            </if>
+
+
+        </where>
+        limit #{start},#{limit}
+
+
+
+
+    </select>
+    <select id="selectUserDownFlowCountByQuery" resultType="java.lang.Integer">
+        select  count(pk_user_id)
+        from ecm_user inner join  ecm_downlink_flow on fk_user_id = pk_user_id
+        <where>
+
+            <if test="userId != null and userId!=''">
+                and pk_user_id like CONCAT('%',#{userId},'%')
+            </if>
+            <if test="userName != null and userName!=''">
+                and username like CONCAT('%',#{userName},'%')
+            </if>
+            <if test="phone != null ">
+                and mobile like CONCAT('%',#{phone},'%')
+            </if>
+        </where>
     </select>
     <update id="updataUserLogoStatus">
 

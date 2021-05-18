@@ -114,4 +114,10 @@ public interface EcmArtworkDao {
     Integer updateByPrimaryKeyFail(EcmArtwork ecmArtwork);
 
     int updateArtWorkPlayClient(EcmArtworkVO ecmArtworkVO);
+
+    List<EcmArtworkVO> selectByPrimaryKeyList(@Param(("ids")) List<Integer> fkArtworkIdList);
+
+    List<EcmArtworkVO> selectDownLinkFlowByPrimaryKeyList(@Param(("ids"))List<Integer> fkArtworkIdList);
+
+    List<EcmArtworkVO> selectAjaxFreeAdList(EcmArtworkQuery ecmArtworkQuery);
 }

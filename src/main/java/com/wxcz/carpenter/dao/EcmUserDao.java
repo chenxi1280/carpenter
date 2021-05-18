@@ -111,4 +111,8 @@ public interface EcmUserDao {
     List<EcmUserVO> selectIds(@Param("ids") List<Integer> asList);
 
     int updataUserLogoStatus(EcmUserVO ecmUserVO);
+
+    List<EcmUserVO> selectUserDownFlowListByQuery(EcmUserQuery ecmUserQuery);
+
+    Integer selectUserDownFlowCountByQuery(EcmUserQuery ecmUserQuery);
 }

@@ -2,6 +2,7 @@ package com.wxcz.carpenter.dao;
 
 import com.wxcz.carpenter.pojo.entity.StatisticsPlayRecord;
 import com.wxcz.carpenter.pojo.query.UsersRetentionQuery;
+import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
 import com.wxcz.carpenter.pojo.vo.StatisticsPlayRecordVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -42,4 +43,6 @@ public interface StatisticsPlayRecordDao {
     List<StatisticsPlayRecordVO> getPlayCountByQueryTime(UsersRetentionQuery usersRetentionQuery);
 
     List<StatisticsPlayRecordVO> selectDailyUsersByTime(UsersRetentionQuery usersRetentionQuery);
+
+    List<StatisticsPlayRecordVO> selectListVOByEcmArtworkList(@Param("list") List<EcmArtworkVO> list);
 }

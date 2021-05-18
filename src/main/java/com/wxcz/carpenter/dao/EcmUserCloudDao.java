@@ -1,7 +1,12 @@
 package com.wxcz.carpenter.dao;
 
 import com.wxcz.carpenter.pojo.entity.EcmUserCloud;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface EcmUserCloudDao {
@@ -16,4 +21,6 @@ public interface EcmUserCloudDao {
     int updateByPrimaryKeySelective(EcmUserCloud record);
 
     int updateByPrimaryKey(EcmUserCloud record);
+
+    List<EcmUserCloud> selectByUserIdList(@Param("list") Collection<Integer> integers);
 }

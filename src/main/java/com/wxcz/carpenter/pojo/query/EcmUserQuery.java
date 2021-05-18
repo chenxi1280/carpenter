@@ -41,4 +41,10 @@ public class EcmUserQuery extends PageQuery {
      */
     private Byte userLogoStatus;
 
+    /**
+     * 用户下行总流量（单位KB）
+     */
+    private Integer subTotalFlow;
+
+
 }

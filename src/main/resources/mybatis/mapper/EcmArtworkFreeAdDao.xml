@@ -65,10 +65,13 @@
 
 <!--  sql-->
   <select id="selectListByEcmArtworkFreeAdQuery" resultType="com.wxcz.carpenter.pojo.vo.EcmArtworkVO">
-    select pk_artwork_id, fk_userId, artwork_name,  artwork_status, logo_path, username ,last_create_date
+    select pk_artwork_id, fk_userId, artwork_name,  artwork_status, logo_path, username ,last_create_date,
+    sub_total_flow,sub_used_flow
     from ecm_artwork
-    inner  join ecm_user  on pk_user_id = fk_userId
+    inner join ecm_user on ecm_user.pk_user_id = ecm_artwork.fk_userId
     inner join ecm_artwork_free_ad on pk_artwork_id = fk_artwork_id
+    left join ecm_downlink_flow on  ecm_artwork.fk_userId = ecm_downlink_flow.fk_user_id
+
     <where>
       <if test="pkArtworkId != null and pkArtworkId!=''">
         and pk_artwork_id like CONCAT('%',#{pkArtworkId},'%')
@@ -146,6 +149,15 @@
     </foreach>
 
 
+  </insert>
+  <insert id="insertArtWorkFreeAdEcmArtworkVOList">
+    insert into ecm_artwork_free_ad (fk_artwork_id,  create_time )
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (
+      #{item.pkArtworkId}, now()
+      )
+    </foreach>
   </insert>
 
 

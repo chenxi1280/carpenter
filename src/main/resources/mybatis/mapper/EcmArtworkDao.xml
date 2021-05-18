@@ -331,8 +331,10 @@
   </select>
 
   <select id="selectajaxListByQuery" resultType="com.wxcz.carpenter.pojo.vo.EcmArtworkVO">
-    select <include refid="Base_Column_List" />
-    from ecm_artwork
+    select  pk_artwork_id, fk_userId, artwork_name, artwork_describe, artwork_status, logo_path,
+    logo_path_status, last_create_date, last_modify_date, four_letter_tips, fk_audit_id,
+    play_mode, is_endings, play_client, username
+    from ecm_artwork inner join ecm_user on fk_userId = pk_user_id
     <where>
       <if test="pkArtworkId != null and pkArtworkId!=''">
         and pk_artwork_id like CONCAT('%',#{pkArtworkId},'%')
@@ -380,6 +382,56 @@
     from ecm_artwork
     where pk_artwork_id in
     <foreach collection="ids" separator="," open="(" item="id" close=")">#{id.fkArtworkId}</foreach>
+
+  </select>
+    <select id="selectByPrimaryKeyList" resultType="com.wxcz.carpenter.pojo.vo.EcmArtworkVO">
+      select <include refid="Base_Column_List"/>
+      from ecm_artwork
+      <foreach collection="ids" separator="," open="(" item="id" close=")">#{id}</foreach>
+    </select>
+  <select id="selectDownLinkFlowByPrimaryKeyList" resultType="com.wxcz.carpenter.pojo.vo.EcmArtworkVO">
+    select pk_artwork_id,fk_userId,sub_total_flow,sub_used_flow
+    from  ecm_artwork inner join ecm_downlink_flow  on ecm_downlink_flow.fk_user_id = ecm_artwork.fk_userId
+    where pk_artwork_id in <foreach collection="ids" open="(" close=")" item="id" separator=",">#{id}</foreach>
+  </select>
+  <select id="selectAjaxFreeAdList" resultType="com.wxcz.carpenter.pojo.vo.EcmArtworkVO">
+    select  pk_artwork_id, fk_userId, artwork_name, artwork_describe, artwork_status, logo_path,
+        logo_path_status, last_create_date, last_modify_date, four_letter_tips, fk_audit_id,
+        play_mode, is_endings, play_client, username , sub_total_flow ,sub_used_flow,pk_id as pkDownFowNumber
+    from ecm_artwork inner join ecm_user on fk_userId = pk_user_id left join ecm_downlink_flow  on fk_userId = fk_user_id
+    <where>
+      <if test="pkArtworkId != null and pkArtworkId!=''">
+        and pk_artwork_id like CONCAT('%',#{pkArtworkId},'%')
+      </if>
+
+      <if test="fkUserid != null and fkUserid!=''">
+        and fk_userId like CONCAT('%',#{fkUserid},'%')
+      </if>
+
+      <if test="artworkStatus != null ">
+        and artwork_status = #{artworkStatus}
+      </if>
+
+      <if test="artworkName != null and artworkName!=''">
+        and artwork_name like CONCAT('%',#{artworkName},'%')
+      </if>
+
+      <if test="artworkDescribe != null and artworkDescribe!=''">
+        and artwork_describe like CONCAT('%',#{artworkDescribe},'%')
+      </if>
+
+      <if test="fourLetterTips != null and fourLetterTips!=''">
+        and four_letter_tips like CONCAT('%',#{fourLetterTips},'%')
+      </if>
+
+      <if test="playClient != null and playClient!=''">
+        and play_client is null  or play_client = #{playClient}
+      </if>
+
+    </where>
+    order by last_create_date desc
+    limit #{start},#{limit}
+
 
   </select>
 

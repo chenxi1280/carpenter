@@ -6,7 +6,9 @@ import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface EcmArtworkFreeAdDao {
@@ -33,4 +35,7 @@ public interface EcmArtworkFreeAdDao {
     List<EcmArtworkFreeAd> selectListByEcmArtworkIdList(@Param("list")  List<Integer> fkArtworkIdList);
 
     int insertArtWorkFreeAdList(@Param("list") List<Integer> fkArtworkIdList);
+
+    int insertArtWorkFreeAdEcmArtworkVOList(@Param("list") Collection<EcmArtworkVO> collect);
+
 }

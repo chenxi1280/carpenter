@@ -13,19 +13,19 @@
     pk_user_cloud_id, request_Id, sub_app_id, fk_user_id, create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from ecm_user_cloud
     where pk_user_cloud_id = #{pkUserCloudId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from ecm_user_cloud
     where pk_user_cloud_id = #{pkUserCloudId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" keyColumn="pk_user_cloud_id" keyProperty="pkUserCloudId" parameterType="com.wxcz.carpenter.pojo.entity.EcmUserCloud" useGeneratedKeys="true">
-    insert into ecm_user_cloud (request_Id, sub_app_id, fk_user_id, 
+    insert into ecm_user_cloud (request_Id, sub_app_id, fk_user_id,
       create_time, update_time)
-    values (#{requestId,jdbcType=VARCHAR}, #{subAppId,jdbcType=VARCHAR}, #{fkUserId,jdbcType=INTEGER}, 
+    values (#{requestId,jdbcType=VARCHAR}, #{subAppId,jdbcType=VARCHAR}, #{fkUserId,jdbcType=INTEGER},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" keyColumn="pk_user_cloud_id" keyProperty="pkUserCloudId" parameterType="com.wxcz.carpenter.pojo.entity.EcmUserCloud" useGeneratedKeys="true">
@@ -95,4 +95,19 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where pk_user_cloud_id = #{pkUserCloudId,jdbcType=INTEGER}
   </update>
+
+
+<!--  sql-->
+  <select id="selectByUserIdList" resultType="com.wxcz.carpenter.pojo.entity.EcmUserCloud">
+    select <include refid="Base_Column_List" />
+    from ecm_user_cloud
+    where fk_user_id in <foreach collection="list" separator="," item="item" close=")" open="(" >
+    #{item}
+  </foreach>
+
+
+  </select>
+
+
+
 </mapper>

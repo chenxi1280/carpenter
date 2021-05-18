@@ -58,6 +58,14 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
     @Resource
     EcmArtworkFreeAdDao ecmArtworkFreeAdDao;
 
+    @Resource
+    StatisticsPlayRecordDao statisticsPlayRecordDao;
+
+    @Resource
+    EcmUserCloudDao ecmUserCloudDao;
+
+    @Resource
+    EcmDownlinkFlowDao ecmDownlinkFlowDao;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -90,7 +98,6 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
 //        List<EcmArtworkVO>  list = ecmArtworkDao.selectajaxList(ecmArtworkQuery);
         //通过 作品list 查询对用的审核人list
         if (!CollectionUtils.isEmpty(list)) {
-            List<EcmUserVO> listVOs = ecmUserDao.selectUserNameByList(list);
             List<EcmUserVO> lists = ecmUserDao.selectByList(list);
             // 遍历 赋值 作品VO中的审核人名字
             list.forEach(ecmArtworkVO -> {
@@ -101,16 +108,7 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
                         }
                     }
                 });
-                listVOs.forEach(ecmUserVO -> {
 
-                    if (ecmArtworkVO.getFkUserid() != null) {
-                        if (ecmUserVO.getPkUserId().equals(ecmArtworkVO.getFkUserid())) {
-                            ecmArtworkVO.setUsername(ecmUserVO.getUsername());
-                        }
-
-                    }
-
-                });
 
             });
         }
@@ -539,16 +537,34 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
          List<EcmArtworkVO> list= ecmArtworkFreeAdDao.selectListByEcmArtworkFreeAdQuery(ecmArtworkFreeAdQuery);
          Integer count =  ecmArtworkFreeAdDao.selectCountByEcmArtworkFreeAdQuery(ecmArtworkFreeAdQuery);
 
+//        Integer cun = ecmArtworkBroadcastHotDao.selectAll()
+        List<StatisticsPlayRecordVO> listVOByEcmArtworkList = statisticsPlayRecordDao.selectListVOByEcmArtworkList(list);
+
+        list.forEach( ecmArtworkVO ->  {
+            if ( ecmArtworkVO.getSubTotalFlow() != null && ecmArtworkVO.getSubUsedFlow() != null) {
+                ecmArtworkVO.setSurplusFlow(ecmArtworkVO.getSubTotalFlow() - ecmArtworkVO.getSubUsedFlow());
+            }
+            if (!CollectionUtils.isEmpty(listVOByEcmArtworkList)) {
+                listVOByEcmArtworkList.forEach( statisticsPlayRecordVO ->  {
+                    ecmArtworkVO.setPlayCount(statisticsPlayRecordVO.getPlayCount());
+                });
+
+            }
+
+        });
+
         return PageDTO.setPageData(count, list);
     }
 
     @Override
     public PageDTO ajaxFreeAdList(EcmArtworkQuery ecmArtworkQuery) {
 
-        List<EcmArtworkVO> list = ecmArtworkDao.selectajaxListByQuery(ecmArtworkQuery);
+        List<EcmArtworkVO> list = ecmArtworkDao.selectAjaxFreeAdList(ecmArtworkQuery);
         Integer count = ecmArtworkDao.selectCountByQuery(ecmArtworkQuery);
         List<EcmArtworkFreeAd> ecmArtworkFreeAdList = ecmArtworkFreeAdDao.selectList();
+
         list.forEach( ecmArtworkVO ->  {
+
             if (!CollectionUtils.isEmpty(ecmArtworkFreeAdList)){
                 ecmArtworkFreeAdList.forEach( ecmArtworkFreeAd ->  {
                     if (ecmArtworkVO.getPkArtworkId().equals(ecmArtworkFreeAd.getFkArtworkId())){
@@ -557,6 +573,10 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
                     }
                 });
             }
+            if (ecmArtworkVO.getSubTotalFlow() != null && ecmArtworkVO.getSubUsedFlow() != null) {
+                ecmArtworkVO.setSurplusFlow(ecmArtworkVO.getSubTotalFlow() - ecmArtworkVO.getSubUsedFlow());
+            }
+
         });
 
         return PageDTO.setPageData(count, list);
@@ -566,7 +586,7 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
     public ResponseDTO saveArtWorkFreeAdSettingList(EcmArtworkFreeAdVO ecmArtworkFreeAdVO) {
 
         if (!CollectionUtils.isEmpty(ecmArtworkFreeAdVO.getUnFkArtworkIdList())){
-            ecmArtworkFreeAdDao.deleteByEcmArtworkIdList(  ecmArtworkFreeAdVO.getUnFkArtworkIdList());
+            ecmArtworkFreeAdDao.deleteByEcmArtworkIdList(ecmArtworkFreeAdVO.getUnFkArtworkIdList());
         }
         if (!CollectionUtils.isEmpty(ecmArtworkFreeAdVO.getFkArtworkIdList())){
             List<EcmArtworkFreeAd> ecmArtworkFreeAdList =  ecmArtworkFreeAdDao.selectListByEcmArtworkIdList(ecmArtworkFreeAdVO.getFkArtworkIdList());
@@ -582,17 +602,70 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
                     });
                 }
                 if (!CollectionUtils.isEmpty(fkArtworkIdList)){
-                    ecmArtworkFreeAdDao.insertArtWorkFreeAdList(fkArtworkIdList);
-
+                    return getResponseDTO(checkInsertArtworkFreeAd(ecmArtworkFreeAdVO.getFkArtworkIdList()));
                 }
             }else {
-                ecmArtworkFreeAdDao.insertArtWorkFreeAdList(ecmArtworkFreeAdVO.getFkArtworkIdList());
+                return getResponseDTO( checkInsertArtworkFreeAd(ecmArtworkFreeAdVO.getFkArtworkIdList()));
             }
 
         }
 
         return ResponseDTO.ok("success");
 
+    }
+
+    /**
+     * @param: [checkId] 状态
+     * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO
+     * @author: cxd
+     * @Date: 2021/5/18
+     * 描述 : 根据状态返回不同消息
+     *       成功: status 200  msg "success”   date:
+     *       失败: status 500  msg "error“
+     */
+    private ResponseDTO getResponseDTO(int checkId) {
+        if (checkId ==1 )  {
+            return ResponseDTO.fail("所选作品全部用户没有绑定私有云点播，请联系技术人员");
+        }else if(checkId ==2) {
+            return ResponseDTO.fail("所选作品中部分保存成功，有作者没有流量保存失败！");
+        }else if(checkId ==3) {
+            return ResponseDTO.fail("所选作品中部分保存成功，有作者没有成为免广告权限！");
+        }
+        return ResponseDTO.ok("success");
+    }
+
+    /**
+     * @param: [fkArtworkIdList2] 需要保存的 作品id 数组
+     * @return: int
+     * @author: cxd
+     * @Date: 2021/5/18
+     * 描述 :   根据需要保存的 作品id 保存 开通免广告和 剩余下行流量足够的作品
+     *       成功: status 200  msg "success”   date:
+     *       失败: status 500  msg "error“
+     */
+    private int checkInsertArtworkFreeAd(List<Integer> fkArtworkIdList2) {
+        List<EcmArtworkVO> ecmArtworkVOList = ecmArtworkDao.selectDownLinkFlowByPrimaryKeyList(fkArtworkIdList2);
+        //所选作品全部用户没有绑定私有云点播，请联系技术人员
+        if (CollectionUtils.isEmpty(ecmArtworkVOList)) {
+            return 1;
+        }
+        Set<EcmArtworkVO> collect = ecmArtworkVOList.stream().filter(ecmArtworkVO -> ecmArtworkVO.getSubTotalFlow() > ecmArtworkVO.getSubUsedFlow()).collect(Collectors.toSet());
+        if (CollectionUtils.isEmpty(collect)) {
+            //所选作品中部分保存成功，有作者没有流量保存失败！
+            if (ecmArtworkVOList.size() != collect.size()) {
+                return 2;
+            }
+            return 1;
+        }
+        ecmArtworkFreeAdDao.insertArtWorkFreeAdEcmArtworkVOList(collect);
+
+
+        //所选作品中部分保存成功，有作者没有成为免广告权限！
+        if (ecmArtworkVOList.size() != fkArtworkIdList2.size()) {
+            return 3;
+        }
+
+        return 0;
     }
 
 

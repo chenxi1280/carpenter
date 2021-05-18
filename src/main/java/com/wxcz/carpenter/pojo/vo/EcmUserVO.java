@@ -19,4 +19,21 @@ public class EcmUserVO extends EcmUser {
 
     //上行流量
     private String upFlow;
+
+
+    /**
+     * 用户下行总流量（单位KB）
+     */
+    private Integer subTotalFlow;
+
+    /**
+     * 用户下行已使用流量（单位KB）
+     */
+    private Integer subUsedFlow;
+
+    /**
+     * 用户下行剩余流量（单位KB）
+     */
+    private Integer surplusFlow;
+
 }
