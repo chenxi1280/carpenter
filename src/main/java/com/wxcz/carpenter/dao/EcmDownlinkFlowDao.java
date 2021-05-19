@@ -1,6 +1,7 @@
 package com.wxcz.carpenter.dao;
 
 import com.wxcz.carpenter.pojo.entity.EcmDownlinkFlow;
+import com.wxcz.carpenter.pojo.vo.EcmDownlinkFlowVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Collection;
@@ -21,4 +22,6 @@ public interface EcmDownlinkFlowDao {
     int updateByPrimaryKey(EcmDownlinkFlow record);
 
     List<EcmDownlinkFlow> selectByUserIdList(@Param("list") Collection<Integer> integers);
+
+    EcmDownlinkFlowVO selectByUserId(Integer fkUserId);
 }

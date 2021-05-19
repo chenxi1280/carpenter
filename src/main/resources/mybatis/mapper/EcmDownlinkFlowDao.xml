@@ -130,5 +130,10 @@
     #{item}
   </foreach>
   </select>
+    <select id="selectByUserId" resultType="com.wxcz.carpenter.pojo.vo.EcmDownlinkFlowVO">
+      select <include refid="Base_Column_List" />
+      from ecm_downlink_flow
+      where fk_user_id = #{fkUserId}
+    </select>
 
 </mapper>

@@ -3,7 +3,9 @@ package com.wxcz.carpenter.controller.back;
 import com.wxcz.carpenter.controller.BaseController;
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
+import com.wxcz.carpenter.pojo.entity.EcmDownlinkFlow;
 import com.wxcz.carpenter.pojo.query.EcmUserQuery;
+import com.wxcz.carpenter.pojo.vo.EcmDownlinkFlowVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserVO;
 import com.wxcz.carpenter.service.EcmUserService;
 import org.apache.shiro.SecurityUtils;
@@ -125,4 +127,15 @@ public class EcmUserController extends BaseController {
         return ecmUserService.updataUserLogoStatus(ecmUserVO);
     }
 
+    @RequestMapping("addDownFlowUser")
+    @ResponseBody
+    public ResponseDTO addDownFlowUser(EcmDownlinkFlowVO ecmDownlinkFlowVO) {
+        return ecmUserService.addDownFlowUser(ecmDownlinkFlowVO);
+    }
+
+    @RequestMapping("addUserDownFlow")
+    @ResponseBody
+    public ResponseDTO addUserDownFlow(EcmDownlinkFlowVO ecmDownlinkFlowVO) {
+        return ecmUserService.addUserDownFlow(ecmDownlinkFlowVO);
+    }
 }

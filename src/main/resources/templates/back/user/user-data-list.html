@@ -58,7 +58,7 @@
 
         <form class="layui-form">
 
-            <input type="text" style="display: none" name="pkUserId" id="userId">
+            <input type="text" style="display: none" name="fkUserId" id="userId">
 
 
 
@@ -96,16 +96,16 @@
 
         <form class="layui-form">
 
-            <input type="text" style="display: none" name="pkUserId" id="userIdAdd">
+            <input type="text" style="display: none" name="fkUserId" id="userIdAdd">
 
 
 
 
 
             <div class="layui-form-item">
-                <label class="layui-form-label">用户下行总流量（单位KB）</label>
+                <label class="layui-form-label">新加用户下行流量（单位KB）</label>
                 <div class="layui-input-block">
-                    <input type="text" name="subTotalFlow" lay-verify="title" id="subTotalFlow"
+                    <input type="text" name="subTotalFlow" lay-verify="title"
                            autocomplete="off" placeholder="请输入" class="layui-input" >
                 </div>
             </div>
@@ -266,7 +266,7 @@
 
 
                     $("#userIdAdd").val(d.pkUserId)
-                    $("#subTotalFlow").val(d.subTotalFlow)
+                    // $("#subTotalFlow").val(d.subTotalFlow)
 
 
 

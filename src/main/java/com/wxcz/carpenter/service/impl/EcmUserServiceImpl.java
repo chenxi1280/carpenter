@@ -5,10 +5,7 @@ import com.wxcz.carpenter.common.SecretKeyConstants;
 import com.wxcz.carpenter.dao.*;
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
-import com.wxcz.carpenter.pojo.entity.EcmArtwork;
-import com.wxcz.carpenter.pojo.entity.EcmUser;
-import com.wxcz.carpenter.pojo.entity.EcmUserFlow;
-import com.wxcz.carpenter.pojo.entity.EcmUserRoles;
+import com.wxcz.carpenter.pojo.entity.*;
 import com.wxcz.carpenter.pojo.query.EcmUserQuery;
 import com.wxcz.carpenter.pojo.vo.*;
 import com.wxcz.carpenter.service.BaseService;
@@ -39,6 +36,10 @@ import java.util.stream.Collectors;
 @Service
 public class EcmUserServiceImpl implements EcmUserService , BaseService {
 
+
+    @Resource
+    EcmMessageService ecmMessageService;
+
     @Resource
     EcmUserDao ecmUserDao;
 
@@ -55,10 +56,16 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
     EcmInnerMessageDao ecmInnerMessageDao;
 
     @Resource
-    EcmMessageService ecmMessageService;
+    EcmUserFlowDao ecmUserFlowDao;
 
     @Resource
-    EcmUserFlowDao ecmUserFlowDao;
+    EcmDownlinkFlowDao ecmDownlinkFlowDao;
+
+    @Resource
+    EcmUserNoticeRecordDao ecmUserNoticeRecordDao;
+
+
+
 
     @Override
     public EcmUserVO login(EcmUserQuery query) {
@@ -300,6 +307,49 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
 
         Integer count = ecmUserDao.selectUserDownFlowCountByQuery(ecmUserQuery);
         return PageDTO.setPageData(count,list);
+    }
+
+    @Override
+    public ResponseDTO addDownFlowUser(EcmDownlinkFlowVO ecmDownlinkFlowVO) {
+        ecmDownlinkFlowVO.setCreateTime(new Date());
+        ecmDownlinkFlowVO.setSubUsedFlow(0);
+        ecmDownlinkFlowVO.setSubFlowStatus(0);
+        ecmDownlinkFlowVO.setUpdateTime(new Date());
+        EcmUserNoticeRecord userNoticeRecord = new EcmUserNoticeRecord();
+        userNoticeRecord.setCreateTime(new Date());
+        userNoticeRecord.setFkUserId(ecmDownlinkFlowVO.getFkUserId());
+        userNoticeRecord.setNoticeStatus(1);
+        ecmUserNoticeRecordDao.insertSelective(userNoticeRecord);
+
+        return ResponseDTO.get(1 ==  ecmDownlinkFlowDao.insertSelective(ecmDownlinkFlowVO));
+
+    }
+
+    @Override
+    public ResponseDTO addUserDownFlow(EcmDownlinkFlowVO ecmDownlinkFlowVO) {
+
+        EcmDownlinkFlowVO byUserId = ecmDownlinkFlowDao.selectByUserId(ecmDownlinkFlowVO.getFkUserId());
+
+        if (byUserId == null) {
+            return ResponseDTO.fail("错误用户");
+        }
+        byUserId.setSubTotalFlow(byUserId.getSubTotalFlow()+ ecmDownlinkFlowVO.getSubTotalFlow());
+        byUserId.setUpdateTime( new Date());
+        // 发短信！！！
+        EcmUserNoticeRecord ecmUserNoticeRecord = ecmUserNoticeRecordDao.selectByUserId(ecmDownlinkFlowVO.getFkUserId());
+
+        if (ecmUserNoticeRecord == null) {
+            EcmUserNoticeRecord userNoticeRecord = new EcmUserNoticeRecord();
+            userNoticeRecord.setCreateTime(new Date());
+            userNoticeRecord.setFkUserId(ecmDownlinkFlowVO.getFkUserId());
+            userNoticeRecord.setNoticeStatus(1);
+            ecmUserNoticeRecordDao.insertSelective(userNoticeRecord);
+        }else {
+            ecmUserNoticeRecord.setNoticeStatus(1);
+            ecmUserNoticeRecordDao.updateByPrimaryKeySelective(ecmUserNoticeRecord);
+        }
+
+        return ResponseDTO.get(1 == ecmDownlinkFlowDao.updateByPrimaryKeySelective(byUserId));
     }
 
 

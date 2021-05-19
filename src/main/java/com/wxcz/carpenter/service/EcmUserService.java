@@ -3,6 +3,7 @@ package com.wxcz.carpenter.service;
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.query.EcmUserQuery;
+import com.wxcz.carpenter.pojo.vo.EcmDownlinkFlowVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserAcessVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserRolesVO;
 import com.wxcz.carpenter.pojo.vo.EcmUserVO;
@@ -102,4 +103,7 @@ public interface EcmUserService {
 
     PageDTO ajaxUserDownFlowList(EcmUserQuery ecmUserQuery);
 
+    ResponseDTO addDownFlowUser(EcmDownlinkFlowVO ecmDownlinkFlowVO);
+
+    ResponseDTO addUserDownFlow(EcmDownlinkFlowVO ecmDownlinkFlowVO);
 }
