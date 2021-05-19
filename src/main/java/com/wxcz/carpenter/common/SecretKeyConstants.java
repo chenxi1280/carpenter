@@ -15,4 +15,8 @@ public interface SecretKeyConstants {
 	 * jwt密钥
 	 */
 	String JWT_SECRET_KEY="$jwt*#@*twj$";
+
+
+	String SMS_SECRET_ID ="AKIDNs9B1a3HUSFmMgJeIgneFpnYAWcRGfKm";
+	String SMS_SECRET_KEY="MXYlmOeLm9KErRk1TfKj7E4oImzvlKsA";
 }

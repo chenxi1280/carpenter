@@ -61,15 +61,6 @@
             <input type="text" style="display: none" name="fkUserId" id="userId">
 
 
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">点播子应用id</label>
-                <div class="layui-input-block">
-                    <input type="text" name="subAppId" lay-verify="title"
-                           autocomplete="off" placeholder="请输入" class="layui-input" >
-                </div>
-            </div>
-
             <div class="layui-form-item">
                 <label class="layui-form-label">用户下行总流量（单位KB）</label>
                 <div class="layui-input-block">
@@ -207,6 +198,8 @@
                     $("#userId").val(d.pkUserId)
 
 
+
+
                     //新增用户
                     form.on('submit(sureDispatch)', function (data) {
 
@@ -217,6 +210,7 @@
                             area: ['40px', '30px'] //自定义文本域宽高
                         }, function (value, index, elem) {
                             if (value == '确定') {
+                                var layerLoad = layer.load()
                                 $.ajax({
                                     type: 'post',// ajax请求的方式，post或get
                                     url: '/ims/back/user/addDownFlowUser',
@@ -226,7 +220,7 @@
                                     dataType: 'json',// 服务器响应数据：json,text,html,xml
                                     processData: true,//布尔值,一般都不用设置，规定通过请求发送的数据是否转换为查询字符串。默认是 true。如果此时上传的时候，有图片，这里必须设置false,
                                     success: function (res) {// 请求成功，回调函数,data，指的就是服务器返回的数据
-
+                                        layer.close(layerLoad)
                                         layer.msg(res.msg)
 
                                         let page = $('.layui-laypage-skip .layui-input').val();
@@ -247,6 +241,7 @@
 
                                 });
                                 layer.close(index);
+
                             } else {
                                 layer.msg('输入有误');
                             }

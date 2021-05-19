@@ -9,6 +9,7 @@ import com.wxcz.carpenter.pojo.entity.*;
 import com.wxcz.carpenter.pojo.query.EcmUserQuery;
 import com.wxcz.carpenter.pojo.vo.*;
 import com.wxcz.carpenter.service.BaseService;
+import com.wxcz.carpenter.service.EcmDownLinkFlowService;
 import com.wxcz.carpenter.service.EcmMessageService;
 import com.wxcz.carpenter.service.EcmUserService;
 import com.wxcz.carpenter.util.EncryptUtil;
@@ -41,6 +42,9 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
     EcmMessageService ecmMessageService;
 
     @Resource
+    EcmDownLinkFlowService ecmDownLinkFlowService;
+
+    @Resource
     EcmUserDao ecmUserDao;
 
     @Resource
@@ -63,6 +67,9 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
 
     @Resource
     EcmUserNoticeRecordDao ecmUserNoticeRecordDao;
+
+    @Resource
+    EcmDownlinkFlowUpdateHistoryDao ecmDownlinkFlowUpdateHistoryDao;
 
 
 
@@ -314,14 +321,23 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
         ecmDownlinkFlowVO.setCreateTime(new Date());
         ecmDownlinkFlowVO.setSubUsedFlow(0);
         ecmDownlinkFlowVO.setSubFlowStatus(0);
+        ecmDownlinkFlowVO.setSubAppId(Integer.valueOf(String.valueOf(ecmDownLinkFlowService.createSubAppId( String.valueOf(ecmDownlinkFlowVO.getFkUserId())  ))));
         ecmDownlinkFlowVO.setUpdateTime(new Date());
-        EcmUserNoticeRecord userNoticeRecord = new EcmUserNoticeRecord();
-        userNoticeRecord.setCreateTime(new Date());
-        userNoticeRecord.setFkUserId(ecmDownlinkFlowVO.getFkUserId());
-        userNoticeRecord.setNoticeStatus(1);
-        ecmUserNoticeRecordDao.insertSelective(userNoticeRecord);
 
-        return ResponseDTO.get(1 ==  ecmDownlinkFlowDao.insertSelective(ecmDownlinkFlowVO));
+        EcmUserNoticeRecord ecmUserNoticeRecord = ecmUserNoticeRecordDao.selectByUserId(ecmDownlinkFlowVO.getFkUserId());
+
+        if (ecmUserNoticeRecord == null) {
+            EcmUserNoticeRecord userNoticeRecord = new EcmUserNoticeRecord();
+            userNoticeRecord.setCreateTime(new Date());
+            userNoticeRecord.setFkUserId(ecmDownlinkFlowVO.getFkUserId());
+            userNoticeRecord.setNoticeStatus(1);
+            ecmUserNoticeRecordDao.insertSelective(userNoticeRecord);
+        }else {
+            ecmUserNoticeRecord.setNoticeStatus(1);
+            ecmUserNoticeRecordDao.updateByPrimaryKeySelective(ecmUserNoticeRecord);
+        }
+
+        return ResponseDTO.get(1 == ecmDownlinkFlowDao.insertSelective(ecmDownlinkFlowVO));
 
     }
 
@@ -348,6 +364,13 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
             ecmUserNoticeRecord.setNoticeStatus(1);
             ecmUserNoticeRecordDao.updateByPrimaryKeySelective(ecmUserNoticeRecord);
         }
+
+        EcmDownlinkFlowUpdateHistory ecmDownlinkFlowUpdateHistory = new EcmDownlinkFlowUpdateHistory();
+        ecmDownlinkFlowUpdateHistory.setCreateTime(new Date());
+        ecmDownlinkFlowUpdateHistory.setFkUserId(ecmDownlinkFlowVO.getFkUserId());
+        ecmDownlinkFlowUpdateHistory.setSubFlow(ecmDownlinkFlowVO.getSubTotalFlow());
+        ecmDownlinkFlowUpdateHistory.setSubAppId(byUserId.getSubAppId());
+        ecmDownlinkFlowUpdateHistoryDao.insertSelective(ecmDownlinkFlowUpdateHistory);
 
         return ResponseDTO.get(1 == ecmDownlinkFlowDao.updateByPrimaryKeySelective(byUserId));
     }
