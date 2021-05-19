@@ -127,6 +127,9 @@ public class ResponseDTO implements Serializable {
         return new ResponseDTO("操作成功", null);
     }
 
+    public static ResponseDTO ok(Object data) {
+        return new ResponseDTO("操作成功", data);
+    }
     /**
      * 调用失败的时候，返回失败的状态
      *

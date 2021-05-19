@@ -3,6 +3,7 @@ package com.wxcz.carpenter.controller.back;
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.entity.EcmAdSettings;
+import com.wxcz.carpenter.pojo.entity.EcmBanner;
 import com.wxcz.carpenter.pojo.query.EcmAdSettingsQuery;
 import com.wxcz.carpenter.pojo.query.EcmArtworkQuery;
 import com.wxcz.carpenter.pojo.vo.EcmAdSettingsVO;
@@ -70,4 +71,21 @@ public class AdvertisingController {
     }
 
 
+    @RequestMapping("bannerAdSettingsPage")
+    public String BannerAdSettingsPage() {
+        return "back/advertising/bannerAdSetting";
+    }
+
+    @RequestMapping("updateBannerAdSettings")
+    @ResponseBody
+    public ResponseDTO updateBannerAdSettings(EcmBanner ecmBanner){
+        return advertisingService.updateBannerAdSettings(ecmBanner);
+    }
+
+    @RequestMapping("getBannerAd")
+    @ResponseBody
+    public ResponseDTO getBannerAd(EcmBanner ecmBanner){
+        ecmBanner.setEcmBannerId(1);
+        return advertisingService.getBannerAd(ecmBanner);
+    }
 }

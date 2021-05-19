@@ -2,6 +2,7 @@ package com.wxcz.carpenter.service;
 
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
+import com.wxcz.carpenter.pojo.entity.EcmBanner;
 import com.wxcz.carpenter.pojo.query.EcmAdSettingsQuery;
 import com.wxcz.carpenter.pojo.vo.EcmAdSettingsVO;
 
@@ -16,4 +17,7 @@ public interface AdvertisingService {
 
     ResponseDTO updateAdSettings(EcmAdSettingsVO ecmAdSettingsVO);
 
+    ResponseDTO updateBannerAdSettings(EcmBanner ecmBanner);
+
+    ResponseDTO getBannerAd(EcmBanner ecmBanner);
 }

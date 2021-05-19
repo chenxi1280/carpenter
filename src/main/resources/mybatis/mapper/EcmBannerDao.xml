@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wxcz.carpenter.dao.EcmBannerDao">
+  <resultMap id="BaseResultMap" type="com.wxcz.carpenter.pojo.entity.EcmBanner">
+    <id column="ecm_banner_id" jdbcType="INTEGER" property="ecmBannerId" />
+    <result column="ecm_banner_name" jdbcType="VARCHAR" property="ecmBannerName" />
+    <result column="ecm_banner_state" jdbcType="INTEGER" property="ecmBannerState" />
+    <result column="ecm_banner_address" jdbcType="VARCHAR" property="ecmBannerAddress" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ecm_banner_id, ecm_banner_name, ecm_banner_state, ecm_banner_address, create_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ecm_banner
+    where ecm_banner_id = #{ecmBannerId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ecm_banner
+    where ecm_banner_id = #{ecmBannerId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="ecm_banner_id" keyProperty="ecmBannerId" parameterType="com.wxcz.carpenter.pojo.entity.EcmBanner" useGeneratedKeys="true">
+    insert into ecm_banner (ecm_banner_name, ecm_banner_state, ecm_banner_address, 
+      create_date)
+    values (#{ecmBannerName,jdbcType=VARCHAR}, #{ecmBannerState,jdbcType=INTEGER}, #{ecmBannerAddress,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="ecm_banner_id" keyProperty="ecmBannerId" parameterType="com.wxcz.carpenter.pojo.entity.EcmBanner" useGeneratedKeys="true">
+    insert into ecm_banner
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ecmBannerName != null">
+        ecm_banner_name,
+      </if>
+      <if test="ecmBannerState != null">
+        ecm_banner_state,
+      </if>
+      <if test="ecmBannerAddress != null">
+        ecm_banner_address,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ecmBannerName != null">
+        #{ecmBannerName,jdbcType=VARCHAR},
+      </if>
+      <if test="ecmBannerState != null">
+        #{ecmBannerState,jdbcType=INTEGER},
+      </if>
+      <if test="ecmBannerAddress != null">
+        #{ecmBannerAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wxcz.carpenter.pojo.entity.EcmBanner">
+    update ecm_banner
+    <set>
+      <if test="ecmBannerName != null">
+        ecm_banner_name = #{ecmBannerName,jdbcType=VARCHAR},
+      </if>
+      <if test="ecmBannerState != null">
+        ecm_banner_state = #{ecmBannerState,jdbcType=INTEGER},
+      </if>
+      <if test="ecmBannerAddress != null">
+        ecm_banner_address = #{ecmBannerAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ecm_banner_id = #{ecmBannerId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wxcz.carpenter.pojo.entity.EcmBanner">
+    update ecm_banner
+    set ecm_banner_name = #{ecmBannerName,jdbcType=VARCHAR},
+      ecm_banner_state = #{ecmBannerState,jdbcType=INTEGER},
+      ecm_banner_address = #{ecmBannerAddress,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP}
+    where ecm_banner_id = #{ecmBannerId,jdbcType=INTEGER}
+  </update>
+</mapper>
