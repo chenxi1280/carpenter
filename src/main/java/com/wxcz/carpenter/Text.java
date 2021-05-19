@@ -2,6 +2,7 @@ package com.wxcz.carpenter;
 
 import com.alibaba.fastjson.JSON;
 import com.wxcz.carpenter.pojo.entity.EcmInnerMessage;
+import com.wxcz.carpenter.pojo.vo.SendNoticeVO;
 import com.wxcz.carpenter.util.HttpUtils;
 import org.jsoup.Connection;
 
@@ -28,7 +29,14 @@ public class Text {
      */
     public static void main(String[] args) {
 
-        System.out.println( UUID.randomUUID().toString().replace("-","") );
+        SendNoticeVO sendNoticeVO = new SendNoticeVO();
+        sendNoticeVO.setTemplateId("960224");
+        sendNoticeVO.setPhoneNumber("17754923091");
+        try {
+            HttpUtils.post(HttpUtils.SEND_NOTICE_URL_TEST, JSON.toJSONString(sendNoticeVO));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

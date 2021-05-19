@@ -6,13 +6,11 @@ package com.wxcz.carpenter.util;
 import com.wxcz.carpenter.common.SecretKeyConstants;
 import org.springframework.util.StringUtils;
 
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
+import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.SecureRandom;
+import java.security.*;
 import java.util.Base64;
 
 /**
@@ -369,7 +367,7 @@ public class EncryptUtil {
     }
 
     public static void main(String[] args) throws Exception {
-    	String aesEncrypt = EncryptUtil.aesEncrypt("15213064486", SecretKeyConstants.SECRET_KEY);
+    	String aesEncrypt = EncryptUtil.aesEncrypt("17754923091", SecretKeyConstants.SECRET_KEY);
     	System.out.println(aesEncrypt);
 	}
 }

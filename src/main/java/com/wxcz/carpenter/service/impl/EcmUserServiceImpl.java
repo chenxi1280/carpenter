@@ -1,5 +1,6 @@
 package com.wxcz.carpenter.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.hazelcast.util.StringUtil;
 import com.wxcz.carpenter.common.SecretKeyConstants;
 import com.wxcz.carpenter.dao.*;
@@ -13,17 +14,20 @@ import com.wxcz.carpenter.service.EcmDownLinkFlowService;
 import com.wxcz.carpenter.service.EcmMessageService;
 import com.wxcz.carpenter.service.EcmUserService;
 import com.wxcz.carpenter.util.EncryptUtil;
+import com.wxcz.carpenter.util.HttpUtils;
 import com.wxcz.carpenter.util.MD5Utils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -146,7 +150,7 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
                 ecmUserVO.setMobile(EncryptUtil.aesDecrypt(  ecmUserVO.getMobile(), SecretKeyConstants.SECRET_KEY));
             } catch (Exception e) {
 //                e.printStackTrace();
-                System.out.println("手机号码转码错误！");
+                System.out.println("手机号码转码错误！" + ecmUserVO.getMobile());
             }
             ecmUserFlowVOS.forEach( flow -> {
                if (flow.getUserId().equals(ecmUserVO.getPkUserId())){
@@ -306,7 +310,7 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
                 ecmUserVO.setMobile(EncryptUtil.aesDecrypt(  ecmUserVO.getMobile(), SecretKeyConstants.SECRET_KEY));
             } catch (Exception e) {
 //                e.printStackTrace();
-                System.out.println("手机号码转码错误！");
+                System.out.println("手机号码转码错误！"+ ecmUserVO.getMobile());
             }
 
         });
@@ -325,19 +329,36 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
         ecmDownlinkFlowVO.setUpdateTime(new Date());
 
         EcmUserNoticeRecord ecmUserNoticeRecord = ecmUserNoticeRecordDao.selectByUserId(ecmDownlinkFlowVO.getFkUserId());
+        try {
+            if (ecmUserNoticeRecord == null) {
+                EcmUserNoticeRecord userNoticeRecord = new EcmUserNoticeRecord();
+                userNoticeRecord.setCreateTime(new Date());
+                userNoticeRecord.setFkUserId(ecmDownlinkFlowVO.getFkUserId());
+                userNoticeRecord.setNoticeStatus(1);
+                ecmUserNoticeRecordDao.insertSelective(userNoticeRecord);
+            }else {
+                ecmUserNoticeRecord.setNoticeStatus(1);
+                ecmUserNoticeRecordDao.updateByPrimaryKeySelective(ecmUserNoticeRecord);
+            }
 
-        if (ecmUserNoticeRecord == null) {
-            EcmUserNoticeRecord userNoticeRecord = new EcmUserNoticeRecord();
-            userNoticeRecord.setCreateTime(new Date());
-            userNoticeRecord.setFkUserId(ecmDownlinkFlowVO.getFkUserId());
-            userNoticeRecord.setNoticeStatus(1);
-            ecmUserNoticeRecordDao.insertSelective(userNoticeRecord);
-        }else {
-            ecmUserNoticeRecord.setNoticeStatus(1);
-            ecmUserNoticeRecordDao.updateByPrimaryKeySelective(ecmUserNoticeRecord);
+            ecmDownlinkFlowDao.insertSelective(ecmDownlinkFlowVO);
+            EcmUser ecmUser = ecmUserDao.selectByPrimaryKey(ecmDownlinkFlowVO.getFkUserId());
+            ecmUser.setMobile(EncryptUtil.aesDecrypt(  ecmUser.getMobile(), SecretKeyConstants.SECRET_KEY));
+
+            SendNoticeVO sendNoticeVO = new SendNoticeVO();
+            sendNoticeVO.setTemplateId("960224");
+            sendNoticeVO.setPhoneNumber(ecmUser.getMobile());
+            HttpUtils.post(HttpUtils.SEND_NOTICE_URL, JSON.toJSONString(sendNoticeVO));
+        }catch (IOException e){
+            e.printStackTrace();
+            return ResponseDTO.fail("短信发送错误");
+        }catch (Exception e){
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return ResponseDTO.fail("网络错误");
         }
 
-        return ResponseDTO.get(1 == ecmDownlinkFlowDao.insertSelective(ecmDownlinkFlowVO));
+        return ResponseDTO.ok();
 
     }
 
