@@ -375,15 +375,8 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
         // 发短信！！！
         EcmUserNoticeRecord ecmUserNoticeRecord = ecmUserNoticeRecordDao.selectByUserId(ecmDownlinkFlowVO.getFkUserId());
 
-        if (ecmUserNoticeRecord == null) {
-            EcmUserNoticeRecord userNoticeRecord = new EcmUserNoticeRecord();
-            userNoticeRecord.setCreateTime(new Date());
-            userNoticeRecord.setFkUserId(ecmDownlinkFlowVO.getFkUserId());
-            userNoticeRecord.setNoticeStatus(1);
-            ecmUserNoticeRecordDao.insertSelective(userNoticeRecord);
-        }else {
-            ecmUserNoticeRecord.setNoticeStatus(1);
-            ecmUserNoticeRecordDao.updateByPrimaryKeySelective(ecmUserNoticeRecord);
+        if (ecmUserNoticeRecord != null) {
+            ecmUserNoticeRecordDao.deleteByPrimaryKey(ecmUserNoticeRecord.getPkId());
         }
 
         EcmDownlinkFlowUpdateHistory ecmDownlinkFlowUpdateHistory = new EcmDownlinkFlowUpdateHistory();
