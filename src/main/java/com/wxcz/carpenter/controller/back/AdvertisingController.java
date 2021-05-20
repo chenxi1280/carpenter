@@ -70,23 +70,6 @@ public class AdvertisingController {
         return advertisingService.updateAdSettings(ecmAdSettingsVO);
     }
 
-    @RequestMapping("bannerAdSettingsPage")
-    public String BannerAdSettingsPage() {
-        return "back/advertising/bannerAdSetting";
-    }
-
-    @RequestMapping("updateBannerAdSettings")
-    @ResponseBody
-    public ResponseDTO updateBannerAdSettings(EcmBanner ecmBanner){
-        return advertisingService.updateBannerAdSettings(ecmBanner);
-    }
-
-    @RequestMapping("getBannerAd")
-    @ResponseBody
-    public ResponseDTO getBannerAd(EcmBanner ecmBanner){
-        ecmBanner.setEcmBannerId(1);
-        return advertisingService.getBannerAd(ecmBanner);
-    }
 
     @RequestMapping("bannerAdSettingsPage")
     public String BannerAdSettingsPage() {
