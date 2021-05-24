@@ -1,9 +1,8 @@
 package com.wxcz.carpenter.pojo.entity;
 
-import lombok.Data;
-
 import java.io.Serializable;
 import java.util.Date;
+import lombok.Data;
 
 /**
  * ecm_banner
@@ -22,7 +21,7 @@ public class EcmBanner implements Serializable {
     private String ecmBannerName;
 
     /**
-     * 状态（未使用）
+     * 状态（0 未使用）(1 使用)
      */
     private Integer ecmBannerState;
 
@@ -30,6 +29,16 @@ public class EcmBanner implements Serializable {
      * baner地址
      */
     private String ecmBannerAddress;
+
+    /**
+     * 鏈接地址
+     */
+    private String ecmBannerConnectionUrl;
+
+    /**
+     * 连接状态
+     */
+    private Integer ecmBannerConnectionState;
 
     /**
      * 创建日期
