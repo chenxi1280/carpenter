@@ -26,7 +26,7 @@ public class EcmBanner implements Serializable {
     private Integer ecmBannerState;
 
     /**
-     * baner地址
+     * banner地址
      */
     private String ecmBannerAddress;
 

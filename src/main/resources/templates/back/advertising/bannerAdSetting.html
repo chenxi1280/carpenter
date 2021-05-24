@@ -45,6 +45,24 @@
                 </div>
             </div>
 
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否打开跳转</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" checked="" id="ecmBannerConnectionState" name="ecmBannerConnectionState" lay-skin="switch" lay-filter="switchTest" lay-text="开|关">
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">baner广告图片连接地址</label>
+                <div class="layui-input-block">
+                    <input type="text" name="ecmBannerConnectionUrl"
+                           autocomplete="off" placeholder="请输入" class="layui-input" id="ecmBannerConnectionUrl">
+                </div>
+            </div>
+
+
             <div style="width: 100px; margin: 10px auto">
                 <button class="layui-btn layui-btn-fluid" lay-submit onclick="return false;" lay-filter="sureDispatch" >提交
                 </button>
@@ -98,6 +116,14 @@
                     // $("#ecmBannerState").append("<option value='1' " +  select + ">使用</option>")
 
                     $('#ecmBannerState').val(res.data.ecmBannerState );
+                    $('#ecmBannerConnectionUrl').val(res.data.ecmBannerConnectionUrl );
+                    // console.log(data.elem.checked); //开关是否开启，true或者false
+                    // $('#ecmBannerConnectionState').val(res.data.ecmBannerConnectionState != 0 );
+                    let elementById = document.getElementById('ecmBannerConnectionState');
+                    elementById.checked = res.data.ecmBannerConnectionState != 0
+
+                    // console.log( ); //开关是否开启，true或者false
+
 
                     form.render();
 
@@ -109,6 +135,12 @@
 
         //新增用户
         form.on('submit(sureDispatch)', function (data) {
+            console.log(data.field)
+            if (data.field.ecmBannerConnectionState == null) {
+                data.field.ecmBannerConnectionState = 0
+            }else {
+                data.field.ecmBannerConnectionState= 1
+            }
 
             layer.prompt({
                 formType: 2,
