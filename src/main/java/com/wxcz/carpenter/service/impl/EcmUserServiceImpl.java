@@ -322,7 +322,7 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
     @Override
     public ResponseDTO addDownFlowUser(EcmDownlinkFlowVO ecmDownlinkFlowVO) {
         ecmDownlinkFlowVO.setCreateTime(new Date());
-        ecmDownlinkFlowVO.setSubUsedFlow(0);
+        ecmDownlinkFlowVO.setSubUsedFlow(0L);
         ecmDownlinkFlowVO.setSubFlowStatus(0);
         ecmDownlinkFlowVO.setSubAppId(Integer.valueOf(String.valueOf(ecmDownLinkFlowService.createSubAppId( String.valueOf(ecmDownlinkFlowVO.getFkUserId())  ))));
         ecmDownlinkFlowVO.setUpdateTime(new Date());

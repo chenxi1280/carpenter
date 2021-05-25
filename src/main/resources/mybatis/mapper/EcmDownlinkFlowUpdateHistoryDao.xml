@@ -12,7 +12,7 @@
     pk_id, fk_user_id, sub_app_id, sub_flow, create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from ecm_downlink_flow_update_history
     where pk_id = #{pkId,jdbcType=INTEGER}
@@ -22,9 +22,9 @@
     where pk_id = #{pkId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" keyColumn="pk_id" keyProperty="pkId" parameterType="com.wxcz.carpenter.pojo.entity.EcmDownlinkFlowUpdateHistory" useGeneratedKeys="true">
-    insert into ecm_downlink_flow_update_history (fk_user_id, sub_app_id, sub_flow, 
+    insert into ecm_downlink_flow_update_history (fk_user_id, sub_app_id, sub_flow,
       create_time)
-    values (#{fkUserId,jdbcType=INTEGER}, #{subAppId,jdbcType=INTEGER}, #{subFlow,jdbcType=INTEGER}, 
+    values (#{fkUserId,jdbcType=INTEGER}, #{subAppId,jdbcType=INTEGER}, #{subFlow,jdbcType=INTEGER},
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" keyColumn="pk_id" keyProperty="pkId" parameterType="com.wxcz.carpenter.pojo.entity.EcmDownlinkFlowUpdateHistory" useGeneratedKeys="true">

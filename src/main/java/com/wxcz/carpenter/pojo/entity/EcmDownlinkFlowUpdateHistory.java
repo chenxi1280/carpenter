@@ -29,7 +29,7 @@ public class EcmDownlinkFlowUpdateHistory implements Serializable {
     /**
      * 用户充值的下行流量（单位KB）
      */
-    private Integer subFlow;
+    private Long subFlow;
 
     /**
      * 记录创建时间
