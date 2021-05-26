@@ -77,6 +77,8 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
 
 
 
+
+
     @Override
     public EcmUserVO login(EcmUserQuery query) {
 
@@ -320,6 +322,7 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResponseDTO addDownFlowUser(EcmDownlinkFlowVO ecmDownlinkFlowVO) {
         ecmDownlinkFlowVO.setCreateTime(new Date());
         ecmDownlinkFlowVO.setSubUsedFlow(0L);
@@ -344,6 +347,7 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
             EcmUser ecmUser = ecmUserDao.selectByPrimaryKey(ecmDownlinkFlowVO.getFkUserId());
             ecmUser.setMobile(EncryptUtil.aesDecrypt(  ecmUser.getMobile(), SecretKeyConstants.SECRET_KEY));
 
+            //发送短信
             SendNoticeVO sendNoticeVO = new SendNoticeVO();
             sendNoticeVO.setTemplateId("960224");
             sendNoticeVO.setPhoneNumber(ecmUser.getMobile());
@@ -362,6 +366,7 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResponseDTO addUserDownFlow(EcmDownlinkFlowVO ecmDownlinkFlowVO) {
 
         EcmDownlinkFlowVO byUserId = ecmDownlinkFlowDao.selectByUserId(ecmDownlinkFlowVO.getFkUserId());
@@ -371,21 +376,26 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
         }
         byUserId.setSubTotalFlow(byUserId.getSubTotalFlow()+ ecmDownlinkFlowVO.getSubTotalFlow());
         byUserId.setUpdateTime( new Date());
-        // 发短信！！！
+
         EcmUserNoticeRecord ecmUserNoticeRecord = ecmUserNoticeRecordDao.selectByUserId(ecmDownlinkFlowVO.getFkUserId());
+        try{
+            if (ecmUserNoticeRecord != null) {
+                ecmUserNoticeRecordDao.deleteByPrimaryKey(ecmUserNoticeRecord.getPkId());
+            }
 
-        if (ecmUserNoticeRecord != null) {
-            ecmUserNoticeRecordDao.deleteByPrimaryKey(ecmUserNoticeRecord.getPkId());
+            EcmDownlinkFlowUpdateHistory ecmDownlinkFlowUpdateHistory = new EcmDownlinkFlowUpdateHistory();
+            ecmDownlinkFlowUpdateHistory.setCreateTime(new Date());
+            ecmDownlinkFlowUpdateHistory.setFkUserId(ecmDownlinkFlowVO.getFkUserId());
+            ecmDownlinkFlowUpdateHistory.setSubFlow(ecmDownlinkFlowVO.getSubTotalFlow());
+            ecmDownlinkFlowUpdateHistory.setSubAppId(byUserId.getSubAppId());
+            ecmDownlinkFlowUpdateHistoryDao.insertSelective(ecmDownlinkFlowUpdateHistory);
+            ecmDownLinkFlowService.modifySubAppStatus("Off",Long.valueOf(byUserId.getSubAppId()));
+            ecmDownlinkFlowDao.updateByPrimaryKeySelective(byUserId);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDTO.fail();
         }
-
-        EcmDownlinkFlowUpdateHistory ecmDownlinkFlowUpdateHistory = new EcmDownlinkFlowUpdateHistory();
-        ecmDownlinkFlowUpdateHistory.setCreateTime(new Date());
-        ecmDownlinkFlowUpdateHistory.setFkUserId(ecmDownlinkFlowVO.getFkUserId());
-        ecmDownlinkFlowUpdateHistory.setSubFlow(ecmDownlinkFlowVO.getSubTotalFlow());
-        ecmDownlinkFlowUpdateHistory.setSubAppId(byUserId.getSubAppId());
-        ecmDownlinkFlowUpdateHistoryDao.insertSelective(ecmDownlinkFlowUpdateHistory);
-
-        return ResponseDTO.get(1 == ecmDownlinkFlowDao.updateByPrimaryKeySelective(byUserId));
+        return ResponseDTO.ok();
     }
 
 

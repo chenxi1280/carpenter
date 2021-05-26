@@ -7,10 +7,7 @@ import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.tencentcloudapi.common.profile.ClientProfile;
 import com.tencentcloudapi.common.profile.HttpProfile;
 import com.tencentcloudapi.vod.v20180717.VodClient;
-import com.tencentcloudapi.vod.v20180717.models.CreateSubAppIdRequest;
-import com.tencentcloudapi.vod.v20180717.models.CreateSubAppIdResponse;
-import com.tencentcloudapi.vod.v20180717.models.DescribeCDNStatDetailsRequest;
-import com.tencentcloudapi.vod.v20180717.models.DescribeCDNStatDetailsResponse;
+import com.tencentcloudapi.vod.v20180717.models.*;
 import com.wxcz.carpenter.service.EcmDownLinkFlowService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -85,6 +82,35 @@ public class EcmDownLinkFlowServiceImpl implements EcmDownLinkFlowService {
         } catch (TencentCloudSDKException e) {
             System.out.println(e.toString());
             return null;
+        }
+    }
+
+
+    @Override
+    public boolean modifySubAppStatus(String status, Long subAppId){
+        try{
+
+            Credential cred = new Credential(SMS_SECRET_ID, SMS_SECRET_KEY);
+
+            HttpProfile httpProfile = new HttpProfile();
+            httpProfile.setEndpoint("vod.tencentcloudapi.com");
+
+            ClientProfile clientProfile = new ClientProfile();
+            clientProfile.setHttpProfile(httpProfile);
+
+            VodClient client = new VodClient(cred, "", clientProfile);
+
+            ModifySubAppIdStatusRequest req = new ModifySubAppIdStatusRequest();
+            req.setSubAppId(subAppId);
+            req.setStatus(status);
+
+            ModifySubAppIdStatusResponse resp = client.ModifySubAppIdStatus(req);
+
+            System.out.println(ModifySubAppIdStatusResponse.toJsonString(resp));
+            return true;
+        } catch (TencentCloudSDKException e) {
+            System.out.println(e.toString());
+            return false;
         }
     }
 

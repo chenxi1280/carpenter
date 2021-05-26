@@ -99,11 +99,38 @@ public interface EcmUserService {
      */
     ResponseDTO setPassWord(EcmUserVO ecmUserVO);
 
+    /**
+     * @param: [ecmUserVO]
+     * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO
+     * @author: cxd
+     * @Date: 2021/5/26
+     * 描述 : 更新 用户头像状态
+     *       成功: status 200  msg "success”   date:
+     *       失败: status 500  msg "error“
+     */
     ResponseDTO updataUserLogoStatus(EcmUserVO ecmUserVO);
 
     PageDTO ajaxUserDownFlowList(EcmUserQuery ecmUserQuery);
 
+    /**
+     * @param: [ecmDownlinkFlowVO]
+     * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO
+     * @author: cxd
+     * @Date: 2021/5/26
+     * 描述 : 创建 下行流量 免广告用户
+     *       成功: status 200  msg "success”   date:
+     *       失败: status 500  msg "error“
+     */
     ResponseDTO addDownFlowUser(EcmDownlinkFlowVO ecmDownlinkFlowVO);
 
+    /**
+     * @param: [ecmDownlinkFlowVO]
+     * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO
+     * @author: cxd
+     * @Date: 2021/5/26
+     * 描述 : 增加下行流量
+     *       成功: status 200  msg "success”   date:
+     *       失败: status 500  msg "error“
+     */
     ResponseDTO addUserDownFlow(EcmDownlinkFlowVO ecmDownlinkFlowVO);
 }
