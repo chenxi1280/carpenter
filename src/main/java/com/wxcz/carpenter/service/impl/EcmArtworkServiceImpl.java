@@ -546,7 +546,9 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
             }
             if (!CollectionUtils.isEmpty(listVOByEcmArtworkList)) {
                 listVOByEcmArtworkList.forEach( statisticsPlayRecordVO ->  {
-                    ecmArtworkVO.setPlayCount(statisticsPlayRecordVO.getPlayCount());
+                    if(ecmArtworkVO.getPkArtworkId().equals(statisticsPlayRecordVO.getFkArtworkId())) {
+                        ecmArtworkVO.setPlayCount(statisticsPlayRecordVO.getPlayCount());
+                    }
                 });
 
             }

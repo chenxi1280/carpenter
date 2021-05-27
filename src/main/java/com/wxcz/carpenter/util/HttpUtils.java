@@ -59,7 +59,7 @@ public class HttpUtils {
 
     public static final String sendHttpsUrl = "https://wanxiangchengzhen.com/bpi/pushMsg";
 
-    public static final String SEND_NOTICE_URL  = "https://wanxiangchengzhen.com/bpi/pushMsg";
+    public static final String SEND_NOTICE_URL  = "https://wanxiangchengzhen.com/bpi/EcmInnerMessage/sendNotice";
 
     public static final String SEND_NOTICE_URL_TEST  = "http://127.0.0.1:8080/EcmInnerMessage/sendNotice";
 

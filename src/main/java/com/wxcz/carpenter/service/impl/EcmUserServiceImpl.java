@@ -389,7 +389,7 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
             ecmDownlinkFlowUpdateHistory.setSubFlow(ecmDownlinkFlowVO.getSubTotalFlow());
             ecmDownlinkFlowUpdateHistory.setSubAppId(byUserId.getSubAppId());
             ecmDownlinkFlowUpdateHistoryDao.insertSelective(ecmDownlinkFlowUpdateHistory);
-            ecmDownLinkFlowService.modifySubAppStatus("Off",Long.valueOf(byUserId.getSubAppId()));
+            ecmDownLinkFlowService.modifySubAppStatus("On",Long.valueOf(byUserId.getSubAppId()));
             ecmDownlinkFlowDao.updateByPrimaryKeySelective(byUserId);
         }catch (Exception e) {
             e.printStackTrace();
