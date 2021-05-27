@@ -23,4 +23,6 @@ public class EcmArtworkFreeAdQuery extends PageQuery{
 
     private String artworkName;
 
+    private String artworkStatus;
+
 }

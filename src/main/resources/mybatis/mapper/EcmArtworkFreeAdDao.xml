@@ -71,8 +71,7 @@
     inner join ecm_user on ecm_user.pk_user_id = ecm_artwork.fk_userId
     inner join ecm_artwork_free_ad on pk_artwork_id = fk_artwork_id
     left join ecm_downlink_flow on  ecm_artwork.fk_userId = ecm_downlink_flow.fk_user_id
-
-    <where>
+    where artwork_status != 5
       <if test="pkArtworkId != null and pkArtworkId!=''">
         and pk_artwork_id like CONCAT('%',#{pkArtworkId},'%')
       </if>
@@ -89,7 +88,7 @@
         and fk_userId like CONCAT('%',#{pkArtworkId},'%')
       </if>
 
-    </where>
+
     order by last_create_date desc
     limit #{start},#{limit}
   </select>
@@ -113,6 +112,10 @@
 
       <if test="fkArtworkId != null and fkArtworkId!=''">
         and fk_userId like CONCAT('%',#{pkArtworkId},'%')
+      </if>
+
+      <if test="artworkStatus != null ">
+        and artwork_status = #{artworkStatus}
       </if>
 
     </where>
