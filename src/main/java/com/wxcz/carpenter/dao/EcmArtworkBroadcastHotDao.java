@@ -3,6 +3,7 @@ package com.wxcz.carpenter.dao;
 import com.wxcz.carpenter.pojo.entity.EcmArtworkBroadcastHot;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkBroadcastHistoryVO;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkBroadcastHotVO;
+import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -34,4 +35,5 @@ public interface EcmArtworkBroadcastHotDao {
 
     List<EcmArtworkBroadcastHotVO> selectAll();
 
+    List<EcmArtworkBroadcastHotVO> selectListVOByEcmArtworkList(@Param("list") List<EcmArtworkVO> list);
 }

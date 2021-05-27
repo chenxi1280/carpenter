@@ -538,7 +538,7 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
          Integer count =  ecmArtworkFreeAdDao.selectCountByEcmArtworkFreeAdQuery(ecmArtworkFreeAdQuery);
 
 //        Integer cun = ecmArtworkBroadcastHotDao.selectAll()
-        List<StatisticsPlayRecordVO> listVOByEcmArtworkList = statisticsPlayRecordDao.selectListVOByEcmArtworkList(list);
+        List<EcmArtworkBroadcastHotVO> listVOByEcmArtworkList = ecmArtworkBroadcastHotDao.selectListVOByEcmArtworkList(list);
 
         list.forEach( ecmArtworkVO ->  {
             if ( ecmArtworkVO.getSubTotalFlow() != null && ecmArtworkVO.getSubUsedFlow() != null) {
@@ -546,13 +546,11 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
             }
             if (!CollectionUtils.isEmpty(listVOByEcmArtworkList)) {
                 listVOByEcmArtworkList.forEach( statisticsPlayRecordVO ->  {
-                    if(ecmArtworkVO.getPkArtworkId().equals(statisticsPlayRecordVO.getFkArtworkId())) {
-                        ecmArtworkVO.setPlayCount(statisticsPlayRecordVO.getPlayCount());
+                    if(ecmArtworkVO.getPkArtworkId().equals(statisticsPlayRecordVO.getFkArkworkId())) {
+                        ecmArtworkVO.setPlayCount(statisticsPlayRecordVO.getBroadcastCount());
                     }
                 });
-
             }
-
         });
 
         return PageDTO.setPageData(count, list);

@@ -102,8 +102,15 @@
     select <include refid="Base_Column_List" />
     from ecm_artwork_broadcast_hot
   </select>
+  <select id="selectListVOByEcmArtworkList" resultType="com.wxcz.carpenter.pojo.vo.EcmArtworkBroadcastHotVO">
+    select  pk_broadcast_hot_id, fk_arkwork_id, broadcast_count, wait_count
+    from ecm_artwork_broadcast_hot join ecm_artwork on  pk_artwork_id = fk_arkwork_id
+    where pk_artwork_id  in  <foreach collection="list" separator="," item="item" close=")" open="(" >
+      #{item.pkArtworkId}
+    </foreach>
+  </select>
 
-  <update id="updateByNewBroadcastHot">
+    <update id="updateByNewBroadcastHot">
     update ecm_artwork_broadcast_hot
     <trim prefix="set" suffixOverrides=",">
 

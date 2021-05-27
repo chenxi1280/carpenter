@@ -78,7 +78,7 @@
   <select id="selectByUserId" resultType="com.wxcz.carpenter.pojo.entity.EcmUserNoticeRecord">
     select <include refid="Base_Column_List" />
     from ecm_user_notice_record
-    where fk_user_id = #{fkUserId}
+    where fk_user_id = #{fkUserId} and notice_status = 1
 
   </select>
 
