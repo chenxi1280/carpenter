@@ -14,27 +14,27 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    pk_work_order_id, fk_user_id, user_name, user_company, user_contact_information, 
+    pk_work_order_id, fk_user_id, user_name, user_company, user_contact_information,
     user_application_function, apply_status, fk_handler_id, create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from ecm_work_order
     where pk_work_order_id = #{pkWorkOrderId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from ecm_work_order
     where pk_work_order_id = #{pkWorkOrderId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" keyColumn="pk_work_order_id" keyProperty="pkWorkOrderId" parameterType="com.wxcz.carpenter.pojo.entity.EcmWorkOrder" useGeneratedKeys="true">
-    insert into ecm_work_order (fk_user_id, user_name, user_company, 
-      user_contact_information, user_application_function, 
-      apply_status, fk_handler_id, create_time, 
+    insert into ecm_work_order (fk_user_id, user_name, user_company,
+      user_contact_information, user_application_function,
+      apply_status, fk_handler_id, create_time,
       update_time)
-    values (#{fkUserId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userCompany,jdbcType=VARCHAR}, 
-      #{userContactInformation,jdbcType=VARCHAR}, #{userApplicationFunction,jdbcType=VARCHAR}, 
-      #{applyStatus,jdbcType=INTEGER}, #{fkHandlerId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+    values (#{fkUserId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userCompany,jdbcType=VARCHAR},
+      #{userContactInformation,jdbcType=VARCHAR}, #{userApplicationFunction,jdbcType=VARCHAR},
+      #{applyStatus,jdbcType=INTEGER}, #{fkHandlerId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" keyColumn="pk_work_order_id" keyProperty="pkWorkOrderId" parameterType="com.wxcz.carpenter.pojo.entity.EcmWorkOrder" useGeneratedKeys="true">
@@ -144,4 +144,59 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where pk_work_order_id = #{pkWorkOrderId,jdbcType=INTEGER}
   </update>
+
+
+<!--  sql-->
+  <select id="selectListByEcmWorkOrderQuery" resultType="com.wxcz.carpenter.pojo.vo.EcmWorkOrderVO">
+    select  pk_work_order_id, fk_user_id, user_name, user_company, user_contact_information,
+            user_application_function, apply_status, fk_handler_id, ecm_work_order.create_time, ecm_work_order.update_time,username as fkHandlerName
+    from ecm_work_order left join ecm_user on fk_handler_id = pk_user_id
+    <where>
+
+      <if test="userName != null and userName !=''">
+        and pk_work_order_id like CONCAT('%',#{userName},'%')
+      </if>
+      <if test="userName != null and userName!=''">
+        and user_name like CONCAT('%',#{userName},'%')
+      </if>
+      <if test="userCompany != null  and userCompany!=''">
+        and user_company like CONCAT('%',#{userCompany},'%')
+      </if>
+      <if test="userContactInformation != null  and userContactInformation!=''">
+        and user_contact_information like CONCAT('%',#{userContactInformation},'%')
+      </if>
+      <if test="applyStatus != null  ">
+        and apply_status =  #{applyStatus}
+      </if>
+
+    </where>
+    limit #{start},#{limit}
+
+
+  </select>
+  <select id="selectCountByEcmWorkOrderQuery" resultType="java.lang.Integer">
+    select COUNT(*)
+    from ecm_work_order left join ecm_user on fk_handler_id = pk_user_id
+    <where>
+
+      <if test="userName != null and userName !=''">
+        and pk_work_order_id like CONCAT('%',#{userName},'%')
+      </if>
+      <if test="userName != null and userName!=''">
+        and user_name like CONCAT('%',#{userName},'%')
+      </if>
+      <if test="userCompany != null  and userCompany!=''">
+        and user_company like CONCAT('%',#{userCompany},'%')
+      </if>
+      <if test="userContactInformation != null  and userContactInformation!=''">
+        and user_contact_information like CONCAT('%',#{userContactInformation},'%')
+      </if>
+      <if test="applyStatus != null  and applyStatus!=''">
+        and apply_status like CONCAT('%',#{applyStatus},'%')
+      </if>
+
+    </where>
+
+  </select>
+
 </mapper>

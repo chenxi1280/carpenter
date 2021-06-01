@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+
+<script type="text/javascript" src="../../layuiadmin/layui/layui.js"></script>
+
+<style>
+    /*修改layui表格的高度*/
+    .layui-table-cell {
+        height: auto;
+    }
+</style>
+<body class="layui-card-body layui-card">
+<div style="padding: 10px;" class="layui-card">
+    <div style="display: flex">
+        <form id="queryForm" class="layui-form" method="post"
+              style="display: flex;align-items: center;padding-left: 5px">
+            <div class="layui-hide-xs" style="display: flex;align-items: center">
+                <span style="width: fit-content">工单id：</span>
+                <input class="layui-input" name="pkWorkOrderId"
+                       style="width: 120px;"/>
+            </div>
+            <div style="display: flex;align-items: center;margin-left: 20px">
+                <label style="width:  fit-content">用户名：</label>
+                <input class="layui-input" name="userName"
+                       style="width: 120px"/>
+            </div>
+            <div style="display: flex;align-items: center;margin-left: 20px">
+                <label style="width:  fit-content">公司名：</label>
+                <input class="layui-input" name="userCompany"
+                       style="width: 120px"/>
+            </div>
+
+            <div style="display: flex;align-items: center;margin-left: 20px">
+                <label style="width:  fit-content">联系方式：</label>
+                <input class="layui-input" name="userContactInformation"
+                       style="width: 120px"/>
+            </div>
+
+
+            <div class="layui-form-item" >
+                <label class="layui-form-label">工单状态</label>
+                <div class="layui-input-block">
+                    <select name="applyStatus">
+                        <option value="">请选择</option>
+                        <option value="0">未处理</option>
+                        <option value="1">处理中</option>
+                        <option value="2">完成</option>
+                    </select>
+                </div>
+            </div>
+            <div style="display: flex;align-items: center;margin-left: 20px">
+                <button type="button" class="layui-btn" id="queryBtn" lay-submit lay-filter="queryForm">查询</button>
+            </div>
+        </form>
+        <!--        <div style="padding-left: 5%"></div>-->
+    </div>
+    <table id="tTable" lay-filter="tTableFilter" style="padding-top: 10px"></table>
+    <!--        <div th:include="plugins/splitBar::splitBar"></div>-->
+
+</div>
+
+
+
+<script type="text/html" id="setWorkOrderDiv">
+    <div style="padding: 20px">
+
+        <form class="layui-form">
+
+            <input type="text" style="display: none" name="pkWorkOrderId" id="pkWorkOrderId">
+
+
+
+            <div class="layui-form-item" >
+                <label class="layui-form-label">工单状态</label>
+                <div class="layui-input-block">
+                    <select name="applyStatus">
+                        <option value="0">未处理</option>
+                        <option value="1">处理中</option>
+                        <option value="2">完成</option>
+                    </select>
+                </div>
+            </div>
+
+
+
+            <div style="text-align: center">
+                <input type="submit" class="layui-btn layui-btn-danger" lay-submit onclick="return false;"
+                       lay-filter="setWorkOrderDivSubmit">
+            </div>
+        </form>
+
+    </div>
+
+</script>
+
+<!--// 加上th:inline='javascript' 否则可能会因为小于或者大于符号导致 thymeleaf模板引擎解析错误。-->
+<script th:inline="javascript" type="text/javascript">
+
+    layui.use(['table', 'layer', 'laydate', 'form'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var laydate = layui.laydate;
+        var form = layui.form;
+        var $ = layui.$;
+        laydate.render({
+            elem: '#creteDateRange' //指定元素
+            , range: '至'
+        });
+
+        var tTable = table.render({
+            elem: '#tTable'
+            , page: true
+            , url: '/ims/back/workOrder/ajaxWorkOrderList' //数据接口
+            , cols: [[ //表头
+                {field: 'pkWorkOrderId', title: 'ID', width: 120,sort: true}
+                , {field: 'userName', title: '用户名称', width: 120}
+                , {field: 'userContactInformation', title: '用户联系方式', width: 160}
+                , {field: 'userCompany', title: '用户公司', width: 160}
+                , {field: 'userApplicationFunction', title: '用户申请功能', width: 120}
+                , {field: 'fkHandlerName', title: '处理人', width: 160}
+                , { field: 'applyStatus', title: '工单状态', width: 120, sort: true, templet: function (d) {
+                        // 0 未支付 1 支付完成并未做完业务  2 完成     5过期
+                        if (d.applyStatus == "2") {
+                            return '<div >' +
+                                '<button class="layui-btn  layui-btn  layui-btn-xs" >完成</button>' +
+                                '</div>'
+                        } else if (d.applyStatus == "1") {
+                            return '<div >' +
+                                '<button class="layui-btn layui-btn-normal  layui-btn-xs" >处理中</button>' +
+                                '</div>'
+                        }else {
+
+                            return '<div >' +
+                                '<button class="layui-btn   layui-btn-disabled layui-btn-xs" >未处理</button>' +
+                                '</div>'
+                        }
+                    } }
+                , {field: 'createTime', title: '创建时间', width: 160,sort: true}
+                , {field: 'updateTime', title: '更新时间', width: 160,sort: true}
+                , {
+                    field: '', title: '操作', width: 240, templet: function (d) {
+                        return '<div >' +
+                            '<button class="layui-btn  layui-btn-warm layui-btn-xs" lay-event="setWorkOrder">调整状态</button>' +
+                            '</div>'
+                    }
+                }
+            ]]
+            , toolbar: 'default'
+
+        });
+
+        //监听头部工具栏的事件
+        table.on('toolbar(tTableFilter)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'add':
+                    // addaddMsgBtn();
+                    break;
+                case 'delete':
+
+                    layer.msg('删除');
+                    break;
+                case 'update':
+                    layer.msg('编辑');
+                    break;
+            }
+            ;
+        });
+
+
+
+        //监听行中工具栏事件
+        table.on('tool(tTableFilter)', function (obj) {
+
+            var d = obj.data;
+
+
+            switch (obj.event) {
+
+                case 'setWorkOrder':
+                    if (d.applyStatus ==2 ) {
+                        layer.msg("已经完成的订单不能修改")
+                        return
+                    }
+
+                    let editmes = layer.open({
+                        type: 1,
+                        area: ['50%', '50%'],
+                        title: '编辑消息',
+                        content: $('#setWorkOrderDiv').html() //这里content是一个普通的String
+                    });
+
+
+                    $("#pkWorkOrderId").val(d.pkWorkOrderId)
+
+
+                    form.render();
+
+
+                    //提交 调整
+                    form.on('submit(setWorkOrderDivSubmit)', function (data) {
+
+
+                        var d = data.field
+
+                        $.ajax({
+                            type: 'post',// ajax请求的方式，post或get
+                            url: '/ims/back/workOrder/updateWorkOrder',
+                            // contentType: "application/json",// 默认就是表单数据(不写)，如果此时要传递的是json字符串，
+                            // 那么此时就用application/json,如果此时要传递图片"multipart/form-data，还有数组，集合，还有对象，那么contentType必须指定为false
+                            data: data.field,// 要上传的参数,把数组对象转换为JSON字符串
+                            dataType: 'json',// 服务器响应数据：json,text,html,xml
+                            processData: true,//布尔值,一般都不用设置，规定通过请求发送的数据是否转换为查询字符串。默认是 true。如果此时上传的时候，有图片，这里必须设置false,
+                            success: function (res) {// 请求成功，回调函数,data，指的就是服务器返回的数据
+
+                                layer.msg(res.msg)
+
+                                let page = $('.layui-laypage-skip .layui-input').val();
+                                let limit = $('.layui-laypage-limits').find('option:selected').val();
+
+
+                                layer.close(editmes); //再执行关闭
+
+                                tTable.reload({
+                                    page: page,
+                                    size: limit,
+                                });
+
+
+                                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+                            },
+
+
+                        });
+
+
+                    })
+
+
+                    break;
+            }
+        });
+
+
+        //条件查询
+        form.on('submit(queryForm)', function (data) {
+            tTable.reload({
+                where: data.field,
+                page: {curr: 1}
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+    })
+
+
+</script>
+
+
+</body>
+
+
+</html>
