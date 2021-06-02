@@ -1,5 +1,6 @@
 package com.wxcz.carpenter.dao;
 
+import com.wxcz.carpenter.pojo.entity.EcmArtwork;
 import com.wxcz.carpenter.pojo.entity.EcmArtworkFreeAd;
 import com.wxcz.carpenter.pojo.query.EcmArtworkFreeAdQuery;
 import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
@@ -38,4 +39,5 @@ public interface EcmArtworkFreeAdDao {
 
     int insertArtWorkFreeAdEcmArtworkVOList(@Param("list") Collection<EcmArtworkVO> collect);
 
+    EcmArtwork selectByEcmArtworkId(Integer pkArtworkId);
 }

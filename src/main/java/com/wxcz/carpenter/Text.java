@@ -2,6 +2,7 @@ package com.wxcz.carpenter;
 
 import com.alibaba.fastjson.JSON;
 import com.wxcz.carpenter.pojo.entity.EcmInnerMessage;
+import com.wxcz.carpenter.pojo.vo.EcmArtworkVO;
 import com.wxcz.carpenter.pojo.vo.SendNoticeVO;
 import com.wxcz.carpenter.util.HttpUtils;
 import org.jsoup.Connection;
@@ -29,11 +30,11 @@ public class Text {
      */
     public static void main(String[] args) {
 
-        SendNoticeVO sendNoticeVO = new SendNoticeVO();
-        sendNoticeVO.setTemplateId("960224");
-        sendNoticeVO.setPhoneNumber("17754923091");
+        EcmArtworkVO ecmArtworkVO = new EcmArtworkVO();
+        ecmArtworkVO.setPkArtworkId(10285);
+
         try {
-            HttpUtils.post(HttpUtils.SEND_NOTICE_URL_TEST, JSON.toJSONString(sendNoticeVO));
+            HttpUtils.post(HttpUtils.COPY_VIDEO_ART_WORK_ID_URL_TEST, JSON.toJSONString(ecmArtworkVO));
         } catch (IOException e) {
             e.printStackTrace();
         }

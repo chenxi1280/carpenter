@@ -132,7 +132,13 @@
     </foreach>
 
   </select>
-  <delete id="deleteByEcmArtworkIdList">
+    <select id="selectByEcmArtworkId" resultType="com.wxcz.carpenter.pojo.entity.EcmArtwork">
+      select <include refid="Base_Column_List" />
+      from ecm_artwork_free_ad
+      where fk_artwork_id = #{pkArtworkId}
+
+    </select>
+    <delete id="deleteByEcmArtworkIdList">
     delete from ecm_artwork_free_ad
     where fk_artwork_id
     in <foreach collection="list" open="(" close=")" item="item" separator=",">

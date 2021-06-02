@@ -63,6 +63,11 @@ public class HttpUtils {
 
     public static final String SEND_NOTICE_URL_TEST  = "http://127.0.0.1:8080/EcmInnerMessage/sendNotice";
 
+
+    public static final String COPY_VIDEO_ART_WORK_ID_URL  = "https://wanxiangchengzhen.com/bpi/copyVideoByArtworkId";
+
+    public static final String COPY_VIDEO_ART_WORK_ID_URL_TEST  = "http://127.0.0.1:8080/copyVideoByArtworkId";
+
     /**
      * 发送Get请求
      *

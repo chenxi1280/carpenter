@@ -1,5 +1,6 @@
 package com.wxcz.carpenter.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.wxcz.carpenter.dao.*;
 import com.wxcz.carpenter.pojo.dto.EcmArtworkVersionInfoDTO;
 import com.wxcz.carpenter.pojo.dto.PageDTO;
@@ -12,6 +13,7 @@ import com.wxcz.carpenter.pojo.vo.*;
 import com.wxcz.carpenter.service.BaseService;
 import com.wxcz.carpenter.service.EcmArtworkService;
 import com.wxcz.carpenter.service.EcmMessageService;
+import com.wxcz.carpenter.util.HttpUtils;
 import com.wxcz.carpenter.util.PageUtil;
 import com.wxcz.carpenter.util.TreeUtil;
 import org.springframework.beans.BeanUtils;
@@ -22,6 +24,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -137,6 +140,19 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
                 ecmArtworkBroadcastHotVO.setFkArkworkId(ecmArtworkVO.getPkArtworkId());
                 ecmArtworkBroadcastHotDao.insertSelective(ecmArtworkBroadcastHotVO);
             }
+            // 如果是 免广告作品需要计算下行流量
+            EcmArtwork ecmArtwork =  ecmArtworkFreeAdDao.selectByEcmArtworkId(ecmArtworkVO.getPkArtworkId());
+            if (ecmArtwork != null ){
+                try {
+                    HttpUtils.post(HttpUtils.COPY_VIDEO_ART_WORK_ID_URL, JSON.toJSONString(ecmArtworkVO));
+                    System.out.println("发送copy请求桶请求成功");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println("发送copy请求桶请求错误");
+                }
+            }
+
+
         }
 
         return ResponseDTO.get(ecmArtworkDao.updateByPrimaryKeySelective(ecmArtworkVO) == 1);
