@@ -132,7 +132,7 @@
     </foreach>
 
   </select>
-    <select id="selectByEcmArtworkId" resultType="com.wxcz.carpenter.pojo.entity.EcmArtwork">
+    <select id="selectByEcmArtworkId" resultType="com.wxcz.carpenter.pojo.entity.EcmArtworkFreeAd">
       select <include refid="Base_Column_List" />
       from ecm_artwork_free_ad
       where fk_artwork_id = #{pkArtworkId}

@@ -141,8 +141,8 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
                 ecmArtworkBroadcastHotDao.insertSelective(ecmArtworkBroadcastHotVO);
             }
             // 如果是 免广告作品需要计算下行流量
-            EcmArtwork ecmArtwork =  ecmArtworkFreeAdDao.selectByEcmArtworkId(ecmArtworkVO.getPkArtworkId());
-            if (ecmArtwork != null ){
+            EcmArtworkFreeAd ecmArtworkFreeAd =  ecmArtworkFreeAdDao.selectByEcmArtworkId(ecmArtworkVO.getPkArtworkId());
+            if (ecmArtworkFreeAd != null ){
                 try {
                     HttpUtils.post(HttpUtils.COPY_VIDEO_ART_WORK_ID_URL, JSON.toJSONString(ecmArtworkVO));
                     System.out.println("发送copy请求桶请求成功");

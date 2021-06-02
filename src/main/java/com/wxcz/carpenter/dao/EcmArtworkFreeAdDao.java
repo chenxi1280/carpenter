@@ -39,5 +39,5 @@ public interface EcmArtworkFreeAdDao {
 
     int insertArtWorkFreeAdEcmArtworkVOList(@Param("list") Collection<EcmArtworkVO> collect);
 
-    EcmArtwork selectByEcmArtworkId(Integer pkArtworkId);
+    EcmArtworkFreeAd selectByEcmArtworkId(Integer pkArtworkId);
 }
