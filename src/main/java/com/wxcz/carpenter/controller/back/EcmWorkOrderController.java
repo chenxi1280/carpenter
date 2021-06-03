@@ -1,5 +1,6 @@
 package com.wxcz.carpenter.controller.back;
 
+import com.wxcz.carpenter.controller.BaseController;
 import com.wxcz.carpenter.pojo.dto.PageDTO;
 import com.wxcz.carpenter.pojo.dto.ResponseDTO;
 import com.wxcz.carpenter.pojo.query.EcmWorkOrderQuery;
@@ -19,7 +20,7 @@ import javax.annotation.Resource;
  */
 @Controller
 @RequestMapping("back/workOrder")
-public class EcmWorkOrderController {
+public class EcmWorkOrderController extends BaseController {
 
     @Resource
     EcmWorkOrderService ecmWorkOrderService;
@@ -39,6 +40,7 @@ public class EcmWorkOrderController {
     @RequestMapping("updateWorkOrder")
     @ResponseBody
     public ResponseDTO updateWorkOrder(EcmWorkOrderVO ecmWorkOrderVO) {
+        ecmWorkOrderVO.setFkHandlerId((Integer) getRequstSession().getAttribute("userId"));
         return ecmWorkOrderService.updateWorkOrder(ecmWorkOrderVO);
     }
 }
