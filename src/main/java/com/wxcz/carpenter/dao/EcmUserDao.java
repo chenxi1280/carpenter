@@ -15,7 +15,7 @@ import java.util.List;
  * @Date: 2020/8/14
  */
 @Repository
-public interface EcmUserDao {
+public interface EcmUserDao  {
     int deleteByPrimaryKey(Integer pkUserId);
 
     int insert(EcmUser record);
