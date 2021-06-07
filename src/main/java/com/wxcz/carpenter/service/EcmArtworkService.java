@@ -152,4 +152,8 @@ public interface EcmArtworkService {
     PageDTO ajaxFreeAdList(EcmArtworkQuery ecmArtworkQuery);
 
     ResponseDTO saveArtWorkFreeAdSettingList(EcmArtworkFreeAdVO ecmArtworkFreeAdVO);
+
+    ResponseDTO saveArtworkWhiteSettingList(EcmArtworkVO ecmArtworkVO);
+
+    PageDTO ajaxWhiteList(EcmArtworkQuery ecmArtworkQuery);
 }

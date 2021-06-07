@@ -633,6 +633,38 @@ public class EcmArtworkServiceImpl implements EcmArtworkService, BaseService {
 
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseDTO saveArtworkWhiteSettingList(EcmArtworkVO ecmArtworkVO) {
+
+        if (!CollectionUtils.isEmpty(ecmArtworkVO.getUnFkArtworkIdList())){
+            ecmArtworkDao.updateArtworkWhiteByEcmArtworkIdList(ecmArtworkVO.getUnFkArtworkIdList(),0);
+        }
+        if (!CollectionUtils.isEmpty(ecmArtworkVO.getFkArtworkIdList())){
+            ecmArtworkDao.updateArtworkWhiteByEcmArtworkIdList(ecmArtworkVO.getFkArtworkIdList(),2);
+        }
+        return ResponseDTO.ok("success");
+    }
+
+    @Override
+    public PageDTO ajaxWhiteList(EcmArtworkQuery ecmArtworkQuery) {
+        List<EcmArtworkVO> list = ecmArtworkDao.selectajaxListByQuery(ecmArtworkQuery);
+        Integer count = ecmArtworkDao.selectCountByQuery(ecmArtworkQuery);
+
+
+        list.forEach( ecmArtworkVO ->  {
+
+            if (ecmArtworkVO.getPlayType()!=null){
+                if (ecmArtworkVO.getPlayType().equals(2)){
+                    ecmArtworkVO.setChecked(true);
+                    ecmArtworkVO.setIsChecked(true);
+                }
+            }
+        });
+
+        return PageDTO.setPageData(count, list);
+    }
+
     /**
      * @param: [checkId] 状态
      * @return: com.wxcz.carpenter.pojo.dto.ResponseDTO

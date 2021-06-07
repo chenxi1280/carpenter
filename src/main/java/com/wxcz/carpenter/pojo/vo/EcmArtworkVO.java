@@ -4,6 +4,7 @@ import com.wxcz.carpenter.pojo.entity.EcmArtwork;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author by cxd
@@ -57,5 +58,9 @@ public class EcmArtworkVO extends EcmArtwork {
      * 是否 有存储桶用户
      */
     private Integer pkDownFowNumber;
+
+
+    private List<Integer> fkArtworkIdList;
+    private List<Integer> unFkArtworkIdList;
 
 }

@@ -120,4 +120,8 @@ public interface EcmArtworkDao {
     List<EcmArtworkVO> selectDownLinkFlowByPrimaryKeyList(@Param(("ids"))List<Integer> fkArtworkIdList);
 
     List<EcmArtworkVO> selectAjaxFreeAdList(EcmArtworkQuery ecmArtworkQuery);
+
+    Integer updateArtworkWhiteByEcmArtworkIdList(@Param("ids") List<Integer> unFkArtworkIdList,@Param("playType") Integer playType);
+
+
 }

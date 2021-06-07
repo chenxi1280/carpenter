@@ -24,7 +24,7 @@ public class EcmArtwork implements Serializable {
     private String artworkName;
 
     /**
-     * 作品描述
+     * 播放端用于分享的图片的url
      */
     private String artworkDescribe;
 
@@ -39,7 +39,7 @@ public class EcmArtwork implements Serializable {
     private String logoPath;
 
     /**
-     * 图片审核状态
+     * 图片审核状态 0 未审核  1 通过 2 不通过
      */
     private Short logoPathStatus;
 
@@ -57,7 +57,6 @@ public class EcmArtwork implements Serializable {
      */
     private Integer fkAuditId;
 
-
     /**
      * 播放模式
      */
@@ -69,9 +68,14 @@ public class EcmArtwork implements Serializable {
     private Integer isEndings;
 
     /**
-     * 能播放的客户端  null 所有，1 微信，2 抖音
+     * 能播放的客户端  null 所有，1 微信，2 抖音 ，3 H5
      */
     private Integer playClient;
+
+    /**
+     * 1 免广告播放作品
+     */
+    private Integer playType;
 
     private static final long serialVersionUID = 1L;
 }

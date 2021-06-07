@@ -52,4 +52,10 @@ public class EcmArtworkQuery extends PageQuery {
      */
     private String versionId;
 
+
+    /**
+     * 1 免广告播放作品 2 白名单作品
+     */
+    private Integer playType;
+
 }

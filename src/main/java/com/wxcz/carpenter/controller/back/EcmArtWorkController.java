@@ -343,4 +343,36 @@ public class EcmArtWorkController extends BaseController {
         return ecmArtworkService.saveArtWorkFreeAdSettingList(ecmArtworkFreeAdVO);
     }
 
+
+    // 白名单
+
+    @RequestMapping("artworkWhitePage")
+    public String artworkWhitePage() {
+        return "back/artWork/artwork-white-list";
+    }
+
+    @RequestMapping("artWorkWhiteSettingListPage")
+    public String artWorkWhiteSettingListPage() {
+        return "back/artWork/artWork-white-setting-list";
+    }
+
+    @RequestMapping("ajaxArtworkWhiteList")
+    @ResponseBody
+    public PageDTO ajaxArtworkWhiteList(EcmArtworkQuery ecmArtworkQuery) {
+        ecmArtworkQuery.setPlayType(2);
+        return ecmArtworkService.ajaxList(ecmArtworkQuery);
+    }
+
+    @RequestMapping("ajaxWhiteList")
+    @ResponseBody
+    public PageDTO ajaxWhiteList(EcmArtworkQuery ecmArtworkQuery) {
+        return ecmArtworkService.ajaxWhiteList(ecmArtworkQuery);
+    }
+
+
+    @RequestMapping("saveArtworkWhiteSettingList")
+    @ResponseBody
+    public ResponseDTO saveArtworkWhiteSetting(@RequestBody EcmArtworkVO ecmArtworkVO) {
+        return ecmArtworkService.saveArtworkWhiteSettingList(ecmArtworkVO);
+    }
 }
