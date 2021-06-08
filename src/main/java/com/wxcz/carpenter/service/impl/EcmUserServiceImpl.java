@@ -330,17 +330,19 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
         ecmDownlinkFlowVO.setSubAppId(Integer.valueOf(String.valueOf(ecmDownLinkFlowService.createSubAppId( String.valueOf(ecmDownlinkFlowVO.getFkUserId())  ))));
         ecmDownlinkFlowVO.setUpdateTime(new Date());
 
-        EcmUserNoticeRecord ecmUserNoticeRecord = ecmUserNoticeRecordDao.selectByUserId(ecmDownlinkFlowVO.getFkUserId());
+        // 查询带上短信状态码 开通类的短信为1
+        EcmUserNoticeRecord ecmUserNoticeRecord = new EcmUserNoticeRecord();
+        ecmUserNoticeRecord.setNoticeStatus(1);
+        ecmUserNoticeRecord.setFkUserId(ecmDownlinkFlowVO.getFkUserId());
+        EcmUserNoticeRecord ecmUserNotice = ecmUserNoticeRecordDao.selectByRecord(ecmUserNoticeRecord);
         try {
-            if (ecmUserNoticeRecord == null) {
-                EcmUserNoticeRecord userNoticeRecord = new EcmUserNoticeRecord();
-                userNoticeRecord.setCreateTime(new Date());
-                userNoticeRecord.setFkUserId(ecmDownlinkFlowVO.getFkUserId());
-                userNoticeRecord.setNoticeStatus(1);
-                ecmUserNoticeRecordDao.insertSelective(userNoticeRecord);
+            if (ecmUserNotice == null) {
+                ecmUserNoticeRecord.setCreateTime(new Date());
+                ecmUserNoticeRecord.setFkUserId(ecmDownlinkFlowVO.getFkUserId());
+                ecmUserNoticeRecordDao.insertSelective(ecmUserNoticeRecord);
             }else {
-                ecmUserNoticeRecord.setNoticeStatus(1);
-                ecmUserNoticeRecordDao.updateByPrimaryKeySelective(ecmUserNoticeRecord);
+                ecmUserNotice.setNoticeStatus(1);
+                ecmUserNoticeRecordDao.updateByPrimaryKeySelective(ecmUserNotice);
             }
 
             ecmDownlinkFlowDao.insertSelective(ecmDownlinkFlowVO);
@@ -377,10 +379,15 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
         byUserId.setSubTotalFlow(byUserId.getSubTotalFlow()+ ecmDownlinkFlowVO.getSubTotalFlow());
         byUserId.setUpdateTime( new Date());
 
-        EcmUserNoticeRecord ecmUserNoticeRecord = ecmUserNoticeRecordDao.selectByUserId(ecmDownlinkFlowVO.getFkUserId());
+        // 添加流量后会重新发送只剩余1gb下行流量的短信通知 状态码是3
+        EcmUserNoticeRecord ecmUserNoticeRecord = new EcmUserNoticeRecord();
+        ecmUserNoticeRecord.setNoticeStatus(3);
+        ecmUserNoticeRecord.setFkUserId(ecmDownlinkFlowVO.getFkUserId());
+        EcmUserNoticeRecord ecmUserNotice = ecmUserNoticeRecordDao.selectByRecord(ecmUserNoticeRecord);
         try{
-            if (ecmUserNoticeRecord != null) {
-                ecmUserNoticeRecordDao.deleteByPrimaryKey(ecmUserNoticeRecord.getPkId());
+            if (ecmUserNotice != null) {
+                // 删除1gb的短信通知记录 这样用户在流量剩余1gb时 才会受到短信
+                ecmUserNoticeRecordDao.deleteByPrimaryKey(ecmUserNotice.getPkId());
             }
 
             EcmDownlinkFlowUpdateHistory ecmDownlinkFlowUpdateHistory = new EcmDownlinkFlowUpdateHistory();
@@ -391,6 +398,14 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
             ecmDownlinkFlowUpdateHistoryDao.insertSelective(ecmDownlinkFlowUpdateHistory);
             ecmDownLinkFlowService.modifySubAppStatus("On",Long.valueOf(byUserId.getSubAppId()));
             ecmDownlinkFlowDao.updateByPrimaryKeySelective(byUserId);
+
+            // 24周任务改动 用户成功添加流量后 发送下行流量开通成功的短信提醒
+            EcmUser ecmUser = ecmUserDao.selectByPrimaryKey(ecmDownlinkFlowVO.getFkUserId());
+            ecmUser.setMobile(EncryptUtil.aesDecrypt(  ecmUser.getMobile(), SecretKeyConstants.SECRET_KEY));
+            SendNoticeVO sendNoticeVO = new SendNoticeVO();
+            sendNoticeVO.setTemplateId("960224");
+            sendNoticeVO.setPhoneNumber(ecmUser.getMobile());
+            HttpUtils.post(HttpUtils.SEND_NOTICE_URL, JSON.toJSONString(sendNoticeVO));
         }catch (Exception e) {
             e.printStackTrace();
             return ResponseDTO.fail();
