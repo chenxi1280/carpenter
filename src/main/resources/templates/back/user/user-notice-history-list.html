@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+<link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+
+<script type="text/javascript" src="../../layuiadmin/layui/layui.js"></script>
+
+<style>
+    /*修改layui表格的高度*/
+    .layui-table-cell {
+        height: auto;
+    }
+</style>
+<body class="layui-card-body layui-card">
+<div style="padding: 10px; " class="layui-card">
+    <form id="queryForm" class="layui-form" method="post"
+          style="display: flex;align-items: center;">
+        <div style="display: flex;">
+
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label"> id：</label>
+                <div class="layui-input-block">
+                    <input class="layui-input" name="userId" id="nickName"
+                           style="width: 120px;"/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label"> 昵称：</label>
+                <div class="layui-input-block">
+                    <input class="layui-input" name="userName" id="realName"
+                           style="width: 120px"/>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label"> 手机号：</label>
+                <div class="layui-input-block">
+                    <input class="layui-input" name="phone" id="phone"
+                           style="width: 120px"/>
+                </div>
+            </div>
+
+
+            <div style="display: flex; margin-left: 20px">
+                <button type="button" class="layui-btn" id="queryBtn" lay-submit lay-filter="queryForm">查询</button>
+            </div>
+        </div>
+    </form>
+
+
+    <!--        <div th:include="plugins/splitBar::splitBar"></div>-->
+    <table id="userTable" lay-filter="userTableFilter" style="padding-top: 10px"></table>
+</div>
+
+
+
+<script type="text/html" id="showBigImgDiv">
+    <div>
+        <img id="showBigImg" src="" style="width: 100%;height: 100%"/>
+    </div>
+
+</script>
+<!--// 加上th:inline='javascript' 否则可能会因为小于或者大于符号导致 thymeleaf模板引擎解析错误。-->
+<script th:inline="javascript" type="text/javascript">
+
+    layui.use(['table', 'layer', 'laydate', 'form'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var laydate = layui.laydate;
+        var form = layui.form;
+        var $ = layui.$;
+        laydate.render({
+            elem: '#creteDateRange' //指定元素
+            , range: '至'
+        });
+
+        var userTable = table.render({
+            elem: '#userTable'
+            , page: true
+            , url: '/ims/back/user/ajaxUserNoticeHistoryList' //数据接口
+            , cols: [[ //表头
+                {field: 'pkId', title: 'ID', width: 120},
+                {field: 'fkUserId', title: '用户ID', width: 120}
+                , {field: 'username', title: '用户昵称', width: 120}
+                , {field: 'noticeType', title: '短信类型', width: 120}
+                , {field: 'noticeContent', title: '短信内容', width: 120}
+                , {field: 'noticeStatus', title: '发送状态', width: 80 ,  templet: function (d) {
+                        if (d.noticeStatus == 1) {
+                            return '<div >' +
+                                '<button class="layui-btn layui-btn-normal  layui-btn-xs" lay-event="lock">成功</button>' +
+                                '</div>'
+                        }else if (d.noticeStatus == 0){
+                            return '<div >' +
+                                '<button class="layui-btn layui-btn-warm  layui-btn-xs" lay-event="lock">失败</button>' +
+                                '</div>'
+                        }
+                    }
+                }
+                , {field: 'createTime', title: '创建时间', width: 150}
+                , {field: 'updateTime', title: '修改时间', width: 150}
+            ]]
+            , toolbar: 'default'
+            , done() {// 表格渲染完成之后，也就是图片都被渲染好了
+                showBigImg();// 渲染大图查看，给这些图片绑定点击事件
+            }
+
+        });
+
+        //监听头部工具栏的事件
+        table.on('toolbar(userTableFilter)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'add':
+                    layer.msg('添加');
+                    break;
+                case 'delete':
+                    layer.msg('删除');
+                    break;
+                case 'update':
+                    layer.msg('编辑');
+                    break;
+            }
+            ;
+        });
+
+
+        //监听行中工具栏事件
+        table.on('tool(userTableFilter)', function (obj) {
+
+            var d = obj.data;
+
+            switch (obj.event) {
+
+                case 'showPermissions':
+
+                    break;
+
+                case 'scsArtWorkImg':
+
+                    break;
+                case "failArtWorkImg":
+                    break;
+            }
+        });
+        //条件查询
+        form.on('submit(queryForm)', function (data) {
+            userTable.reload({
+                where: data.field,
+                page: {curr: 1}
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+
+
+        function showBigImg() {// 渲染大图查看
+            $("img[showBig]").unbind("click").click(function () {// 先解除绑定，再绑定，绑定图片点击事件，否则会出现绑定两次点击事件
+
+                let bigImg = layer.open({// 弹框之后，如遇到select标签，radio,checkbox之类，需要使用表单渲染
+                    type: 1,
+                    offset: '40px',
+                    area: ['500px', '600px'],
+                    title: "大图展示",
+                    shadeClose: true,
+                    content: $("#showBigImgDiv").html()
+                });
+                $("#showBigImg")[0].src = this.src;
+            });
+        }
+    })
+
+
+</script>
+
+
+</body>
+
+
+</html>

@@ -133,4 +133,6 @@ public interface EcmUserService {
      *       失败: status 500  msg "error“
      */
     ResponseDTO addUserDownFlow(EcmDownlinkFlowVO ecmDownlinkFlowVO);
+
+    PageDTO ajaxUserNoticeHistoryList(EcmUserQuery ecmUserQuery);
 }

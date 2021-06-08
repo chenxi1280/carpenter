@@ -16,18 +16,15 @@ import com.wxcz.carpenter.util.EncryptUtil;
 import com.wxcz.carpenter.util.HttpUtils;
 import com.wxcz.carpenter.util.MD5Utils;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -70,6 +67,9 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
 
     @Resource
     EcmUserNoticeRecordDao ecmUserNoticeRecordDao;
+
+    @Resource
+    EcmUserNoticeHistoryDao ecmUserNoticeHistoryDao;
 
     @Resource
     EcmDownlinkFlowUpdateHistoryDao ecmDownlinkFlowUpdateHistoryDao;
@@ -411,6 +411,15 @@ public class EcmUserServiceImpl implements EcmUserService , BaseService {
             return ResponseDTO.fail();
         }
         return ResponseDTO.ok();
+    }
+
+    @Override
+    public PageDTO ajaxUserNoticeHistoryList(EcmUserQuery ecmUserQuery) {
+
+        List<EcmUserNoticeHistoryVO> list = ecmUserNoticeHistoryDao.selectListByEcmUserQuery(ecmUserQuery);
+        Integer count = ecmUserNoticeHistoryDao.selectCountByEcmUserQuery(ecmUserQuery);
+
+        return PageDTO.setPageData(count,list);
     }
 
 

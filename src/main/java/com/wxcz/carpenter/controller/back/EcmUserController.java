@@ -61,6 +61,11 @@ public class EcmUserController extends BaseController {
         return "back/user/user-logo-list";
     }
 
+    @RequestMapping("/userNoticeHistoryPage")
+    public String userNoticeHistoryPage() {
+        return "back/user/user-notice-history-list";
+    }
+
     /**
      * @param: []
      * @return: java.lang.String
@@ -138,4 +143,11 @@ public class EcmUserController extends BaseController {
     public ResponseDTO addUserDownFlow(EcmDownlinkFlowVO ecmDownlinkFlowVO) {
         return ecmUserService.addUserDownFlow(ecmDownlinkFlowVO);
     }
+
+    @RequestMapping("ajaxUserNoticeHistoryList")
+    @ResponseBody
+    public PageDTO ajaxUserNoticeHistoryList(EcmUserQuery ecmUserQuery) {
+        return ecmUserService.ajaxUserNoticeHistoryList(ecmUserQuery);
+    }
+
 }
