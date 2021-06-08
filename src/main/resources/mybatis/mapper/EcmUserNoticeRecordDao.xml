@@ -75,11 +75,18 @@
   </update>
 
 <!--  sql-->
-  <select id="selectByUserId" resultType="com.wxcz.carpenter.pojo.entity.EcmUserNoticeRecord">
+  <select id="selectByRecord" parameterType="com.wxcz.carpenter.pojo.entity.EcmUserNoticeRecord"
+          resultType="com.wxcz.carpenter.pojo.entity.EcmUserNoticeRecord">
     select <include refid="Base_Column_List" />
     from ecm_user_notice_record
-    where fk_user_id = #{fkUserId} and notice_status = 1
-
+    <where>
+      <if test="fkUserId != null">
+        and fk_user_id = #{fkUserId,jdbcType=INTEGER}
+      </if>
+      <if test="noticeStatus != null">
+        and notice_status = #{noticeStatus,jdbcType=INTEGER}
+      </if>
+    </where>
   </select>
 
 

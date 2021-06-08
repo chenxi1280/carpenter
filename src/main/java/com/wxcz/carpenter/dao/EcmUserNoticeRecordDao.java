@@ -15,5 +15,5 @@ public interface EcmUserNoticeRecordDao {
 
     int updateByPrimaryKey(EcmUserNoticeRecord record);
 
-    EcmUserNoticeRecord selectByUserId(Integer fkUserId);
+    EcmUserNoticeRecord selectByRecord(EcmUserNoticeRecord record);
 }
